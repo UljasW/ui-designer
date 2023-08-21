@@ -15,7 +15,7 @@ function Canvas({ onReady }: CanvasProps) {
   return (
     <div className="canvas-component">
       {/* Rendering the canvas */}
-      <FabricJSCanvas className="sample-canvas" />
+      <FabricJSCanvas className="sample-canvas" />‰
     </div>
   );
 }
