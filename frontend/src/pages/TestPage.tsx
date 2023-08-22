@@ -22,7 +22,22 @@ const TestPage : React.FC<TestPageProps> = ({ canvas }) => {
             radius: 50,
             fill: "blue",
           });
-          canvas.add(circle);
+
+          const rect = new fabric.Rect({
+            top: 100,
+            left: 100,
+            width: 60,
+            height: 70,
+            fill: 'red',
+            selectable: true, // Ensure the object is selectable
+            hasControls: true, // Display controls for scaling/rotating
+          });
+          
+          canvas.add(rect);
+          
+
+
+          
         }
     }
       
