@@ -1,19 +1,14 @@
-import React, { useRef } from "react";
-import Canvas from "./features/canvas/Canvas";
-import { fabric } from "fabric"; // Import the fabric object from the Fabric.js library
+// App.js
+import React, { useContext } from 'react';
+import FabricCanvas from './features/canvas/FabricCanvas';
+import { fabric } from 'fabric';
 
 export default function App() {
-  const editorRef = useRef<any>(null); // To store the editor instance
-
-  const handleEditorReady = (editor : any) => {
-    editorRef.current = editor; // Store the editor instance for manipulation
-    
-  };
   
   return (
     <div className="App">
-      <h1>FabricJS React Sample</h1>
-      <Canvas onReady={handleEditorReady} />
+      <h1>Your UI Designer App</h1>
+      <FabricCanvas />
     </div>
   );
 }
