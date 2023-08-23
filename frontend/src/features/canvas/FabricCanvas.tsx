@@ -1,34 +1,35 @@
-import React, { useEffect, useRef, useState, ReactNode, SetStateAction, Dispatch } from 'react';
-import { fabric } from 'fabric';
+import React, { useEffect, useRef, useState } from "react";
+import { fabric } from "fabric";
 
 interface FabricCanvasProps {
-  setCanvas: Dispatch<SetStateAction<fabric.Canvas | null>>;
+  canvas: React.MutableRefObject<fabric.Canvas | undefined>;
 }
 
-const FabricCanvas: React.FC = () => {
+const FabricCanvas: React.FC<FabricCanvasProps> = ({ canvas }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const fabricInstance = useRef<fabric.Canvas | undefined>();
 
   useEffect(() => {
-    if (canvasRef.current) {
+    if (canvasRef.current && !fabricInstance.current) {
       const fabricCanvas = new fabric.Canvas(canvasRef.current);
-      
-      const rect = new fabric.Rect({
-        top: 100,
-        left: 100,
-        width: 60,
-        height: 70,
-        fill: 'red',
-        selectable: true, // Ensure the object is selectable
-        hasControls: true, // Display controls for scaling/rotating
-      });
-      
-      fabricCanvas.add(rect);    }
-  }, []);
+      // const rect = new fabric.Rect({
+      //   top: 300,
+      //   left: 300,
+      //   width: 60,
+      //   height: 70,
+      //   fill: "red",
+      //   selectable: true,
+      //   hasControls: true,
+      // });
+
+      // fabricCanvas.add(rect);
+
+      fabricInstance.current = fabricCanvas;
+      canvas.current = fabricCanvas;
+    }
+  }, [fabricInstance, canvas]);
 
   return <canvas ref={canvasRef} width={500} height={500} />;
 };
-
-
-
 
 export default FabricCanvas;
