@@ -12,17 +12,6 @@ const FabricCanvas: React.FC<FabricCanvasProps> = ({ canvas }) => {
   useEffect(() => {
     if (canvasRef.current && !fabricInstance.current) {
       const fabricCanvas = new fabric.Canvas(canvasRef.current);
-      // const rect = new fabric.Rect({
-      //   top: 300,
-      //   left: 300,
-      //   width: 60,
-      //   height: 70,
-      //   fill: "red",
-      //   selectable: true,
-      //   hasControls: true,
-      // });
-
-      // fabricCanvas.add(rect);
 
       fabricInstance.current = fabricCanvas;
       canvas.current = fabricCanvas;

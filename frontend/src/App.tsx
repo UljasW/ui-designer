@@ -27,7 +27,7 @@ export default function App() {
   
   return (
     <div className="App">
-      <button onClick={addStuff}>ILLLA.SE</button>
+      <button onClick={addStuff}>ADD</button>
       <MemoizedFabricCanvas canvas={canvas} />
     </div>
   );
