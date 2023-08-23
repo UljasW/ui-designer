@@ -1,12 +1,11 @@
 // App.js
 import React, { useCallback, useContext } from "react";
-import TestPage from "./pages/TestPage";
-import WrapperComponent from "./pages/WrapperComponentTest";
+import FabricCanvas from "./features/canvas/FabricCanvas";
 
 export default function App() {
   return (
     <div className="App">
-      <WrapperComponent></WrapperComponent>
+      <FabricCanvas></FabricCanvas>
     </div>
   );
   
