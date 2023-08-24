@@ -1,11 +1,36 @@
 // App.js
-import React, { useCallback, useContext, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import FabricCanvas from "./features/canvas/FabricCanvas";
-import { fabric } from 'fabric';
+import { fabric } from "fabric";
 
 export default function App() {
   const canvas = useRef<fabric.Canvas>();
   const MemoizedFabricCanvas = React.memo(FabricCanvas);
+
+  useEffect(() => {
+
+    if (canvas.current) {
+      canvas.current.on("selection:created", (e) => {
+
+        if (e.selected) {
+          e.selected.map((element) => {
+            if (canvas.current) {
+              canvas.current.bringToFront(element);
+            }
+          });
+        }
+        console.log(canvas.current?.getActiveObject);
+
+      });
+    }
+
+  }, [canvas]);
 
   const addStuff = useCallback(() => {
     if (canvas.current) {
@@ -18,13 +43,11 @@ export default function App() {
         selectable: true,
         hasControls: true,
       });
-  
-      canvas.current.add(rect);
-      console.log(canvas);
 
+      canvas.current.add(rect);
     }
   }, [canvas]);
-  
+
   return (
     <div className="App">
       <button onClick={addStuff}>ADD</button>
