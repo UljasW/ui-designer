@@ -14,10 +14,8 @@ export default function App() {
   const MemoizedFabricCanvas = React.memo(FabricCanvas);
 
   useEffect(() => {
-
     if (canvas.current) {
       canvas.current.on("selection:created", (e) => {
-
         if (e.selected) {
           e.selected.map((element) => {
             if (canvas.current) {
@@ -26,10 +24,8 @@ export default function App() {
           });
         }
         console.log(canvas.current?.getActiveObject);
-
       });
     }
-
   }, [canvas]);
 
   const addStuff = useCallback(() => {
