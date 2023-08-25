@@ -23,7 +23,7 @@ export default function App() {
             }
           });
         }
-        console.log(canvas.current?.getActiveObject);
+        console.log(canvas.current?.getObjects());
       });
     }
   }, [canvas]);
@@ -44,9 +44,29 @@ export default function App() {
     }
   }, [canvas]);
 
+  const addStuff2 = useCallback(() => {
+    if (canvas.current) {
+      const rect = new fabric.Rect({
+        top: 100,
+        left: 100,
+        width: 60,
+        height: 70,
+        fill: "blue",
+        selectable: true,
+        hasControls: true,
+      });
+
+      canvas.current.add(rect);
+    }
+  }, [canvas]);
+
+
+
   return (
     <div className="App">
       <button onClick={addStuff}>ADD</button>
+      <button onClick={addStuff2}>ADD2</button>
+
       <MemoizedFabricCanvas canvas={canvas} />
     </div>
   );
