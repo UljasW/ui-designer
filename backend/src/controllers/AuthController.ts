@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import AuthService from "../services/AuthService";
+import AuthService from "../services/authService";
 import { error } from "console";
 import verifyToken from "../middlewares/verifyToken";
 
