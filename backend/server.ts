@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import AuthController from './src/controllers/AuthController'
+import AuthController from './src/controllers/authController'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
