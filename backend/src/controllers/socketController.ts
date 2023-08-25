@@ -5,6 +5,7 @@ export default class SocketController {
 
   constructor(io: Server) {
     this.io = io;
+    this.setupEvents();
   }
 
   private setupEvents(): void {
