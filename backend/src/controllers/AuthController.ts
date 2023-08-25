@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express";
 import AuthService from "../services/AuthService";
 import { error } from "console";
+import verifyToken from "../middlewares/verifyToken";
 
 export default class AuthController {
   secret = () => {
@@ -37,6 +38,15 @@ export default class AuthController {
           req.body.password as string
         );
         res.send("User has been registered");
+      } catch (error) {
+        res.status(401).send(error);
+      }
+    });
+
+    router.delete("/", verifyToken, async (req: Request, res: Response) => {
+      try {
+        await this.authService.delete((req as any).user);
+        res.send("User has been deleted");
       } catch (error) {
         res.status(401).send(error);
       }
