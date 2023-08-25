@@ -27,7 +27,7 @@ export default class AuthController {
         );
         res.send(token);
       } catch (error) {
-        res.status(401).send(error);
+        res.status(400).send(error);
       }
     });
 
@@ -39,7 +39,7 @@ export default class AuthController {
         );
         res.send("User has been registered");
       } catch (error) {
-        res.status(401).send(error);
+        res.status(400).send(error);
       }
     });
 
@@ -48,7 +48,7 @@ export default class AuthController {
         await this.authService.delete((req as any).user);
         res.send("User has been deleted");
       } catch (error) {
-        res.status(401).send(error);
+        res.status(400).send(error);
       }
     });
 

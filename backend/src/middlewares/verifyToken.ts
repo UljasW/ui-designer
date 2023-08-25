@@ -2,38 +2,55 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { PrismaClient, User } from "@prisma/client";
 
-const token = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is missing in environment variables");
+}
+
 const prisma = new PrismaClient();
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: User;
+    }
+  }
+}
 
 const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
   try {
-    const bearerHeader = req.headers.authorization as string;
-    if (bearerHeader || token) {
-      jwt.verify(
-        bearerHeader,
-        token || "",
-        async (err: any, decodedToken: any) => {
-          if (err) {
-            res.status(401).send("Not logged-in");
-          } else {
-            const user = await prisma.user.findUnique({
-              where: {
-                id: decodedToken.id,
-              },
-            });
+    const authorization = req.headers.authorization as string;
 
-            (req as any).user = user;
+    if (!authorization) {
+        res.status(401).send("No authorization header present.");
+    }
 
-            next();
-          }
-        }
-      );
+    const token = authorization.split("Bearer ")[1];
+    if (!token) {
+       res.status(401).send("Malformed authorization header.");
     }
-    else{
-        res.status(401).send("Not logged-in")
-    }
+
+    jwt.verify(token, JWT_SECRET, async (err : any, decodedToken : any) => {
+      if (err) {
+        return res.status(401).send("Invalid token.");
+      }
+
+      const user = await prisma.user.findUnique({
+        where: {
+          id: decodedToken.id,
+        },
+      });
+
+      if (!user) {
+        return res.status(404).send("User associated with the token not found.");
+      }
+
+      req.user = user;
+      next();
+    });
   } catch (error) {
-    res.status(500).send(error)
+    console.error(error);  // log the error for debugging
+    res.status(500).send("Internal server error.");
   }
 };
 
