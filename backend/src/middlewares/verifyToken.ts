@@ -9,13 +9,6 @@ if (!JWT_SECRET) {
 
 const prisma = new PrismaClient();
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: User;
-    }
-  }
-}
 
 const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
   try {
@@ -45,7 +38,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
         return res.status(404).send("User associated with the token not found.");
       }
 
-      req.user = user;
+      (req as any).user = user;
       next();
     });
   } catch (error) {
