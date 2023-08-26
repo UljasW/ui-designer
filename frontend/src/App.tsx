@@ -1,16 +1,10 @@
 // App.js
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import FabricCanvas from "./features/canvas/FabricCanvas";
-import { fabric } from "fabric";
+import React from "react";
+import DesignerTool from "./pages/designerTool/DesignerTool";
+
 
 export default function App() {
-  const canvas = useRef<fabric.Canvas>();
+  /* const canvas = useRef<fabric.Canvas>();
   const MemoizedFabricCanvas = React.memo(FabricCanvas);
 
   useEffect(() => {
@@ -58,16 +52,11 @@ export default function App() {
 
       canvas.current.add(rect);
     }
-  }, [canvas]);
+  }, [canvas]); */
 
 
 
   return (
-    <div className="App">
-      <button onClick={addStuff}>ADD</button>
-      <button onClick={addStuff2}>ADD2</button>
-
-      <MemoizedFabricCanvas canvas={canvas} />
-    </div>
+    <DesignerTool></DesignerTool>
   );
 }
