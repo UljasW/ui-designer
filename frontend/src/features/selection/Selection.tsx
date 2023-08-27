@@ -10,17 +10,26 @@ export default function Selection(props: FabricCanvasProps) {
   useEffect(() => {
     if (canvas) {
       canvas.on("selection:created", (e: any) => {
-        if (e.selected) {
-          e.selected.map((element: any) => {
-            if (canvas) {
-              canvas.bringToFront(element);
-            }
-          });
-        }
-        console.log(canvas?.getObjects());
+        moveUp(e);
       });
+
+      canvas.on("selection:updated", (e: any) => {
+        moveUp(e);
+      });
+
     }
   }, [canvas]);
+
+  function moveUp(e:any) {
+    if (e.selected) {
+      e.selected.map((element: any) => {
+        if (canvas) {
+          canvas.bringToFront(element);
+        }
+      });
+    }
+    console.log(canvas?.getObjects());
+  }
 
   const addStuff = useCallback(() => {
     if (canvas) {
