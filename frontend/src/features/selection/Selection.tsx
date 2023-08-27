@@ -28,7 +28,6 @@ export default function Selection(props: FabricCanvasProps) {
         }
       });
     }
-    console.log(canvas?.getObjects());
   }
 
   const addStuff = useCallback(() => {
