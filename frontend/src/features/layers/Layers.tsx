@@ -12,10 +12,21 @@ export default function Layers(props: FabricCanvasProps) {
     const canvasInstance = props.canvas.current;
 
     const updateObjects = () => {
-      if (canvasInstance) {
-        setObjList(canvasInstance.getObjects());
+      if (!canvasInstance) {
+        return;
       }
+      const tempObjList = canvasInstance.getObjects();
+      if(tempObjList === objList){
+        return;
+      }
+
+      setObjList(canvasInstance.getObjects());
+
     };
+
+    function updateBackend() {
+      
+    }
 
     const handleSelectionCreated = (e: any) => {
       console.log("Selection created");
@@ -23,7 +34,6 @@ export default function Layers(props: FabricCanvasProps) {
       if (canvasInstance) {
         setSelectedObj(e.selected[0]);
         console.log(e.selected[0]);
-
       }
     };
 
@@ -55,24 +65,27 @@ export default function Layers(props: FabricCanvasProps) {
   }, [props.canvas]);
 
   const isObjectMatch = (obj1: any, obj2: any) => {
-
-    console.log(obj1)
-    console.log(obj2)
+    console.log(obj1);
+    console.log(obj2);
 
     if (!obj1 || !obj2) return false;
 
-
     console.log(obj1.type === obj2.type && obj1.fill === obj2.fill);
-    return obj1.type === obj2.type && obj1.fill === obj2.fill && obj1.top === obj2.top && obj1.left === obj2.left;
+    return (
+      obj1.type === obj2.type &&
+      obj1.fill === obj2.fill &&
+      obj1.top === obj2.top &&
+      obj1.left === obj2.left
+    );
     // You can add more properties to compare if needed
   };
 
   return (
     <div style={{ width: "200px", background: "grey" }}>
       {objList.map((obj, index) => (
-        <div 
+        <div
           key={index}
-          style={isObjectMatch(obj, selectedObj) ? { color: 'red' } : {}}
+          style={isObjectMatch(obj, selectedObj) ? { color: "red" } : {}}
         >
           {index} - {obj.type} - {obj.fill}
         </div>
