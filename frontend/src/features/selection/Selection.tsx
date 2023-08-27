@@ -7,29 +7,7 @@ interface FabricCanvasProps {
 
 export default function Selection(props: FabricCanvasProps) {
   const canvas = props.canvas.current;
-  useEffect(() => {
-    if (canvas) {
-      canvas.on("selection:created", (e: any) => {
-        moveUp(e);
-      });
-
-      canvas.on("selection:updated", (e: any) => {
-        moveUp(e);
-      });
-
-    }
-  }, [canvas]);
-
-  function moveUp(e:any) {
-    if (e.selected) {
-      e.selected.map((element: any) => {
-        if (canvas) {
-          canvas.bringToFront(element);
-          console.log(element)
-        }
-      });
-    }
-  }
+  
 
   const addStuff = useCallback(() => {
     if (canvas) {
