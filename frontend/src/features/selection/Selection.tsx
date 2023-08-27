@@ -1,12 +1,11 @@
-import Fabric from "fabric";
+import fabric from "fabric";
 import React, { useCallback, useEffect } from "react";
 
 interface FabricCanvasProps {
-  canvas: React.MutableRefObject<fabric.Canvas | undefined>;
+  canvas: React.MutableRefObject<fabric.fabric.Canvas | undefined>;
 }
 
 export default function Selection(props: FabricCanvasProps) {
-  const fabric = Fabric.fabric;
   const canvas = props.canvas.current;
   useEffect(() => {
     if (canvas) {
@@ -25,7 +24,7 @@ export default function Selection(props: FabricCanvasProps) {
 
   const addStuff = useCallback(() => {
     if (canvas) {
-      const rect = new fabric.Rect({
+      const rect = new fabric.fabric.Rect({
         top: 100,
         left: 100,
         width: 60,
@@ -40,8 +39,10 @@ export default function Selection(props: FabricCanvasProps) {
   }, [canvas]);
 
   const addStuff2 = useCallback(() => {
+
     if (canvas) {
-      const rect = new fabric.Rect({
+
+      const rect = new fabric.fabric.Rect({
         top: 100,
         left: 100,
         width: 60,
