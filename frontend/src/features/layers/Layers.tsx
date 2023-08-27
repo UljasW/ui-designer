@@ -1,7 +1,10 @@
 import React from 'react'
+interface FabricCanvasProps {
+  canvas: React.MutableRefObject<fabric.Canvas | undefined>;
+}
 
-export default function Layers() {
+export default function Layers(props:FabricCanvasProps) {
   return (
-    <div>layers</div>
+    <div style={{width:"200px", background:"grey"}}>layers</div>
   )
 }
