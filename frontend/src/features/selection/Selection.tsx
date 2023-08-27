@@ -25,6 +25,7 @@ export default function Selection(props: FabricCanvasProps) {
       e.selected.map((element: any) => {
         if (canvas) {
           canvas.bringToFront(element);
+          console.log(element)
         }
       });
     }
@@ -43,6 +44,7 @@ export default function Selection(props: FabricCanvasProps) {
       });
 
       canvas.add(rect);
+      console.log(canvas.getObjects())
     }
   }, [canvas]);
 
