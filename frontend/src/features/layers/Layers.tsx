@@ -77,7 +77,6 @@ export default function Layers(props: FabricCanvasProps) {
       obj1.top === obj2.top &&
       obj1.left === obj2.left
     );
-    // You can add more properties to compare if needed
   };
 
   return (

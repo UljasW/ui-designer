@@ -7,6 +7,31 @@ interface FabricCanvasProps {
 
 export default function Selection(props: FabricCanvasProps) {
   const canvas = props.canvas.current;
+
+
+  useEffect(() => {
+    if (canvas) {
+      // Listen for mouse:down event (click)
+      canvas.on('mouse:down', (options) => {
+        const pointer = canvas.getPointer(options.e);
+        console.log(`Canvas clicked at position: x=${pointer.x}, y=${pointer.y}`);
+      });
+
+      // Listen for mouse:move event
+      canvas.on('mouse:move', (options) => {
+        const pointer = canvas.getPointer(options.e);
+        console.log(`Mouse position: x=${pointer.x}, y=${pointer.y}`);
+      });
+    }
+
+    // Cleanup event listeners on component unmount
+    return () => {
+      if (canvas) {
+        canvas.off('mouse:down');
+        canvas.off('mouse:move');
+      }
+    };
+  }, [canvas]);
   
 
   const addStuff = useCallback(() => {
