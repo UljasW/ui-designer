@@ -8,6 +8,7 @@ export default function Layers(props: FabricCanvasProps) {
   const [objList, setObjList] = useState<any[]>([]);
   const [selectedObj, setSelectedObj] = useState<any | null>(null);
 
+
   useEffect(() => {
     const canvasInstance = props.canvas.current;
 
@@ -23,7 +24,6 @@ export default function Layers(props: FabricCanvasProps) {
       setObjList(canvasInstance.getObjects());
     };
 
-    function updateBackend() {}
 
     const handleSelectionCreated = (e: any) => {
       console.log("Selection created");
@@ -41,6 +41,7 @@ export default function Layers(props: FabricCanvasProps) {
       }
     };
 
+  
     if (canvasInstance) {
       updateObjects();
       canvasInstance.on("object:added", updateObjects);
@@ -60,6 +61,36 @@ export default function Layers(props: FabricCanvasProps) {
       }
     };
   }, [props.canvas]);
+
+  function moveUp() {
+    const canvasInstance = props.canvas.current;
+    if (!selectedObj || !canvasInstance) return;
+  
+    const idx = canvasInstance.getObjects().indexOf(selectedObj);
+
+    // If it's already at the top, do nothing
+    if (idx <= 0) return;
+  
+    selectedObj.moveTo(idx - 1);
+    canvasInstance.renderAll();
+    setObjList(canvasInstance.getObjects());
+  }
+  
+  function moveDown() {
+    const canvasInstance = props.canvas.current;
+    if (!selectedObj || !canvasInstance) return;
+  
+    const idx = canvasInstance.getObjects().indexOf(selectedObj);
+    const lastIdx = canvasInstance.getObjects().length - 1;
+  
+    // If it's already at the bottom, do nothing
+    if (idx >= lastIdx) return;
+  
+    selectedObj.moveTo(idx + 1);
+    canvasInstance.renderAll();
+    setObjList(canvasInstance.getObjects());
+  }
+  
 
   const isObjectMatch = (obj1: any, obj2: any) => {
     console.log(obj1);
@@ -94,10 +125,15 @@ export default function Layers(props: FabricCanvasProps) {
           justifyContent: "flex-end",
         }}
       >
-        <div style={{ display:"flex", flexDirection:"row", justifyContent: "center"}}>
-        <button>Move up</button>
-        <button>Move down</button>
-
+        <div
+          style={{
+            display: selectedObj ? "flex" : "none",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
+          <button onClick={moveUp}>Move up</button>
+          <button onClick={moveDown}>Move down</button>
         </div>
       </div>
     </div>

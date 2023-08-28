@@ -20,6 +20,8 @@ export default class SocketController {
         this.io.emit("message", `User ${socket.id} says: ${message}`);
       });
 
+      
+
       socket.on("disconnect", () => {
         console.log("User disconnected:", socket.id);
       });

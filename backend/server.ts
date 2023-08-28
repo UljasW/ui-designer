@@ -19,6 +19,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use("/auth", new AuthController().Router)
 
+
 new SocketController(io);
 
 server.listen(PORT, () => {
