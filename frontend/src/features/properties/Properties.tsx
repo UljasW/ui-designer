@@ -1,12 +1,15 @@
-import React from 'react'
+import React from "react";
 
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.Canvas | undefined>;
 }
 
-
-export default function Properties(props:FabricCanvasProps) {
+export default function Properties(props: FabricCanvasProps) {
   return (
-    <div style={{width:"200px", background:"grey"}}>properties</div>
-  )
+    <div
+      style={{ width: "200px", background: "LightGrey"}}
+    >
+      properties
+    </div>
+  );
 }

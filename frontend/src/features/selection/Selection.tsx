@@ -1,13 +1,11 @@
 import fabric from "fabric";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.fabric.Canvas | undefined>;
 }
-
 export default function Selection(props: FabricCanvasProps) {
   const canvas = props.canvas.current;
-
 
   useEffect(() => {
     if (canvas) {
@@ -56,8 +54,8 @@ export default function Selection(props: FabricCanvasProps) {
     if (canvas) {
 
       const rect = new fabric.fabric.Rect({
-        top: 100,
-        left: 100,
+        top: 0,
+        left: 0,
         width: 60,
         height: 70,
         fill: "blue",
@@ -73,7 +71,7 @@ export default function Selection(props: FabricCanvasProps) {
     <div
       style={{
         height: "50px",
-        background: "grey",
+        background: "LightGrey",
         display: "flex",
         flexDirection: "row",
       }}

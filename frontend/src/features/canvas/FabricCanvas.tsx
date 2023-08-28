@@ -17,7 +17,7 @@ const FabricCanvas: React.FC<FabricCanvasProps> = ({ canvas }) => {
     }
   }, [canvas]);
 
-  return <canvas ref={canvasRef} width={window.innerWidth - 400} height={window.innerHeight - 50} />;
+  return <canvas ref={canvasRef} width={window.innerWidth - 400}  height={window.innerHeight - 50} />;
 };
 
 export default FabricCanvas;

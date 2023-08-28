@@ -16,17 +16,14 @@ export default function Layers(props: FabricCanvasProps) {
         return;
       }
       const tempObjList = canvasInstance.getObjects();
-      if(tempObjList === objList){
+      if (tempObjList === objList) {
         return;
       }
 
       setObjList(canvasInstance.getObjects());
-
     };
 
-    function updateBackend() {
-      
-    }
+    function updateBackend() {}
 
     const handleSelectionCreated = (e: any) => {
       console.log("Selection created");
@@ -80,7 +77,7 @@ export default function Layers(props: FabricCanvasProps) {
   };
 
   return (
-    <div style={{ width: "200px", background: "grey" }}>
+    <div style={{ width: "200px", background: "LightGrey" }}>
       {objList.map((obj, index) => (
         <div
           key={index}
@@ -89,6 +86,20 @@ export default function Layers(props: FabricCanvasProps) {
           {index} - {obj.type} - {obj.fill}
         </div>
       ))}
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+        }}
+      >
+        <div style={{ display:"flex", flexDirection:"row", justifyContent: "center"}}>
+        <button>Move up</button>
+        <button>Move down</button>
+
+        </div>
+      </div>
     </div>
   );
 }
