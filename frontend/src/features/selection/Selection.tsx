@@ -10,6 +10,8 @@ export default function Selection(props: FabricCanvasProps) {
   const canvas = props.canvas.current;
   const [mousePos, setMousePos] = useState<[number, number] | undefined>();
   const [rect, setRect] = useState<fabric.fabric.Rect | undefined>();
+  const [text, setText] = useState<fabric.fabric.Text | undefined>();
+
 
   useEffect(() => {
     if (canvas) {
@@ -20,6 +22,12 @@ export default function Selection(props: FabricCanvasProps) {
           canvas.renderAll();
           setRect(undefined); // Clear the rect object
         }
+        if (text) {
+          text.set({ selectable: true, hasControls: true });
+          canvas.setActiveObject(text); // Make the rectangle the active object
+          canvas.renderAll();
+          setText(undefined); // Clear the rect object
+        }
       });
 
       canvas.on("mouse:move", (options) => {
@@ -28,6 +36,12 @@ export default function Selection(props: FabricCanvasProps) {
 
         if (rect) {
           rect.set({ left: pointer.x, top: pointer.y });
+
+          canvas.renderAll();
+        }
+
+        if (text) {
+          text.set({ left: pointer.x, top: pointer.y });
 
           canvas.renderAll();
         }
@@ -41,9 +55,9 @@ export default function Selection(props: FabricCanvasProps) {
         canvas.off("mouse:move");
       }
     };
-  }, [canvas, rect]);
+  }, [canvas, rect, text]);
 
-  const addRedRect = useCallback(() => {
+  const addRect = useCallback(() => {
     if (canvas && !rect) {
       const rect = new fabric.fabric.Rect({
         top: mousePos ? mousePos[1] : 100,
@@ -60,6 +74,23 @@ export default function Selection(props: FabricCanvasProps) {
     }
   }, [canvas, mousePos]);
 
+  const addText = useCallback(() => {
+    if (canvas && !text) {
+      const text = new fabric.fabric.Text('Sample Text', {  // <-- Set the desired text here
+        top: mousePos ? mousePos[1] : 100,
+        left: mousePos ? mousePos[0] : 100,
+        fontSize: 24,  // Adjust font size to your liking
+        selectable: false, // Initially not selectable
+        hasControls: false, // No controls for now
+        fill: props.currentColor
+      });
+
+      setText(text);
+      canvas.add(text);
+    }
+}, [canvas, mousePos]);
+
+
 
   return (
     <div
@@ -70,8 +101,12 @@ export default function Selection(props: FabricCanvasProps) {
         flexDirection: "row",
       }}
     >
-      <button disabled={rect ? true : false} onClick={addRedRect}>
+      <button disabled={rect || text ? true : false} onClick={addRect}>
         ADD RECT
+      </button>
+
+      <button disabled={rect || text ? true : false} onClick={addText}>
+        ADD TEXT
       </button>
 
     </div>

@@ -13,6 +13,7 @@ export default function Properties(props: FabricCanvasProps) {
   const [borderRadius, setBorderRadius] = useState<number>(0);
   const [strokeColor, setStrokeColor] = useState<string>("");
   const [strokeWidth, setStrokeWidth] = useState<number>(0);
+  const [textValue, setTextValue] = useState<string>(""); // Add this line
 
   useEffect(() => {
     const canvasInstance = props.canvas.current;
@@ -28,6 +29,10 @@ export default function Properties(props: FabricCanvasProps) {
         setBorderRadius(selectedObject.rx || 0); // Assuming rx and ry are the same
         setStrokeColor(selectedObject.stroke || "");
         setStrokeWidth(selectedObject.strokeWidth || 0);
+
+        if (selectedObject.type === "text") {
+          setTextValue(selectedObject.text || "");
+        }
       }
     };
 
@@ -117,6 +122,20 @@ export default function Properties(props: FabricCanvasProps) {
     }
   }
 
+  function handleTextChange(event: any) {
+    const canvasInstance = props.canvas.current;
+    if (!canvasInstance) return;
+    
+    const obj = canvasInstance.getActiveObject();
+    if (obj && obj.type === "text") {
+        const textObj = obj as fabric.Text;
+        textObj.set("text", event.currentTarget.value);
+        setTextValue(event.currentTarget.value);
+        canvasInstance.renderAll();
+    }
+}
+
+
   return (
     <div
       style={{
@@ -127,6 +146,17 @@ export default function Properties(props: FabricCanvasProps) {
         alignItems: "center",
       }}
     >
+       {selectedObj && selectedObj.type === "text" && (
+            <div>
+                <label>Text Content</label>
+                <input
+                    style={{ width: "150px" }}
+                    type="text"
+                    value={textValue}
+                    onChange={handleTextChange}
+                ></input>
+            </div>
+        )}
       <h4>Current color: {selectedObj ? selectedObj.fill : null} </h4>
       <label>Select color</label>
       <input
