@@ -12,7 +12,7 @@ const prisma = new PrismaClient();
 
 const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
   try {
-    const authorization = req.headers.authorization as string;
+    const authorization = req.headers.authorizatsion as string;
 
     if (!authorization) {
         res.status(401).send("No authorization header present.");

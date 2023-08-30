@@ -4,68 +4,59 @@ import React, { useCallback, useEffect, useState } from "react";
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.fabric.Canvas | undefined>;
 }
+
 export default function Selection(props: FabricCanvasProps) {
   const canvas = props.canvas.current;
+  const [mousePos, setMousePos] = useState<[number, number] | undefined>();
+  const [rect, setRect] = useState<fabric.fabric.Rect | undefined>();
 
   useEffect(() => {
     if (canvas) {
-      // Listen for mouse:down event (click)
-      canvas.on('mouse:down', (options) => {
-        const pointer = canvas.getPointer(options.e);
-        console.log(`Canvas clicked at position: x=${pointer.x}, y=${pointer.y}`);
+      canvas.on("mouse:down", () => {
+        if (rect) {
+          rect.set({ selectable: true, hasControls:true });
+          canvas.setActiveObject(rect);  // Make the rectangle the active object
+          canvas.renderAll();
+          setRect(undefined);  // Clear the rect object
+        }
       });
 
-      // Listen for mouse:move event
-      canvas.on('mouse:move', (options) => {
+      canvas.on("mouse:move", (options) => {
         const pointer = canvas.getPointer(options.e);
-        console.log(`Mouse position: x=${pointer.x}, y=${pointer.y}`);
+        setMousePos([pointer.x, pointer.y]);
+
+        if (rect) {
+          rect.set({ left: pointer.x, top: pointer.y, });
+          canvas.renderAll();  // Refresh the canvas to show updated position
+        }
       });
     }
 
     // Cleanup event listeners on component unmount
     return () => {
       if (canvas) {
-        canvas.off('mouse:down');
-        canvas.off('mouse:move');
+        canvas.off("mouse:down");
+        canvas.off("mouse:move");
       }
     };
-  }, [canvas]);
-  
+  }, [canvas, rect]);
 
-  const addStuff = useCallback(() => {
-    if (canvas) {
+  const addRect = useCallback(() => {
+    if (canvas && !rect) {
       const rect = new fabric.fabric.Rect({
-        top: 100,
-        left: 100,
+        top: mousePos ? mousePos[1] : 100,
+        left: mousePos ? mousePos[0] : 100,
         width: 60,
         height: 70,
         fill: "red",
-        selectable: true,
-        hasControls: true,
+        selectable: false,  // Initially not selectable
+        hasControls: false,  // No controls for now
       });
 
-      canvas.add(rect);
-      console.log(canvas.getObjects())
-    }
-  }, [canvas]);
-
-  const addStuff2 = useCallback(() => {
-
-    if (canvas) {
-
-      const rect = new fabric.fabric.Rect({
-        top: 0,
-        left: 0,
-        width: 60,
-        height: 70,
-        fill: "blue",
-        selectable: true,
-        hasControls: true,
-      });
-
+      setRect(rect);
       canvas.add(rect);
     }
-  }, [canvas]);
+  }, [canvas, mousePos]);
 
   return (
     <div
@@ -76,8 +67,7 @@ export default function Selection(props: FabricCanvasProps) {
         flexDirection: "row",
       }}
     >
-      <button onClick={addStuff}>ADD</button>
-      <button onClick={addStuff2}>ADD2</button>
+      <button onClick={addRect}>ADD RECT</button>
     </div>
   );
 }
