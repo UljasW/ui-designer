@@ -8,7 +8,6 @@ export default function Layers(props: FabricCanvasProps) {
   const [objList, setObjList] = useState<any[]>([]);
   const [selectedObj, setSelectedObj] = useState<any | null>(null);
 
-
   useEffect(() => {
     const canvasInstance = props.canvas.current;
 
@@ -23,7 +22,6 @@ export default function Layers(props: FabricCanvasProps) {
 
       setObjList(canvasInstance.getObjects());
     };
-
 
     const handleSelectionCreated = (e: any) => {
       console.log("Selection created");
@@ -41,7 +39,6 @@ export default function Layers(props: FabricCanvasProps) {
       }
     };
 
-  
     if (canvasInstance) {
       updateObjects();
       canvasInstance.on("object:added", updateObjects);
@@ -62,35 +59,34 @@ export default function Layers(props: FabricCanvasProps) {
     };
   }, [props.canvas]);
 
-  function moveUp() {
+  function moveDown() {
     const canvasInstance = props.canvas.current;
     if (!selectedObj || !canvasInstance) return;
-  
+
     const idx = canvasInstance.getObjects().indexOf(selectedObj);
 
     // If it's already at the top, do nothing
     if (idx <= 0) return;
-  
+
     selectedObj.moveTo(idx - 1);
-    canvasInstance.renderAll();
     setObjList(canvasInstance.getObjects());
+    canvasInstance.renderAll();
   }
-  
-  function moveDown() {
+
+  function moveUp() {
     const canvasInstance = props.canvas.current;
     if (!selectedObj || !canvasInstance) return;
-  
+
     const idx = canvasInstance.getObjects().indexOf(selectedObj);
     const lastIdx = canvasInstance.getObjects().length - 1;
-  
+
     // If it's already at the bottom, do nothing
     if (idx >= lastIdx) return;
-  
+
     selectedObj.moveTo(idx + 1);
-    canvasInstance.renderAll();
     setObjList(canvasInstance.getObjects());
+    canvasInstance.renderAll();
   }
-  
 
   const isObjectMatch = (obj1: any, obj2: any) => {
     console.log(obj1);
@@ -108,15 +104,34 @@ export default function Layers(props: FabricCanvasProps) {
   };
 
   return (
-    <div style={{ width: "200px", background: "LightGrey" }}>
-      {objList.map((obj, index) => (
-        <div
-          key={index}
-          style={isObjectMatch(obj, selectedObj) ? { color: "red" } : {}}
-        >
-          {index} - {obj.type} - {obj.fill}
-        </div>
-      ))}
+    <div
+      style={{
+        width: "200px",
+        background: "LightGrey",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {objList.map((obj, index) => {
+        const reverseIndex = objList.length - 1 - index;
+        const reverseObj = objList[reverseIndex];
+
+        return (
+          <button
+            key={reverseIndex}
+            style={
+              isObjectMatch(reverseObj, selectedObj) ? { color: "red" } : {}
+            }
+            onClick={() => {
+              const canvasInstance = props.canvas.current;
+              canvasInstance?.setActiveObject(reverseObj);
+              canvasInstance?.renderAll();
+            }}
+          >
+            {reverseIndex} - {reverseObj.type} - {reverseObj.fill}
+          </button>
+        );
+      })}
 
       <div
         style={{

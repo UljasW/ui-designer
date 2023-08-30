@@ -14,10 +14,10 @@ export default function Selection(props: FabricCanvasProps) {
     if (canvas) {
       canvas.on("mouse:down", () => {
         if (rect) {
-          rect.set({ selectable: true, hasControls:true });
-          canvas.setActiveObject(rect);  // Make the rectangle the active object
+          rect.set({ selectable: true, hasControls: true });
+          canvas.setActiveObject(rect); // Make the rectangle the active object
           canvas.renderAll();
-          setRect(undefined);  // Clear the rect object
+          setRect(undefined); // Clear the rect object
         }
       });
 
@@ -26,8 +26,9 @@ export default function Selection(props: FabricCanvasProps) {
         setMousePos([pointer.x, pointer.y]);
 
         if (rect) {
-          rect.set({ left: pointer.x, top: pointer.y, });
-          canvas.renderAll();  // Refresh the canvas to show updated position
+          rect.set({ left: pointer.x, top: pointer.y });
+
+          canvas.renderAll();
         }
       });
     }
@@ -41,7 +42,7 @@ export default function Selection(props: FabricCanvasProps) {
     };
   }, [canvas, rect]);
 
-  const addRect = useCallback(() => {
+  const addRedRect = useCallback(() => {
     if (canvas && !rect) {
       const rect = new fabric.fabric.Rect({
         top: mousePos ? mousePos[1] : 100,
@@ -49,8 +50,25 @@ export default function Selection(props: FabricCanvasProps) {
         width: 60,
         height: 70,
         fill: "red",
-        selectable: false,  // Initially not selectable
-        hasControls: false,  // No controls for now
+        selectable: false, // Initially not selectable
+        hasControls: false, // No controls for now
+      });
+
+      setRect(rect);
+      canvas.add(rect);
+    }
+  }, [canvas, mousePos]);
+
+  const addBlueRect = useCallback(() => {
+    if (canvas && !rect) {
+      const rect = new fabric.fabric.Rect({
+        top: mousePos ? mousePos[1] : 100,
+        left: mousePos ? mousePos[0] : 100,
+        width: 60,
+        height: 70,
+        fill: "blue",
+        selectable: false, // Initially not selectable
+        hasControls: false, // No controls for now
       });
 
       setRect(rect);
@@ -67,7 +85,12 @@ export default function Selection(props: FabricCanvasProps) {
         flexDirection: "row",
       }}
     >
-      <button onClick={addRect}>ADD RECT</button>
+      <button disabled={rect ? true : false} onClick={addRedRect}>
+        ADD RED RECT
+      </button>
+      <button disabled={rect ? true : false} onClick={addBlueRect}>
+        ADD BLUE RECT
+      </button>
     </div>
   );
 }

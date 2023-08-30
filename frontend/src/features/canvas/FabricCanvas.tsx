@@ -12,6 +12,8 @@ const FabricCanvas: React.FC<FabricCanvasProps> = ({ canvas }) => {
   useEffect(() => {
     if (canvasRef.current && !fabricInstance.current) {
       const fabricCanvas = new fabric.Canvas(canvasRef.current);
+      fabricCanvas.preserveObjectStacking = true;
+
       fabricInstance.current = fabricCanvas;
       canvas.current = fabricCanvas;
     }
