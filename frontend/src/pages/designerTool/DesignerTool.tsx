@@ -8,6 +8,7 @@ import fabric from "fabric";
 export default function DesignerTool() {
   const canvas = useRef<fabric.fabric.Canvas>();
   const [isCanvasInitialized, setCanvasInitialized] = useState(false);
+  const [currentColor, setCurrentColor ] = useState<string>("black");
 
   useEffect(() => {
     if (canvas.current) {
@@ -17,7 +18,7 @@ export default function DesignerTool() {
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
-      {isCanvasInitialized && <Selection canvas={canvas}></Selection>}
+      {isCanvasInitialized && <Selection canvas={canvas} currentColor={currentColor}></Selection>}
 
       <div
         style={{
@@ -30,7 +31,7 @@ export default function DesignerTool() {
       >
         <Layers canvas={canvas}></Layers>
         <FabricCanvas canvas={canvas}></FabricCanvas>
-        <Properties canvas={canvas}></Properties>
+        <Properties canvas={canvas} setCurrentColor={setCurrentColor}></Properties>
       </div>
     </div>
   );

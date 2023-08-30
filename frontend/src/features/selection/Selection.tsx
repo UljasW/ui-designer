@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.fabric.Canvas | undefined>;
+  currentColor: string
 }
 
 export default function Selection(props: FabricCanvasProps) {
@@ -49,9 +50,9 @@ export default function Selection(props: FabricCanvasProps) {
         left: mousePos ? mousePos[0] : 100,
         width: 60,
         height: 70,
-        fill: "red",
         selectable: false, // Initially not selectable
         hasControls: false, // No controls for now
+        fill: props.currentColor
       });
 
       setRect(rect);
@@ -59,22 +60,6 @@ export default function Selection(props: FabricCanvasProps) {
     }
   }, [canvas, mousePos]);
 
-  const addBlueRect = useCallback(() => {
-    if (canvas && !rect) {
-      const rect = new fabric.fabric.Rect({
-        top: mousePos ? mousePos[1] : 100,
-        left: mousePos ? mousePos[0] : 100,
-        width: 60,
-        height: 70,
-        fill: "blue",
-        selectable: false, // Initially not selectable
-        hasControls: false, // No controls for now
-      });
-
-      setRect(rect);
-      canvas.add(rect);
-    }
-  }, [canvas, mousePos]);
 
   return (
     <div
@@ -86,11 +71,9 @@ export default function Selection(props: FabricCanvasProps) {
       }}
     >
       <button disabled={rect ? true : false} onClick={addRedRect}>
-        ADD RED RECT
+        ADD RECT
       </button>
-      <button disabled={rect ? true : false} onClick={addBlueRect}>
-        ADD BLUE RECT
-      </button>
+
     </div>
   );
 }
