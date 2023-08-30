@@ -25,8 +25,7 @@ export default function Layers(props: FabricCanvasProps) {
 
     const handleSelectionCreated = (e: any) => {
       console.log("Selection created");
-      setSelectedObj(e.target);
-      if (canvasInstance) {
+      if (canvasInstance && e.selected.length === 1) {
         setSelectedObj(e.selected[0]);
         console.log(e.selected[0]);
       }
