@@ -11,8 +11,20 @@ datasource db {
 }
 
 model User {
-  id                       String    @id @default(uuid())
-  email                    String    @unique
-  password            String
-  createdAt                DateTime  @default(now())
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  designes Design[]
+}
+
+model Design {
+  id String @id @default(uuid())
+  designer   User @relation(fields: [designerId], references: [id])
+  designerId String
+  name String
+  objectList String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

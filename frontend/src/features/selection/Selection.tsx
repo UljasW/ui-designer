@@ -1,5 +1,6 @@
 import fabric from "fabric";
 import React, { useCallback, useEffect, useState } from "react";
+import { nanoid } from 'nanoid'
 
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.fabric.Canvas | undefined>;
@@ -66,8 +67,11 @@ export default function Selection(props: FabricCanvasProps) {
         height: 70,
         selectable: false, // Initially not selectable
         hasControls: false, // No controls for now
-        fill: props.currentColor
+        fill: props.currentColor,
       });
+
+      (rect as any).id = nanoid();
+
 
       setRect(rect);
       canvas.add(rect);
@@ -82,8 +86,11 @@ export default function Selection(props: FabricCanvasProps) {
         fontSize: 24,  // Adjust font size to your liking
         selectable: false, // Initially not selectable
         hasControls: false, // No controls for now
-        fill: props.currentColor
+        fill: props.currentColor,
       });
+
+      (text as any).id = nanoid();
+
 
       setText(text);
       canvas.add(text);
