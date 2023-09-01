@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import UserInterface from "../interfaces/userInterface";
+import UserInterface from "../interfaces/user-interface";
 import { PrismaClient, User } from "@prisma/client";
 
 export default class AuthService {
@@ -75,7 +75,7 @@ export default class AuthService {
 
     // Create a JWT token
     const token = jwt.sign({ userId: user.id }, this.jwtSecret, {
-      expiresIn: "1h", // Token expires in 1 hour
+      expiresIn: "24h", // Token expires in 1 hour
     });
 
     return token;

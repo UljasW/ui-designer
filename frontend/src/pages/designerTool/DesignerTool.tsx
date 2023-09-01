@@ -24,7 +24,7 @@ export default function DesignerTool() {
         style={{
           display: "flex",
           justifyContent: "center",
-          flexDirection: "row",
+          flexDirection: "row", 
           width: "100%",
           height: "100%",
         }}

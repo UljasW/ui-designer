@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
-import AuthService from "../services/authService";
+import AuthService from "../services/auth-service";
 import { error } from "console";
-import verifyToken from "../middlewares/verifyToken";
+import verifyToken from "../middlewares/verify-token";
 
 export default class AuthController {
   secret = () => {
@@ -32,6 +32,7 @@ export default class AuthController {
     });
 
     router.post("/register", async (req: Request, res: Response) => {
+      console.log("register")
       try {
         await this.authService.register(
           req.body.email as string,

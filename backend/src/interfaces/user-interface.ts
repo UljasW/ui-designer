@@ -7,6 +7,6 @@ import { UUID } from "crypto";
     firstName?: string;       // Optional first name
     lastName?: string;        // Optional last name
     createdAt: Date;         // Optional creation date
-    updatedAt?: Date;         // Optional last updated date
+    updatedAt: Date;         // Optional last updated date
     // Add other fields as needed
 }

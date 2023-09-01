@@ -88,18 +88,8 @@ export default function Layers(props: FabricCanvasProps) {
   }
 
   const isObjectMatch = (obj1: any, obj2: any) => {
-    console.log(obj1);
-    console.log(obj2);
-
     if (!obj1 || !obj2) return false;
-
-    console.log(obj1.type === obj2.type && obj1.fill === obj2.fill);
-    return (
-      obj1.type === obj2.type &&
-      obj1.fill === obj2.fill &&
-      obj1.top === obj2.top &&
-      obj1.left === obj2.left
-    );
+    return obj1.id === obj2.id;
   };
 
   return (
