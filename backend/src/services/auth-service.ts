@@ -5,13 +5,13 @@ import { PrismaClient, User } from "@prisma/client";
 
 export default class AuthService {
   private jwtSecret: string;
+  private prisma : PrismaClient;
 
-  constructor(jwtSecret: string) {
+  constructor(jwtSecret: string, prisma : PrismaClient) {
     this.jwtSecret = jwtSecret;
+    this.prisma = prisma;
   }
-
-  private prisma = new PrismaClient();
-
+  
   private getUserByEmail = async (email: string): Promise<User> => {
     const data = await this.prisma.user.findUnique({
       where: {
@@ -83,7 +83,7 @@ export default class AuthService {
 
   checkEmailAdress(email: string) {
     const emailRegex =
-      /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}(\.[a-zA-Z]{2,6}){0,1})$/;
+    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
       throw new Error("Not correct email");
     }

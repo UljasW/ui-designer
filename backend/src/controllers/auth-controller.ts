@@ -2,6 +2,7 @@ import { Request, Response, Router } from "express";
 import AuthService from "../services/auth-service";
 import { error } from "console";
 import verifyToken from "../middlewares/verify-token";
+import { PrismaClient } from "@prisma/client";
 
 export default class AuthController {
   secret = () => {
@@ -14,14 +15,20 @@ export default class AuthController {
     return secret;
   };
 
-  private authService = new AuthService(this.secret());
+  private prisma: PrismaClient;
+
+  constructor(prisma: PrismaClient) {
+    this.prisma = prisma;
+  }
+
 
   public Router() {
+    const authService = new AuthService(this.secret(), this.prisma);
     const router = Router();
 
     router.post("/login", async (req: Request, res: Response) => {
       try {
-        const token = await this.authService.login(
+        const token = await authService.login(
           req.body.email as string,
           req.body.password as string
         );
@@ -34,7 +41,7 @@ export default class AuthController {
     router.post("/register", async (req: Request, res: Response) => {
       console.log("register")
       try {
-        await this.authService.register(
+        await authService.register(
           req.body.email as string,
           req.body.password as string
         );
@@ -46,7 +53,7 @@ export default class AuthController {
 
     router.delete("/", verifyToken, async (req: Request, res: Response) => {
       try {
-        await this.authService.delete((req as any).user);
+        await authService.delete((req as any).user);
         res.send("User has been deleted");
       } catch (error) {
         res.status(400).send(error);

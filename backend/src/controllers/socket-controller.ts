@@ -1,26 +1,37 @@
 import { Server, Socket } from "socket.io";
+import DesignService from "../services/design-service"; // Adjust the path to your DesignService
+import socketAuthMiddleware from "../middlewares/socket-auth-middleware";
+import { PrismaClient } from "@prisma/client";
 
 export default class SocketController {
   private io: Server;
+  private designService: DesignService;
 
-  constructor(io: Server) {
+  constructor(io: Server, prisma: PrismaClient) { 
     this.io = io;
+    this.designService = new DesignService(prisma);
     this.setupEvents();
   }
 
   private setupEvents(): void {
+    this.io.use(socketAuthMiddleware);
+
     this.io.on("connection", (socket: Socket) => {
       console.log("User connected:", socket.id);
 
-      // Example: Setting up a custom event
-      socket.on("message", (message: string) => {
-        console.log(`Message from ${socket.id}: ${message}`);
+      socket.on("update-design", async (data: any) => {
+        try {
+          const user = (socket as any).user;
+          const designId = data.designId;
+          const objects = data.objects;
 
-        // You can also emit events back to clients
-        this.io.emit("message", `User ${socket.id} says: ${message}`);
+          await this.designService.updateObjList(user, designId, objects);
+          socket.emit("design-updated", { status: "success" });
+        } catch (error) {
+          console.error(`Error updating design: ${error}`);
+          socket.emit("design-update-error", { status: "failed", message: error });
+        }
       });
-
-      
 
       socket.on("disconnect", () => {
         console.log("User disconnected:", socket.id);
