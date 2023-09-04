@@ -18,8 +18,7 @@ export default class DesignController {
 
     router.post("/", verifyToken, async (req: Request, res: Response) => {
       try {
-        await authService.create((req as any).user);
-        res.send("User has been deleted");
+        res.send(await authService.create((req as any).user, req.body.name));
       } catch (error) {
         res.status(400).send(error);
       }
@@ -27,8 +26,7 @@ export default class DesignController {
 
     router.get("/", verifyToken, async (req: Request, res: Response) => {
       try {
-        await authService.get((req as any).user);
-        res.send("User has been deleted");
+        res.send(await authService.getAll((req as any).user));
       } catch (error) {
         res.status(400).send(error);
       }
@@ -36,7 +34,7 @@ export default class DesignController {
 
     router.delete("/", verifyToken, async (req: Request, res: Response) => {
       try {
-        await authService.delete((req as any).user);
+        await authService.delete((req as any).user, req.body.id);
         res.send("User has been deleted");
       } catch (error) {
         res.status(400).send(error);
