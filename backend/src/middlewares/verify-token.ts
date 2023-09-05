@@ -1,9 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { PrismaClient, User } from "@prisma/client";
+import dotenv from "dotenv"
 
+dotenv.config()
 const JWT_SECRET = process.env.JWT_SECRET;
+
 if (!JWT_SECRET) {
+  console.log(JWT_SECRET)
   throw new Error("JWT_SECRET is missing in environment variables");
 }
 

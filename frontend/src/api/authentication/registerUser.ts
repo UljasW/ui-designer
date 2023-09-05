@@ -6,7 +6,7 @@ export default async (email: string, password: string) => {
       email,
       password,
     });
-    return response.data;
+    return response;
   } catch (error) {
     console.log(error);
   }

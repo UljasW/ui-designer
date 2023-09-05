@@ -1,21 +1,26 @@
 import React, { useState } from "react";
 import loginUser from "../../../api/authentication/loginUser";
+import { useNavigate } from "react-router-dom";
 export default function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
 
   const handleUsernameChange = (event : any) => {
-    setUsername(event.target.value);
+    setEmail(event.target.value);
   };
 
   const handlePasswordChange = (event : any) => {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = (event : any) => {
+  const handleSubmit = async (event : any) => {
     event.preventDefault(); 
-    console.log("Username:", username);
+    console.log("Username:", email);
     console.log("Password:", password);
+    localStorage.setItem("jwt", (await loginUser(email, password))?.data);
+    navigate("/home")
   };
 
   return (
@@ -30,8 +35,8 @@ export default function Login() {
       <form onSubmit={handleSubmit}>
         <input 
           type="text" 
-          placeholder="Username" 
-          value={username}
+          placeholder="Email" 
+          value={email}
           onChange={handleUsernameChange}
         />
         <input 

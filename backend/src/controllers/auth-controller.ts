@@ -3,9 +3,13 @@ import AuthService from "../services/auth-service";
 import { error } from "console";
 import verifyToken from "../middlewares/verify-token";
 import { PrismaClient } from "@prisma/client";
+import dotenv from "dotenv"
+
 
 export default class AuthController {
   secret = () => {
+    dotenv.config()
+
     const secret = process.env.JWT_SECRET;
 
     if (!secret) {
