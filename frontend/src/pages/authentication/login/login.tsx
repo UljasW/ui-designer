@@ -19,7 +19,11 @@ export default function Login() {
     event.preventDefault(); 
     console.log("Username:", email);
     console.log("Password:", password);
-    localStorage.setItem("jwt", (await loginUser(email, password))?.data);
+    const response = await loginUser(email, password);
+    if(!response || response.status !== 200){
+      return;
+    }
+    localStorage.setItem("jwt", response?.data);
     navigate("/home")
   };
 
