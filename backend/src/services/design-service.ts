@@ -1,4 +1,5 @@
 import { PrismaClient, User } from "@prisma/client";
+import objectInterface from "../interfaces/object-interface";
 
 export default class DesignService {
   private prisma: PrismaClient;
@@ -29,20 +30,39 @@ export default class DesignService {
   public async updateObjList(
     user: User,
     id: string,
-    objects: any
+    objects: objectInterface[]
   ): Promise<string> {
     this.checkDesign(user, id);
+
     for (const element of objects) {
-      await this.prisma.objects.update({
+      const objectExists = await this.prisma.objects.findUnique({
         where: {
           designId: id,
           id: element.id,
         },
-        data: {
-          data: element.data,
-        },
       });
+  
+      if (objectExists) {
+        await this.prisma.objects.update({
+          where: {
+            designId: id,
+            id: element.id,
+          },
+          data: {
+            data: element.data,
+          },
+        });
+      } else {
+        await this.prisma.objects.create({
+          data: {
+            id : element.id,
+            data: element.data,
+            designId: id,
+          },
+        });
+      }
     }
+  
     return "updated";
   }
 

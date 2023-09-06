@@ -20,6 +20,8 @@ export default class SocketController {
       console.log("User connected:", socket.id);
       const designId = socket.handshake.query.designId as string;
 
+      socket.join(designId);
+
       socket.on("update-design", async (data: any) => {
         try {
           const user = (socket as any).user;

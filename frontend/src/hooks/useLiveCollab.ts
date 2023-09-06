@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export default function useLiveCom(){
+export default function useLiveCollab(){
 
     
 
