@@ -53,9 +53,9 @@ export default class AuthService {
     const hashedPassword: string = await bcrypt.hash(password, 10);
 
     // Store user in the database
-    const newUser = this.createUser(email, hashedPassword);
+    await createUser(email, hashedPassword);
 
-    return newUser;
+    return;
   }
 
   public async login(email: string, password: string): Promise<string> {
