@@ -53,7 +53,7 @@ export default class AuthService {
     const hashedPassword: string = await bcrypt.hash(password, 10);
 
     // Store user in the database
-    await createUser(email, hashedPassword);
+    await this.createUser(email, hashedPassword);
 
     return;
   }
