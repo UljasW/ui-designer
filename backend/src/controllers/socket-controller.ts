@@ -25,9 +25,9 @@ export default class SocketController {
       socket.on("update-design", async (data: any) => {
         try {
           const user = (socket as any).user;
-          const objects = data.objects;
-
+          const objects = Array.isArray(data.objects) ? data.objects : [data.objects];
           await this.designService.updateObjList(user, designId, objects);
+          
           socket.emit("design-updated", { status: "success" });
         } catch (error) {
           console.error(`Error updating design: ${error}`);

@@ -31,40 +31,52 @@ export default class DesignService {
     user: User,
     id: string,
     objects: objectInterface[]
-  ): Promise<string> {
+): Promise<string> {/* 
+
     this.checkDesign(user, id);
 
-    for (const element of objects) {
-      const objectExists = await this.prisma.objects.findUnique({
-        where: {
-          designId: id,
-          id: element.id,
-        },
-      });
-  
-      if (objectExists) {
-        await this.prisma.objects.update({
-          where: {
-            designId: id,
-            id: element.id,
-          },
-          data: {
-            data: element.data,
-          },
-        });
+    const objList = await this.prisma.objects.findMany({
+      where: {
+        designId: id,
+      },
+    });
+
+    for (let index = 0; index < objects.length; index++) {
+      const element = objects[index];
+
+      const existingObject = objList.find((obj) => obj.id === element.id);
+
+      if (existingObject) {
+        // Check if the LayerIndex has changed or any other field you care about
+        if (existingObject.LayerIndex !== index ) {
+          await this.prisma.objects.update({
+            where: {
+              designId: id,
+              id: element.id,
+            },
+            data: {
+              data: element.data,
+              LayerIndex: index, // Update the LayerIndex too
+            },
+          });
+        }
       } else {
         await this.prisma.objects.create({
           data: {
-            id : element.id,
+            id: element.id,
             data: element.data,
+            LayerIndex: index,
             designId: id,
           },
         });
       }
-    }
-  
+    } */
+
+    // (Optional) If you want to handle deletions, you'd also loop through objList 
+    // and check if any object there doesn't exist in the `objects` array and then remove it.
+
     return "updated";
-  }
+}
 
   public async getAll(user: User): Promise<string> {
     const designs = await this.prisma.design.findMany();

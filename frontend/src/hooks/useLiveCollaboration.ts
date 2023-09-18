@@ -3,22 +3,19 @@ import { io } from "socket.io-client";
 
 export default function useLiveCollaboration(designId: string) {
   const [socket, setSocket] = useState<any>(null);
-  const [designStatus, setDesignStatus] = useState<string | null>(null);
-  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
-    const socketInstance = io("http://localhost:3000", { query: { designId } });
+    const socketInstance = io("ws://localhost:3001", { query: { designId } });
 
     socketInstance.on("design-updated", (data) => {
       if (data.status === "success") {
-        setDesignStatus("Updated successfully!");
       } else {
-        setErrorMsg(data.message || "Unknown error");
+        console.log("Unknown error");
       }
     });
 
     socketInstance.on("design-update-error", (data) => {
-      setErrorMsg(data.message || "Unknown error");
+      console.log(data.message || "Unknown error");
     });
 
     setSocket(socketInstance);
@@ -29,17 +26,12 @@ export default function useLiveCollaboration(designId: string) {
     };
   }, [designId]);
 
-  const updateObjList = useCallback(
-    (objects: any) => {
-      if (!socket) return;
-      socket.emit("update-design", { objects });
-    },
-    [socket]
-  );
-
+  const saveToDb = (objects: any) => {
+    console.log("updateObjList", objects);
+    if (!socket) return;
+    socket.emit("update-design", { objects });
+  };
   return {
-    updateObjList,
-    designStatus,
-    errorMsg,
+    saveToDb,
   };
 }

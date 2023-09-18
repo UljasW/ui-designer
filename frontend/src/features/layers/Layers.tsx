@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.Canvas | undefined>;
+  updateObjList: (objects: any) => void;
 }
 
 export default function Layers(props: FabricCanvasProps) {
@@ -66,8 +67,10 @@ export default function Layers(props: FabricCanvasProps) {
 
     // If it's already at the top, do nothing
     if (idx <= 0) return;
-
+    (canvasInstance.getObjects()[idx - 1] as any).layerIndex = idx;
     selectedObj.moveTo(idx - 1);
+    selectedObj.layerIndex = idx - 1;
+
     setObjList(canvasInstance.getObjects());
     canvasInstance.renderAll();
   }
@@ -82,7 +85,10 @@ export default function Layers(props: FabricCanvasProps) {
     // If it's already at the bottom, do nothing
     if (idx >= lastIdx) return;
 
+    (canvasInstance.getObjects()[idx + 1] as any).layerIndex = idx;
     selectedObj.moveTo(idx + 1);
+    selectedObj.layerIndex = idx + 1;
+
     setObjList(canvasInstance.getObjects());
     canvasInstance.renderAll();
   }
@@ -117,7 +123,7 @@ export default function Layers(props: FabricCanvasProps) {
               canvasInstance?.renderAll();
             }}
           >
-            {reverseIndex} - {reverseObj.type} - {reverseObj.fill}
+            {reverseObj.layerIndex} - {reverseObj.type} - {reverseObj.fill}
           </button>
         );
       })}

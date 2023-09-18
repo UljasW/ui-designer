@@ -71,6 +71,8 @@ export default function Selection(props: FabricCanvasProps) {
       });
 
       (rect as any).id = nanoid();
+      (rect as any).layerIndex = canvas.getObjects().length;
+
 
 
       setRect(rect);
@@ -87,9 +89,11 @@ export default function Selection(props: FabricCanvasProps) {
         selectable: false, // Initially not selectable
         hasControls: false, // No controls for now
         fill: props.currentColor,
+        
       });
 
       (text as any).id = nanoid();
+      (rect as any).layerIndex = canvas.getObjects().length;
 
 
       setText(text);
