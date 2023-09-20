@@ -36,7 +36,7 @@ export default function DesignerTool() {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       {isCanvasInitialized && (
-        <Selection canvas={canvas} currentColor={currentColor}></Selection>
+        <Selection updateDb={saveToDb} canvas={canvas} currentColor={currentColor}></Selection>
       )}
 
       <div
@@ -48,7 +48,7 @@ export default function DesignerTool() {
           height: "100%",
         }}
       >
-        <Layers updateObjList={saveToDb} canvas={canvas}></Layers>
+        <Layers updateDb={saveToDb} canvas={canvas}></Layers>
         <FabricCanvas canvas={canvas}></FabricCanvas>
         <Properties
           canvas={canvas}

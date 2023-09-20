@@ -5,6 +5,7 @@ import { nanoid } from 'nanoid'
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.fabric.Canvas | undefined>;
   currentColor: string
+  updateDb: (objects: any) => void;
 }
 
 export default function Selection(props: FabricCanvasProps) {
@@ -23,7 +24,7 @@ export default function Selection(props: FabricCanvasProps) {
           canvas.renderAll();
           setRect(undefined); // Clear the rect object
         }
-        if (text) {
+        else if (text) {
           text.set({ selectable: true, hasControls: true });
           canvas.setActiveObject(text); // Make the rectangle the active object
           canvas.renderAll();

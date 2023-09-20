@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.Canvas | undefined>;
-  updateObjList: (objects: any) => void;
+  updateDb: (objects: any) => void;
 }
 
 export default function Layers(props: FabricCanvasProps) {
   const [objList, setObjList] = useState<any[]>([]);
-  const [selectedObj, setSelectedObj] = useState<any | null>(null);
+  const [selectedObjects, setSelectedObjects] = useState<any[] | null>([]);
 
   useEffect(() => {
     const canvasInstance = props.canvas.current;
@@ -25,15 +25,16 @@ export default function Layers(props: FabricCanvasProps) {
     };
 
     const handleSelectionCreated = (e: any) => {
-      console.log("Selection created");
-      if (canvasInstance && e.selected.length === 1) {
-        setSelectedObj(e.selected[0]);
-        console.log(e.selected[0]);
+      console.log(e.selected);
+
+      if (canvasInstance) {
+        setSelectedObjects(e.selected);
       }
     };
 
     const handleSelectionCleared = () => {
-      setSelectedObj(null);
+      props.updateDb(selectedObjects);
+      setSelectedObjects(null);
       if (canvasInstance) {
         setObjList(canvasInstance.getObjects());
       }
@@ -53,7 +54,10 @@ export default function Layers(props: FabricCanvasProps) {
         canvasInstance.off("object:added", updateObjects);
         canvasInstance.off("object:removed", updateObjects);
         canvasInstance.off("selection:created", handleSelectionCreated);
-        canvasInstance.off("selection:updated", handleSelectionCreated);
+        canvasInstance.off("selection:updated", (e) => {
+          props.updateDb(selectedObjects);
+          handleSelectionCreated(e);
+        });
         canvasInstance.off("selection:cleared", handleSelectionCleared);
       }
     };
@@ -61,41 +65,50 @@ export default function Layers(props: FabricCanvasProps) {
 
   function moveDown() {
     const canvasInstance = props.canvas.current;
-    if (!selectedObj || !canvasInstance) return;
 
+
+    if (!selectedObjects || !canvasInstance || selectedObjects.length > 1) return;
+
+    const selectedObj = selectedObjects[0];
+  
     const idx = canvasInstance.getObjects().indexOf(selectedObj);
-
+  
     // If it's already at the top, do nothing
     if (idx <= 0) return;
+
     (canvasInstance.getObjects()[idx - 1] as any).layerIndex = idx;
     selectedObj.moveTo(idx - 1);
     selectedObj.layerIndex = idx - 1;
-
+  
     setObjList(canvasInstance.getObjects());
     canvasInstance.renderAll();
   }
-
+  
   function moveUp() {
     const canvasInstance = props.canvas.current;
-    if (!selectedObj || !canvasInstance) return;
+    
+    if (!selectedObjects || !canvasInstance || selectedObjects.length > 1) return;
 
+    const selectedObj = selectedObjects[0];
+  
     const idx = canvasInstance.getObjects().indexOf(selectedObj);
     const lastIdx = canvasInstance.getObjects().length - 1;
-
+  
     // If it's already at the bottom, do nothing
     if (idx >= lastIdx) return;
 
     (canvasInstance.getObjects()[idx + 1] as any).layerIndex = idx;
     selectedObj.moveTo(idx + 1);
     selectedObj.layerIndex = idx + 1;
-
+  
     setObjList(canvasInstance.getObjects());
     canvasInstance.renderAll();
   }
+  
 
-  const isObjectMatch = (obj1: any, obj2: any) => {
-    if (!obj1 || !obj2) return false;
-    return obj1.id === obj2.id;
+  const isObjectMatch = (obj: any, selectedObjs: any[] | null) => {
+    if (!selectedObjs) return false;
+    return selectedObjs.some((selectedObj) => selectedObj.id === obj.id);
   };
 
   return (
@@ -111,11 +124,13 @@ export default function Layers(props: FabricCanvasProps) {
         const reverseIndex = objList.length - 1 - index;
         const reverseObj = objList[reverseIndex];
 
+
+
         return (
           <button
             key={reverseIndex}
             style={
-              isObjectMatch(reverseObj, selectedObj) ? { color: "red" } : {}
+              isObjectMatch(reverseObj, selectedObjects) ? { color: "red" } : {}
             }
             onClick={() => {
               const canvasInstance = props.canvas.current;
@@ -123,6 +138,7 @@ export default function Layers(props: FabricCanvasProps) {
               canvasInstance?.renderAll();
             }}
           >
+            {" "}
             {reverseObj.layerIndex} - {reverseObj.type} - {reverseObj.fill}
           </button>
         );
@@ -137,7 +153,7 @@ export default function Layers(props: FabricCanvasProps) {
       >
         <div
           style={{
-            display: selectedObj ? "flex" : "none",
+            display: selectedObjects ? "flex" : "none",
             flexDirection: "row",
             justifyContent: "center",
           }}

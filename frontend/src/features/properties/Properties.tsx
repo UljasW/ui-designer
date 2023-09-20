@@ -19,7 +19,6 @@ export default function Properties(props: FabricCanvasProps) {
     const canvasInstance = props.canvas.current;
 
     const handleSelectionCreated = (e: any) => {
-      console.log("Selection created");
       if (canvasInstance && e.selected.length === 1) {
         setSelectedObj(e.selected[0]);
         const selectedObject = e.selected[0];
