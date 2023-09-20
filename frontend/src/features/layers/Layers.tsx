@@ -153,7 +153,7 @@ export default function Layers(props: FabricCanvasProps) {
       >
         <div
           style={{
-            display: selectedObjects ? "flex" : "none",
+            display: selectedObjects && selectedObjects.length === 1 ? "flex" : "none",
             flexDirection: "row",
             justifyContent: "center",
           }}
