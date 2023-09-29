@@ -32,7 +32,7 @@ export default function Layers(props: FabricCanvasProps) {
       //console.log("created", e.selected);
       setSelectedObjects(e.selected);
     };
-  
+
     const handleSelectionCleared = (e: any) => {
       //console.log("cleared", e.deselected);
       props.updateDb(e.deselected);
@@ -44,15 +44,13 @@ export default function Layers(props: FabricCanvasProps) {
 
     canvasInstance.on("object:added", updateObjects);
     canvasInstance.on("object:removed", updateObjects);
-    
+
     canvasInstance.on("selection:created", handleSelectionCreated);
     canvasInstance.on("selection:updated", (e) => {
       props.updateDb(e.deselected);
       handleSelectionCreated(e);
     });
     canvasInstance.on("selection:cleared", handleSelectionCleared);
-
-
 
     return () => {
       canvasInstance.off("object:added", updateObjects);
