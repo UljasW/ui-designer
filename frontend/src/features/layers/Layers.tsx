@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.Canvas | undefined>;
   updateDb: (objects: any) => void;
+  moveUp: (id: string) => void;
+  moveDown: (id: string) => void;
 }
 
 export default function Layers(props: FabricCanvasProps) {
@@ -10,101 +12,103 @@ export default function Layers(props: FabricCanvasProps) {
   const [selectedObjects, setSelectedObjects] = useState<any[] | null>([]);
 
   useEffect(() => {
-    const canvasInstance = props.canvas.current;
+    console.log("selected objects:", selectedObjects);
+  }, [selectedObjects]);
 
+  useEffect(() => {
+    const canvasInstance = props.canvas.current;
+    if (!canvasInstance) {
+      return;
+    }
     const updateObjects = () => {
-      if (!canvasInstance) {
-        return;
-      }
       const tempObjList = canvasInstance.getObjects();
       if (tempObjList === objList) {
         return;
       }
-
       setObjList(canvasInstance.getObjects());
     };
 
     const handleSelectionCreated = (e: any) => {
-      console.log(e.selected);
-
-      if (canvasInstance) {
-        setSelectedObjects(e.selected);
-      }
+      console.log(e);
+      console.log("created", e.selected);
+      setSelectedObjects(e.selected);
     };
+  
+    const handleSelectionCleared = (e: any) => {
+      console.log(e);
 
-    const handleSelectionCleared = () => {
-      props.updateDb(selectedObjects);
+      props.updateDb(e.deselected);
       setSelectedObjects(null);
-      if (canvasInstance) {
-        setObjList(canvasInstance.getObjects());
-      }
+      setObjList(canvasInstance.getObjects());
     };
 
-    if (canvasInstance) {
-      updateObjects();
-      canvasInstance.on("object:added", updateObjects);
-      canvasInstance.on("object:removed", updateObjects);
-      canvasInstance.on("selection:created", handleSelectionCreated);
-      canvasInstance.on("selection:updated", handleSelectionCreated);
-      canvasInstance.on("selection:cleared", handleSelectionCleared);
-    }
+    updateObjects();
+
+    canvasInstance.on("object:added", updateObjects);
+    canvasInstance.on("object:removed", updateObjects);
+    
+    canvasInstance.on("selection:created", handleSelectionCreated);
+    canvasInstance.on("selection:updated", (e) => {
+      props.updateDb(e.deselected);
+      handleSelectionCreated(e);
+    });
+    canvasInstance.on("selection:cleared", handleSelectionCleared);
+
+
 
     return () => {
-      if (canvasInstance) {
-        canvasInstance.off("object:added", updateObjects);
-        canvasInstance.off("object:removed", updateObjects);
-        canvasInstance.off("selection:created", handleSelectionCreated);
-        canvasInstance.off("selection:updated", (e) => {
-          props.updateDb(selectedObjects);
-          handleSelectionCreated(e);
-        });
-        canvasInstance.off("selection:cleared", handleSelectionCleared);
-      }
+      canvasInstance.off("object:added", updateObjects);
+      canvasInstance.off("object:removed", updateObjects);
+      canvasInstance.off("selection:created", handleSelectionCreated);
+      canvasInstance.off("selection:updated", handleSelectionCreated);
+      canvasInstance.off("selection:cleared", handleSelectionCleared);
     };
   }, [props.canvas]);
 
   function moveDown() {
     const canvasInstance = props.canvas.current;
 
-
-    if (!selectedObjects || !canvasInstance || selectedObjects.length > 1) return;
+    if (!selectedObjects || !canvasInstance || selectedObjects.length > 1)
+      return;
 
     const selectedObj = selectedObjects[0];
-  
+
     const idx = canvasInstance.getObjects().indexOf(selectedObj);
-  
+
     // If it's already at the top, do nothing
     if (idx <= 0) return;
 
     (canvasInstance.getObjects()[idx - 1] as any).layerIndex = idx;
     selectedObj.moveTo(idx - 1);
     selectedObj.layerIndex = idx - 1;
-  
+
     setObjList(canvasInstance.getObjects());
     canvasInstance.renderAll();
+    props.moveDown(selectedObj.id);
   }
-  
+
   function moveUp() {
     const canvasInstance = props.canvas.current;
-    
-    if (!selectedObjects || !canvasInstance || selectedObjects.length > 1) return;
+
+    if (!selectedObjects || !canvasInstance || selectedObjects.length > 1)
+      return;
 
     const selectedObj = selectedObjects[0];
-  
+
     const idx = canvasInstance.getObjects().indexOf(selectedObj);
     const lastIdx = canvasInstance.getObjects().length - 1;
-  
+
     // If it's already at the bottom, do nothing
     if (idx >= lastIdx) return;
 
     (canvasInstance.getObjects()[idx + 1] as any).layerIndex = idx;
     selectedObj.moveTo(idx + 1);
     selectedObj.layerIndex = idx + 1;
-  
+
     setObjList(canvasInstance.getObjects());
     canvasInstance.renderAll();
+    props.moveUp(selectedObj.id);
   }
-  
 
   const isObjectMatch = (obj: any, selectedObjs: any[] | null) => {
     if (!selectedObjs) return false;
@@ -123,8 +127,6 @@ export default function Layers(props: FabricCanvasProps) {
       {objList.map((obj, index) => {
         const reverseIndex = objList.length - 1 - index;
         const reverseObj = objList[reverseIndex];
-
-
 
         return (
           <button
@@ -153,7 +155,8 @@ export default function Layers(props: FabricCanvasProps) {
       >
         <div
           style={{
-            display: selectedObjects && selectedObjects.length === 1 ? "flex" : "none",
+            display:
+              selectedObjects && selectedObjects.length === 1 ? "flex" : "none",
             flexDirection: "row",
             justifyContent: "center",
           }}

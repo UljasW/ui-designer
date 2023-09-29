@@ -5,7 +5,7 @@ import { nanoid } from 'nanoid'
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.fabric.Canvas | undefined>;
   currentColor: string
-  updateDb: (objects: any) => void;
+
 }
 
 export default function Selection(props: FabricCanvasProps) {

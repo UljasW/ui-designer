@@ -10,7 +10,7 @@ export default function DesignerTool() {
   const canvas = useRef<fabric.fabric.Canvas>();
   const [isCanvasInitialized, setCanvasInitialized] = useState(false);
   const [currentColor, setCurrentColor] = useState<string>("black");
-  const { saveToDb } = useLiveCollaboration("ID");
+  const { saveToDb, moveUpDb, moveDownDb} = useLiveCollaboration("ID");
 
   useEffect(() => {
     if (canvas.current) {
@@ -36,7 +36,7 @@ export default function DesignerTool() {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       {isCanvasInitialized && (
-        <Selection updateDb={saveToDb} canvas={canvas} currentColor={currentColor}></Selection>
+        <Selection canvas={canvas} currentColor={currentColor}></Selection>
       )}
 
       <div
@@ -48,7 +48,7 @@ export default function DesignerTool() {
           height: "100%",
         }}
       >
-        <Layers updateDb={saveToDb} canvas={canvas}></Layers>
+        <Layers updateDb={saveToDb} moveDown={moveDownDb} moveUp={moveUpDb} canvas={canvas}></Layers>
         <FabricCanvas canvas={canvas}></FabricCanvas>
         <Properties
           canvas={canvas}

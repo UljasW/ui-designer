@@ -31,7 +31,7 @@ model Design {
 
 model Objects {
   id       String   @id 
-  LayerIndex Int
+  layerIndex Int
   design   Design   @relation(fields: [designId], references: [id])
   designId String
   data     String
