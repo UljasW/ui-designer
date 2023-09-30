@@ -5,8 +5,9 @@ export default function useLiveCollaboration(designId: string) {
   const socketRef = useRef<any>(null);
 
   useEffect(() => {
+    console.log('Value of designId before connection:', designId);
     socketRef.current = io("ws://localhost:3001", { query: { designId } });
-
+    
     socketRef.current.on("connect", () => { console.log("Socket connected!"); });
 
     socketRef.current.on("disconnect", () => { console.log("Socket disconnected!"); });
@@ -40,10 +41,31 @@ export default function useLiveCollaboration(designId: string) {
   };
 
   //change layerIndex in db
-  const moveUpDb = (id: string) => {};
+  const moveUpDb = (id: string) => {
+
+    if (!socketRef.current) return;
+
+    socketRef.current.emit(
+      "move-up-db",
+      { id },
+      (response: any) => {
+        console.log("Server Acknowledgement:", response);
+      }
+    );
+  };
 
   //change layerIndex in db
-  const moveDownDb = (id: string) => {};
+  const moveDownDb = (id: string) => {
+    if (!socketRef.current) return;
+
+    socketRef.current.emit(
+      "move-down-db",
+      { id },
+      (response: any) => {
+        console.log("Server Acknowledgement:", response);
+      }
+    );
+  };
   return {
     updateDb,
     moveUpDb,
