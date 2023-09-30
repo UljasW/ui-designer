@@ -15,54 +15,36 @@ export default class SocketController {
 
   private setupEvents(): void {
     //this.io.use(socketAuthMiddleware);
-    
-    /*  this.io.on("connection", (socket: Socket) => {
-      console.log("User connected:", socket.id);
-      const designId = socket.handshake.query.designId as string;
-      console.log(designId);
-      //socket.join(designId);
-
-      socket.on("update-db", async (data: any, callback: Function) => {
-        console.log("update-db received from client");
-      
-        try {
-          const objects = Array.isArray(data.objects) ? data.objects : [data.objects];
-          console.log("Objects to update:", objects);
-      
-          //await this.designService.updateObjList(user, designId, objects);  // Ensure this function is working!
-          
-          socket.emit("updated-db", { status: "success" });
-        } catch (error) {
-          console.error(`Error updating design: ${error}`);
-          socket.emit("update-db-error", { status: "failed", message: error });
-        }
-
-        callback({ status: "received" });
-
-      });
-      
-
-      socket.on("disconnect", () => {
-        console.log("User disconnected:", socket.id);
-      });
-    }); */
 
     this.io.on("connection", (socket: Socket) => {
       console.log("User connected:", socket.id);
       const designId = socket.handshake.query.designId as string;
+      //socket.join(designId);
 
       socket.join(designId);
-      socket.on("update-db", handleUpdateDb);
-      socket.on("disconnect", handleDisconnect);
+      socket.on("update-db", (data) => handleUpdateDb(socket, data));
+      socket.on("disconnect", () => handleDisconnect(socket));
     });
 
-    function handleUpdateDb(data: any): void {
-      console.log("update-db received from client");
-      // ... remaining logic
+    function handleUpdateDb(socket: Socket, data: any): void {
+      console.log("update-db received from client with socket id:", socket.id);
+      try {
+        const objects = Array.isArray(data.objects)
+          ? data.objects
+          : [data.objects];
+        console.log("Objects to update:", objects);
+
+        //await this.designService.updateObjList(user, designId, objects);  // Ensure this function is working!
+
+        //socket.emit("updated-db", { status: "success" });
+      } catch (error) {
+        console.error(`Error updating design: ${error}`);
+        //socket.emit("update-db-error", { status: "failed", message: error });
+      }
     }
 
-    function handleDisconnect(): void {
-      console.log("User disconnected");
+    function handleDisconnect(socket: Socket): void {
+      console.log("User disconnected with socket id:", socket.id);
     }
   }
 }
