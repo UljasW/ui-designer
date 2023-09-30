@@ -19,32 +19,35 @@ export default class SocketController {
     this.io.on("connection", (socket: Socket) => {
       console.log("User connected:", socket.id);
       const designId = socket.handshake.query.designId as string;
-      //socket.join(designId);
-
       socket.join(designId);
-      socket.on("update-db", (data) => handleUpdateDb(socket, data));
-      socket.on("disconnect", () => handleDisconnect(socket));
+      socket.on("update-db", (data, callback) => this.handleUpdateDb(socket, data, callback));
+      socket.on("disconnect", () => this.handleDisconnect(socket));
     });
 
-    function handleUpdateDb(socket: Socket, data: any): void {
-      console.log("update-db received from client with socket id:", socket.id);
-      try {
-        const objects = Array.isArray(data.objects)
-          ? data.objects
-          : [data.objects];
-        console.log("Objects to update:", objects);
+    
+  }
 
-        //await this.designService.updateObjList(user, designId, objects);  // Ensure this function is working!
+  private handleUpdateDb(socket: Socket, data: any, callback : CallableFunction): void {
+    console.log("update-db received from client with socket id:", socket.id);
+    try {
+      const objects = Array.isArray(data.objects)
+        ? data.objects
+        : [data.objects];
+      
 
-        //socket.emit("updated-db", { status: "success" });
-      } catch (error) {
-        console.error(`Error updating design: ${error}`);
-        //socket.emit("update-db-error", { status: "failed", message: error });
-      }
+      console.log("Objects to update:", objects);
+
+      //await this.designService.updateObjList(user, designId, objects);  // Ensure this function is working!
+      callback({ status: "success" });
+
+    } catch (error) {
+      console.error(`Error updating design: ${error}`);
+      callback({ status: "error" });
+
     }
+  }
 
-    function handleDisconnect(socket: Socket): void {
-      console.log("User disconnected with socket id:", socket.id);
-    }
+  private handleDisconnect(socket: Socket): void {
+    console.log("User disconnected with socket id:", socket.id);
   }
 }

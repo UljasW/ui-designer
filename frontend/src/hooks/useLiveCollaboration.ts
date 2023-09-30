@@ -6,7 +6,12 @@ export default function useLiveCollaboration(designId: string) {
 
   useEffect(() => {
     socketRef.current = io("ws://localhost:3001", { query: { designId } });
-    console.log("Socket initialized!");
+
+    socketRef.current.on("connect", () => { console.log("Socket connected!"); });
+
+    socketRef.current.on("disconnect", () => { console.log("Socket disconnected!"); });
+
+
 
     // Cleanup the socket connection on unmount
     return () => {
@@ -22,7 +27,7 @@ export default function useLiveCollaboration(designId: string) {
   }; */
 
   //save changes when user deselects object
-  const saveToDb = (objects: any) => {
+  const updateDb = (objects: any) => {
     if (!socketRef.current) return;
 
     socketRef.current.emit(
@@ -40,7 +45,7 @@ export default function useLiveCollaboration(designId: string) {
   //change layerIndex in db
   const moveDownDb = (id: string) => {};
   return {
-    saveToDb,
+    updateDb,
     moveUpDb,
     moveDownDb,
   };
