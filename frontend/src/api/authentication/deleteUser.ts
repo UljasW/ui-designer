@@ -2,9 +2,8 @@ import axios from "axios";
 
 export default async (token: string) => {
   try {
-    const apiUrl = process.env.REACT_APP_API_URL;
 
-    const response = await axios.delete("`${apiUrl}/auth`", {
+    const response = await axios.delete("`http://localhost:3001/auth`", {
         headers:{
             "Authorization" : `Bearer ${token}`
         }

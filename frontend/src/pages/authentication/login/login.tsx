@@ -19,12 +19,17 @@ export default function Login() {
     event.preventDefault(); 
     console.log("Username:", email);
     console.log("Password:", password);
-    const response = await loginUser(email, password);
-    if(!response || response.status !== 200){
-      return;
+    try {
+      const response = await loginUser(email, password);
+      if(!response || response.status !== 200){
+        return;
+      }
+      localStorage.setItem("jwt", response?.data);
+      navigate("/home")
+    } catch (error) {
+      alert("An error occurred while logging in. Please try again.");
+      console.error(error);
     }
-    localStorage.setItem("jwt", response?.data);
-    navigate("/home")
   };
 
   return (

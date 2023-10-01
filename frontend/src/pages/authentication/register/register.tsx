@@ -7,7 +7,6 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-
   const handleEmailChange = (event: any) => {
     setEmail(event.target.value);
   };
@@ -21,11 +20,12 @@ export default function Register() {
     console.log("Email:", email);
     console.log("Password:", password);
     try {
-      await registerUser(email, password);
-      localStorage.setItem("jwt", (await loginUser(email, password))?.data ) ;
+      console.log(await registerUser(email, password));
+      
+      const response = await loginUser(email, password);
+      localStorage.setItem("jwt", response?.data);
       navigate("/home");
-    }
-    catch (error) {
+    } catch (error) {
       alert(error);
     }
   };

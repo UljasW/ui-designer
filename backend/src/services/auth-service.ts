@@ -42,15 +42,18 @@ export default class AuthService {
   };
 
   public async register(email: string, password: string) {
+
     this.checkEmailAdress(email);
     // Check if user already exists
     const existingUser = this.getUserByEmail(email);
     if (await existingUser) {
+      console.log("User already exists");
       throw new Error("User already exists");
     }
 
     // Hash the password
     const hashedPassword: string = await bcrypt.hash(password, 10);
+
 
     // Store user in the database
     await this.createUser(email, hashedPassword);

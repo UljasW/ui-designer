@@ -14,7 +14,7 @@ export default class SocketController {
   }
 
   private setupEvents(): void {
-    //this.io.use(socketAuthMiddleware);
+    this.io.use(socketAuthMiddleware);
 
     this.io.on("connection", (socket: Socket) => {
       const designId = socket.handshake.query.designId as string;
@@ -36,11 +36,11 @@ export default class SocketController {
     });
   }
 
-  private handleUpdateDb(
+  private async handleUpdateDb(
     socket: Socket,
     data: any,
     callback: CallableFunction
-  ): void {
+  ): Promise<void> {
     console.log("update-db received from client: ", socket.rooms);
     try {
       const objects = Array.isArray(data.objects)
@@ -49,7 +49,10 @@ export default class SocketController {
 
       console.log("Objects to update:", objects);
 
-      //await this.designService.updateObjList(user, designId, objects);  // Ensure this function is working!
+      const user = (socket.request as any).user;
+      const designId = socket.handshake.query.designId as string;
+
+      await this.designService.updateObjList(user, designId, objects); 
       callback({ status: "success" });
     } catch (error) {
       console.error(`Error updating design: ${error}`);
@@ -57,14 +60,19 @@ export default class SocketController {
     }
   }
 
-  private handleMoveUpDb(
+  private async handleMoveUpDb(
     socket: Socket,
     data: any,
     callback: CallableFunction
-  ): void {
+  ): Promise<void> {
     console.log("move-up-db received from client: ", socket.rooms);
     try {
       const id = data.id;
+      const user = (socket.request as any).user;
+      const designId = socket.handshake.query.designId as string;
+
+      await this.designService.moveUp(user, designId, id);  
+    
       console.log("Object to move up:", id);
 
       callback({ status: "success" });
@@ -82,6 +90,11 @@ export default class SocketController {
     console.log("move-down-db received from client : ", socket.rooms);
     try {
       const id = data.id;
+      const user = (socket.request as any).user;
+      const designId = socket.handshake.query.designId as string;
+
+      this.designService.moveDown(user, designId, id);
+
       console.log("Object to move down:", id);
 
       callback({ status: "success" });
