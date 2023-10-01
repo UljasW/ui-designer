@@ -1,7 +1,10 @@
-import React from 'react'
+import React from "react";
+import DesignManager from "../../features/designManager/DesignManager";
 
 export default function home() {
   return (
-    <div>home</div>
-  )
+    <div>
+      <DesignManager></DesignManager>
+    </div>
+  );
 }
