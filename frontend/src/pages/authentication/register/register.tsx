@@ -8,7 +8,7 @@ export default function Register() {
   const navigate = useNavigate();
 
 
-  const handleUsernameChange = (event: any) => {
+  const handleEmailChange = (event: any) => {
     setEmail(event.target.value);
   };
 
@@ -18,12 +18,16 @@ export default function Register() {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    console.log("Username:", email);
+    console.log("Email:", email);
     console.log("Password:", password);
-
-    await registerUser(email, password);
-    localStorage.setItem("jwt", (await loginUser(email, password))?.data ) ;
-    navigate("/home");
+    try {
+      await registerUser(email, password);
+      localStorage.setItem("jwt", (await loginUser(email, password))?.data ) ;
+      navigate("/home");
+    }
+    catch (error) {
+      alert(error);
+    }
   };
 
   return (
@@ -40,7 +44,7 @@ export default function Register() {
           type="text"
           placeholder="Email"
           value={email}
-          onChange={handleUsernameChange}
+          onChange={handleEmailChange}
         />
         <input
           type="password"

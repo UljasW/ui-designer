@@ -5,7 +5,6 @@ export default function useLiveCollaboration(designId: string) {
   const socketRef = useRef<any>(null);
 
   useEffect(() => {
-    console.log('Value of designId before connection:', designId);
     socketRef.current = io("ws://localhost:3001", { query: { designId } });
     
     socketRef.current.on("connect", () => { console.log("Socket connected!"); });
