@@ -18,9 +18,8 @@ export default class SocketController {
 
     this.io.on("connection", (socket: Socket) => {
       const designId = socket.handshake.query.designId as string;
-      console.log("Joining room with designId:", designId);  
+      console.log("Joining room with designId:", designId);
       socket.join(designId);
-
 
       socket.on("update-db", (data, callback) =>
         this.handleUpdateDb(socket, data, callback)
@@ -31,6 +30,8 @@ export default class SocketController {
       socket.on("move-down-db", (data, callback) =>
         this.handleMoveDownDb(socket, data, callback)
       );
+
+      socket.on("get-objects", (data, callback) => {});
 
       socket.on("disconnect", () => this.handleDisconnect(socket));
     });
@@ -43,16 +44,17 @@ export default class SocketController {
   ): Promise<void> {
     console.log("update-db received from client: ", socket.rooms);
     try {
+      console.log("Received data:", data);
+
       const objects = Array.isArray(data.objects)
         ? data.objects
         : [data.objects];
 
-      console.log("Objects to update:", objects);
-
+        
       const user = (socket.request as any).user;
       const designId = socket.handshake.query.designId as string;
 
-      await this.designService.updateObjList(user, designId, objects); 
+      await this.designService.updateObjList(user, designId, objects);
       callback({ status: "success" });
     } catch (error) {
       console.error(`Error updating design: ${error}`);
@@ -71,8 +73,8 @@ export default class SocketController {
       const user = (socket.request as any).user;
       const designId = socket.handshake.query.designId as string;
 
-      await this.designService.moveUp(user, designId, id);  
-    
+      await this.designService.moveUp(user, designId, id);
+
       console.log("Object to move up:", id);
 
       callback({ status: "success" });
@@ -96,6 +98,25 @@ export default class SocketController {
       this.designService.moveDown(user, designId, id);
 
       console.log("Object to move down:", id);
+
+      callback({ status: "success" });
+    } catch (error) {
+      console.error(`Error updating design: ${error}`);
+      callback({ status: "error" });
+    }
+  }
+
+  private handleGetObjects(
+    socket: Socket,
+    data: any,
+    callback: CallableFunction
+  ): void {
+    console.log("get-objects received from client : ", socket.rooms);
+    try {
+      const user = (socket.request as any).user;
+      const designId = socket.handshake.query.designId as string;
+
+      this.designService.getObjects(user, designId);
 
       callback({ status: "success" });
     } catch (error) {

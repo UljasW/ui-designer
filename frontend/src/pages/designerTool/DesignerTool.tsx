@@ -5,12 +5,16 @@ import Layers from "../../features/layers/Layers";
 import Properties from "../../features/properties/Properties";
 import fabric from "fabric";
 import useLiveCollaboration from "../../hooks/useLiveCollaboration";
+import { useSearchParams } from "react-router-dom";
 
 export default function DesignerTool() {
   const canvas = useRef<fabric.fabric.Canvas>();
   const [isCanvasInitialized, setCanvasInitialized] = useState(false);
   const [currentColor, setCurrentColor] = useState<string>("black");
-  const { updateDb, moveUpDb, moveDownDb} = useLiveCollaboration("ID");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { updateDb, moveUpDb, moveDownDb} = useLiveCollaboration(searchParams.get("id") || "");
+  const [designId, setDesignId] = useState<string>();
+
 
   useEffect(() => {
     if (canvas.current) {

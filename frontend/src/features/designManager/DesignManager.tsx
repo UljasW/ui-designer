@@ -1,17 +1,20 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import getDesignes from "../../api/design/getDesignes";
 import { useNavigate } from "react-router-dom";
+import createDesign from "../../api/design/createDesign";
 
 export default function DesignManager() {
   const [designList, setDesignList] = useState<any[]>();
   const navigate = useNavigate();
+  const [designName, setDesignName] = useState<string>("");
 
   function handleSubmit(event: FormEvent<HTMLFormElement>): void {
-    throw new Error("Function not implemented.");
+    console.log("Design Name: " + designName);
+    createDesign(designName, localStorage.getItem("jwt") || "");
   }
 
   function handleDesignNameChange(event: ChangeEvent<HTMLInputElement>): void {
-    throw new Error("Function not implemented.");
+    setDesignName(event.target.value);
   }
 
   useEffect(() => {
@@ -32,9 +35,9 @@ export default function DesignManager() {
     }
   };
 
-  function handleDesignClick(e: any): void {
+  function handleDesignClick(e: any ,id: string): void {
     e.preventDefault();
-    navigate("/designer/?id=" + e.target.value);
+    navigate("/designer?id=" + id);
   }
 
   return (
@@ -49,9 +52,11 @@ export default function DesignManager() {
       </form>
       <div>
         {designList?.map((design) => (
-          <button onClick={handleDesignClick} key={design.designId}>
-            <h3>{design.designName}</h3>
-            <p>{design.designId}</p>
+          <button onClick={(e:any)=>{
+            handleDesignClick(e, design.id);
+          }} key={design.id}>
+            <h3>{design.name}</h3>
+            <p>{design.id}</p>
           </button>
         ))}
       </div>

@@ -17,26 +17,29 @@ const socketAuthMiddleware = (socket: Socket, next: (err?: any) => void) => {
     const token = socket.handshake.query.token as string;
 
     if (!token) {
+      console.log("Authentication error: Token not provided")
       return next(new Error("Authentication error: Token not provided"));
     }
 
     jwt.verify(token, JWT_SECRET, async (err: any, decodedToken: any) => {
       if (err) {
+        console.log("Authentication error: Invalid token ", err)
         return next(new Error("Authentication error: Invalid token"));
       }
 
       const user = await prisma.user.findUnique({
         where: {
-          id: decodedToken.id,
+          id: decodedToken.userId,
         },
       });
 
       if (!user) {
+        console.log("Authentication error: User associated with the token not found")
         return next(new Error("Authentication error: User associated with the token not found"));
       }
 
       // Attach the user object to the socket for use in subsequent events
-      (socket as any).user = user;
+      (socket.request as any).user = user;
       next();
     });
   } catch (error) {

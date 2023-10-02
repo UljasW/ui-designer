@@ -2,6 +2,7 @@ import { PrismaClient, User } from "@prisma/client";
 import objectInterface from "../interfaces/object-interface";
 
 export default class DesignService {
+  
   private prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
@@ -53,6 +54,8 @@ export default class DesignService {
           },
         });
       } else {
+        console.log("Creating new object: ", obj.id, "in design: ", id); 
+        
         await this.prisma.objects.create({
           data: {
             id: obj.id,
@@ -170,6 +173,19 @@ export default class DesignService {
   public async getAll(user: User): Promise<string> {
     const designs = await this.prisma.design.findMany();
     return JSON.stringify(designs);
+  }
+
+  public async getObjects(user: any, designId: string) {
+    this.authorize(user, designId);
+
+    const objects = await this.prisma.objects.findMany({
+      where: {
+        designId: designId,
+      },
+    });
+
+    return objects;
+
   }
 
   private async authorize(user: User, id: string) {
