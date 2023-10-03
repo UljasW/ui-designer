@@ -23,13 +23,11 @@ export default function useRenderObjectsOnCanvas() {
         case 'text':
           fabricObj = new fabric.Text(obj.text, obj);
           break;
-        // ... add cases for other object types as needed
         default:
           console.error("Unsupported object type: ", obj.type);
           return;
       }
 
-      // Add the fabric object to the canvas
       canvasInstance.add(fabricObj);
     });
 
