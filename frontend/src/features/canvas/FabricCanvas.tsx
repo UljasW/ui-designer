@@ -5,6 +5,40 @@ interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.Canvas | undefined>;
 }
 
+interface CustomFabricRect extends fabric.Rect {
+  id: string;
+  layerIndex: number;
+}
+
+interface CustomFabricText extends fabric.Text {
+  id: string;
+  layerIndex: number;
+}
+
+
+fabric.Rect.prototype.toObject = (function (toObject) {
+  return function (this: CustomFabricRect) {
+    return fabric.util.object.extend(toObject.call(this), {
+      id: this.id,
+      layerIndex: this.layerIndex
+    });
+  };
+})(fabric.Rect.prototype.toObject);
+
+
+
+
+
+fabric.Text.prototype.toObject = (function (toObject) {
+  return function (this: CustomFabricText) {
+    return fabric.util.object.extend(toObject.call(this), {
+      id: this.id,
+      layerIndex: this.layerIndex
+    });
+  };
+})(fabric.Text.prototype.toObject);
+
+
 const FabricCanvas: React.FC<FabricCanvasProps> = ({ canvas }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const fabricInstance = useRef<fabric.Canvas | undefined>();
@@ -14,6 +48,8 @@ const FabricCanvas: React.FC<FabricCanvasProps> = ({ canvas }) => {
 
       
       const fabricCanvas = new fabric.Canvas(canvasRef.current);
+
+      
       fabricCanvas.preserveObjectStacking = true;
 
       fabricInstance.current = fabricCanvas;

@@ -60,9 +60,11 @@ export default function Selection(props: FabricCanvasProps) {
         fill: props.currentColor,
       });
 
+
       (rect as any).id = nanoid();
       (rect as any).layerIndex = canvas.getObjects().length;
 
+      
       setObject(rect);
       canvas.add(rect);
     }
