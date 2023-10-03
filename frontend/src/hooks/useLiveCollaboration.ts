@@ -61,19 +61,25 @@ export default function useLiveCollaboration(designId: string) {
     });
   };
 
-  const getObjects = useCallback(
-    (callback: any) => {
-      if (!socketRef.current) return;
-
-      socketRef.current.emit("get-objects", (objects: any) => {
-        callback(objects);
+  const getObjects = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      if (!socketRef.current) {
+        reject("Socket reference is not defined");
+        return;
+      }
+  
+      socketRef.current.emit("get-objects", (response: any) => {
+        console.log("Server Acknowledgement:", response);
+        resolve(response);
       });
-    },
-    [socketRef]
-  );
+    });
+  };
+  
+
   return {
     updateDb,
     moveUpDb,
     moveDownDb,
+    getObjects,
   };
 }

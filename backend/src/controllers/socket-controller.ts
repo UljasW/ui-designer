@@ -31,7 +31,9 @@ export default class SocketController {
         this.handleMoveDownDb(socket, data, callback)
       );
 
-      socket.on("get-objects", (data, callback) => {});
+      socket.on("get-objects", ( callback) => {
+        this.handleGetObjects(socket, callback);
+      });
 
       socket.on("disconnect", () => this.handleDisconnect(socket));
     });
@@ -50,7 +52,6 @@ export default class SocketController {
         ? data.objects
         : [data.objects];
 
-        
       const user = (socket.request as any).user;
       const designId = socket.handshake.query.designId as string;
 
@@ -106,19 +107,17 @@ export default class SocketController {
     }
   }
 
-  private handleGetObjects(
+  private async handleGetObjects(
     socket: Socket,
-    data: any,
     callback: CallableFunction
-  ): void {
+  ): Promise<void> {
     console.log("get-objects received from client : ", socket.rooms);
     try {
       const user = (socket.request as any).user;
       const designId = socket.handshake.query.designId as string;
 
-      this.designService.getObjects(user, designId);
-
-      callback({ status: "success" });
+      const objects = await this.designService.getObjects(user, designId);
+      callback({ objects });
     } catch (error) {
       console.error(`Error updating design: ${error}`);
       callback({ status: "error" });
