@@ -2,8 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { socketUrl } from "../constants";
 
-
-
 export default function useLiveCollaboration(designId: string) {
   const token = localStorage.getItem("jwt");
 
@@ -40,7 +38,7 @@ export default function useLiveCollaboration(designId: string) {
     if (!socketRef.current) return;
     console.log("Sending objects:", objects);
 
-    socketRef.current.emit("update-db", objects , (response: any) => {
+    socketRef.current.emit("update-db", { objects }, (response: any) => {
       console.log("Server Acknowledgement:", response);
     });
   };
