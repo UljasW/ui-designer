@@ -2,7 +2,6 @@ import { PrismaClient, User } from "@prisma/client";
 import objectInterface from "../interfaces/object-interface";
 
 export default class DesignService {
-  
   private prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
@@ -45,17 +44,18 @@ export default class DesignService {
     for (const obj of objects) {
       const objInDb = objList.find((o) => o.id === obj.id);
       if (objInDb) {
+        console.log("Updating object: ", obj.id, "in design: ", id);
         await this.prisma.objects.update({
           where: {
             id: obj.id,
           },
           data: {
-            ...obj,
+            data: JSON.stringify(obj),
           },
         });
       } else {
-        console.log("Creating new object: ", obj.id, "in design: ", id); 
-        
+        console.log("Creating new object: ", obj.id, "in design: ", id);
+
         await this.prisma.objects.create({
           data: {
             id: obj.id,
@@ -185,7 +185,6 @@ export default class DesignService {
     });
 
     return objects;
-
   }
 
   private async authorize(user: User, id: string) {
