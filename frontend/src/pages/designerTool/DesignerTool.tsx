@@ -13,33 +13,26 @@ export default function DesignerTool() {
   const [isCanvasInitialized, setCanvasInitialized] = useState(false);
   const [currentColor, setCurrentColor] = useState<string>("black");
   const [searchParams] = useSearchParams();
-  const { renderObjectsOnCanvas} = useRenderObjectsOnCanvas();
+  const { renderObjectsOnCanvas } = useRenderObjectsOnCanvas();
   const { updateDb, moveUpDb, moveDownDb, getObjects } = useLiveCollaboration(
     searchParams.get("id") || ""
   );
   const [designId, setDesignId] = useState<string>();
 
-
   useEffect(() => {
-    if (canvas.current) {
-
-      const fetchObjectsAndRender = async () => {
-        try {
-            const objects = await getObjects();
-            if (canvas.current && objects) {
-                setCanvasInitialized(true);
-                renderObjectsOnCanvas(canvas.current, objects);
-            }
-        } catch (error) {
-            console.error("Error fetching objects:", error);
+    const fetchObjectsAndRender = async () => {
+      try {
+        const objects = await getObjects();
+        if (objects && canvas.current) {
+          setCanvasInitialized(true);
+          renderObjectsOnCanvas(canvas.current, objects);
         }
+      } catch (error) {
+        console.error("Error fetching objects:", error);
+      }
     };
 
     fetchObjectsAndRender();
-    
-      setCanvasInitialized(true);
-
-    }
   }, [canvas]);
 
   return (
