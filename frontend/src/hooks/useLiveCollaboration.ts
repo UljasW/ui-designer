@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
+import { socketUrl } from "../constants";
 
 export default function useLiveCollaboration(designId: string) {
   const token = localStorage.getItem("jwt");
@@ -7,7 +8,7 @@ export default function useLiveCollaboration(designId: string) {
   const socketRef = useRef<any>();
 
   useEffect(() => {
-    socketRef.current = io("ws://localhost:3001", {
+    socketRef.current = io(`${socketUrl}`, {
       query: { token, designId },
     });
 

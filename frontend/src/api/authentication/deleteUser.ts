@@ -1,9 +1,10 @@
 import axios from "axios";
+import { apiUrl } from "../../constants";
 
 export default async (token: string) => {
   try {
 
-    const response = await axios.delete("`http://localhost:3001/auth`", {
+    const response = await axios.delete("`${apiUrl}/auth`", {
         headers:{
             "Authorization" : `Bearer ${token}`
         }

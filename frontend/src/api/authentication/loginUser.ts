@@ -1,8 +1,9 @@
 import axios from "axios";
+import { apiUrl } from "../../constants";
 
 export default async (email: string, password: string) => {
   try {
-    const response = await axios.post(`http://localhost:3001/auth/login`, {
+    const response = await axios.post(`${apiUrl}/auth/login`, {
       email,
       password,
     });
