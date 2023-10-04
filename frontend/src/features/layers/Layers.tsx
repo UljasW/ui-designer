@@ -9,9 +9,6 @@ export default function Layers(props: FabricCanvasProps) {
   const [objList, setObjList] = useState<any[]>([]);
   const [selectedObjects, setSelectedObjects] = useState<any[] | null>([]);
 
-  useEffect(() => {
-    //console.log("selectedObjects", selectedObjects);
-  }, [selectedObjects]);
 
   useEffect(() => {
     const canvasInstance = props.canvas.current;
@@ -27,12 +24,10 @@ export default function Layers(props: FabricCanvasProps) {
     };
 
     const handleSelectionCreated = (e: any) => {
-      //console.log("created", e.selected);
       setSelectedObjects(e.selected);
     };
 
     const handleSelectionCleared = (e: any) => {
-      //console.log("cleared", e.deselected);
       props.updateDb(e.deselected);
       setSelectedObjects(null);
       setObjList(canvasInstance.getObjects());
