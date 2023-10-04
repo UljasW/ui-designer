@@ -26,13 +26,6 @@ export default function useLiveCollaboration(designId: string) {
     };
   }, [designId]);
 
-  //update collabers canvas (live update)
-  /* const update = (objects: any) => {
-    console.log("update", objects);
-    if (!socket) return;
-    socket.emit("update", { objects });
-  }; */
-
   //save changes when user deselects object
   const updateDb = (objects: any) => {
     if (!socketRef.current) return;
@@ -43,32 +36,17 @@ export default function useLiveCollaboration(designId: string) {
     });
   };
 
-  //change layerIndex in db
-  // const moveUpDb = (id: string) => {
-  //   if (!socketRef.current) return;
 
-  //   socketRef.current.emit("move-up-db", { id }, (response: any) => {
-  //     console.log("Server Acknowledgement:", response);
-  //   });
-  // };
+  const deleteObjects = (objects: any) => {
+    if (!socketRef.current) return;
+    console.log("Sending objects:", objects);
 
-  // //change layerIndex in db
-  // const moveDownDb = (id: string) => {
-  //   if (!socketRef.current) return;
+    socketRef.current.emit("delete-objects", { objects }, (response: any) => {
+      console.log("Server Acknowledgement:", response);
+    });
+  }
 
-  //   socketRef.current.emit("move-down-db", { id }, (response: any) => {
-  //     console.log("Server Acknowledgement:", response);
-  //   });
-  // };
 
-  // const switchPlacesDb = (id1: string, id2: string) => {
-  //   if (!socketRef.current) return;
-  
-  //   socketRef.current.emit("switch-places-db", { id1, id2 }, (response: any) => {
-  //     console.log("Server Acknowledgement:", response);
-  //   });
-  // };
-  
 
   const getObjects = (): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -88,5 +66,6 @@ export default function useLiveCollaboration(designId: string) {
   return {
     updateDb,
     getObjects,
+    deleteObjects
   };
 }

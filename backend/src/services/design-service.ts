@@ -37,6 +37,20 @@ export default class DesignService {
     return "Design has been removed";
   }
 
+  public async deleteObjects(user: User, id: string, objects: any): Promise<string> {
+    await this.authorize(user, id);
+    
+    await this.prisma.objects.deleteMany({
+      where: {
+        id: {
+          in: objects.map((obj: any) => obj.id)
+        },
+      },
+    });
+
+    return "Objects have been removed";
+  }
+
   public async updateObjList(
     user: User,
     id: string,

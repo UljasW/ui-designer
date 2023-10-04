@@ -24,6 +24,10 @@ export default class SocketController {
       socket.on("update-db", (data, callback) =>
         this.handleUpdateDb(socket, data, callback)
       );
+
+      socket.on("delete-objects", (data, callback) =>
+        this.handleDeleteObjects(socket, data, callback)
+      );
     
       socket.on("get-objects", ( callback) => {
         this.handleGetObjects(socket, callback);
@@ -31,6 +35,25 @@ export default class SocketController {
 
       socket.on("disconnect", () => this.handleDisconnect(socket));
     });
+  }
+  private async handleDeleteObjects(socket: Socket,
+    data: any,
+    callback: CallableFunction) {
+      try {
+        console.log("delete-objects received from client: ", socket.rooms);
+        const objects = Array.isArray(data.objects)
+        ? data.objects
+        : [data.objects];
+        const user = (socket.request as any).user;
+        const designId = socket.handshake.query.designId as string;
+        await this.designService.deleteObjects(user, designId, objects);
+        callback({ status: "success" });
+      } catch (error) {
+        console.error(`Error deleting objects: ${error}`);
+        callback({ status: "error" });
+      }
+
+    
   }
 
   private async handleUpdateDb(

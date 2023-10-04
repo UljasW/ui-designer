@@ -14,7 +14,7 @@ export default function DesignerTool() {
   const [currentColor, setCurrentColor] = useState<string>("black");
   const [searchParams] = useSearchParams();
   const { renderObjectsOnCanvas } = useRenderObjectsOnCanvas();
-  const { updateDb, getObjects } = useLiveCollaboration(
+  const { updateDb, getObjects, deleteObjects } = useLiveCollaboration(
     searchParams.get("id") || ""
   );
   const [designId, setDesignId] = useState<string>();
