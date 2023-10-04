@@ -9,14 +9,14 @@ export default function DesignManager() {
   const navigate = useNavigate();
   const [designName, setDesignName] = useState<string>("");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     console.log("Design Name: " + designName);
     createDesign(designName, localStorage.getItem("jwt") || "");
-  }
+  };
 
-  function handleDesignNameChange(event: ChangeEvent<HTMLInputElement>): void {
+  const handleDesignNameChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setDesignName(event.target.value);
-  }
+  };
 
   useEffect(() => {
     console.log("Design Manager Mounted");
@@ -36,38 +36,67 @@ export default function DesignManager() {
     }
   };
 
-  function handleDesignStart(e: any ,id: string): void {
+  const handleDesignStart = (e: any, id: string): void => {
     e.preventDefault();
     navigate("/designer?id=" + id);
-  }
-  async function handleDesignDelete(id: string) {
+  };
+
+  const handleDesignDelete = async (id: string) => {
     await deleteDesign(id, localStorage.getItem("jwt") || "");
     fetchDesignes();
-  }
+  };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <div style={{ padding: "20px" }}>
+      <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
         <input
           type="text"
           placeholder="Design Name"
           onChange={handleDesignNameChange}
+          style={{ padding: "10px", marginRight: "10px", fontSize: "16px" }}
         />
-        <button type="submit">Create</button>
+        <button type="submit" style={{ padding: "10px", fontSize: "16px" }}>
+          Create
+        </button>
       </form>
       <div>
         {designList?.map((design) => (
-          <div  key={design.id}>
-            <h3>{design.name}</h3>
-            <p>{design.id}</p>
+          <div key={design.id} style={{ marginBottom: "15px" }}>
+            <h3 style={{ color: "#333" }}>{design.name}</h3>
+            <p style={{ color: "#666" }}>{design.id}</p>
             <div>
-              <button onClick={(e:any)=>{
-            handleDesignStart(e, design.id);
-          }}>View</button>
-          <button onClick={(e:any)=>{
-            e.preventDefault();
-            handleDesignDelete(design.id);
-          }}>Delete</button>
+              <button
+                onClick={(e: any) => {
+                  handleDesignStart(e, design.id);
+                }}
+                style={{
+                  padding: "10px",
+                  marginRight: "10px",
+                  fontSize: "16px",
+                  color: "#fff",
+                  backgroundColor: "#4CAF50",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                View
+              </button>
+              <button
+                onClick={(e: any) => {
+                  e.preventDefault();
+                  handleDesignDelete(design.id);
+                }}
+                style={{
+                  padding: "10px",
+                  fontSize: "16px",
+                  color: "#fff",
+                  backgroundColor: "#f44336",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                Delete
+              </button>
             </div>
           </div>
         ))}

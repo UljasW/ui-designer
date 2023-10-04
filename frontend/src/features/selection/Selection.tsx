@@ -83,6 +83,8 @@ export default function Selection(props: FabricCanvasProps) {
       });
 
 
+      console.log(text);
+
       (text as any).id = nanoid();
       (text as any).layerIndex = canvas.getObjects().length;
 
