@@ -18,10 +18,12 @@ export default function useRenderObjectsOnCanvas() {
 
       switch(obj.type) {
         case 'rect':
+          console.log("Rect object:", obj);
           fabricObj = new fabric.Rect(obj);
           break;
         case 'text':
-          fabricObj = new fabric.Text(obj.text, obj);
+          console.log("Text object:", obj);
+          fabricObj = new fabric.Text("Illa", obj);
           break;
         default:
           console.error("Unsupported object type: ", obj.type);

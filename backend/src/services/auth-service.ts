@@ -63,7 +63,7 @@ export default class AuthService {
 
   public async login(email: string, password: string): Promise<string> {
     // Fetch user from the database
-
+    
     this.checkEmailAdress(email);
     const user = await this.getUserByEmail(email);
     if (!user) {

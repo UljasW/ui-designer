@@ -38,6 +38,7 @@ export default class AuthController {
         );
         res.send(token);
       } catch (error) {
+        console.log(error)  
         res.status(400).send(error);
       }
     });
