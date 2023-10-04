@@ -82,6 +82,7 @@ export default function Selection(props: FabricCanvasProps) {
         fill: props.currentColor,
       });
 
+
       (text as any).id = nanoid();
       (text as any).layerIndex = canvas.getObjects().length;
 

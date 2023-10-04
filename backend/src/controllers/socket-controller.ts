@@ -117,6 +117,7 @@ export default class SocketController {
       const designId = socket.handshake.query.designId as string;
 
       const objects = await this.designService.getObjects(user, designId);
+      console.log("Objects:", objects);
       callback({ objects });
     } catch (error) {
       console.error(`Error updating design: ${error}`);

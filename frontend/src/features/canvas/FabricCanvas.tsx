@@ -6,8 +6,11 @@ interface FabricCanvasProps {
 }
 
 interface CustomFabricObject extends fabric.Object {
+  rx?: any;
+  ry?: any;
   id: string;
   layerIndex: number;
+  text?: string;
 }
 
 
@@ -16,9 +19,16 @@ fabric.Object.prototype.toObject = (function (toObject) {
     return fabric.util.object.extend(toObject.call(this), {
       id: this.id,
       layerIndex: this.layerIndex,
+      rx: this.rx || 0,
+      ry: this.ry || 0,
+      text: this.text || "",
     });
   };
 })(fabric.Object.prototype.toObject);
+
+
+
+
 
 
 const FabricCanvas: React.FC<FabricCanvasProps> = ({ canvas }) => {

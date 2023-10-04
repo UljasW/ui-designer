@@ -8,7 +8,6 @@ export default function useRenderObjectsOnCanvas() {
     console.log("Original objects:", objectsContainer);
 
     const sortedDataObjects = objectsContainer.objects
-      .map((obj: any) => JSON.parse(obj.data))
       .sort((a: any, b: any) => a.layerIndex - b.layerIndex);
 
     console.log("Sorted objects:", sortedDataObjects);
@@ -18,12 +17,11 @@ export default function useRenderObjectsOnCanvas() {
 
       switch(obj.type) {
         case 'rect':
-          console.log("Rect object:", obj);
           fabricObj = new fabric.Rect(obj);
           break;
         case 'text':
-          console.log("Text object:", obj);
-          fabricObj = new fabric.Text("Illa", obj);
+          
+          fabricObj = new fabric.Text(obj.text,obj);
           break;
         default:
           console.error("Unsupported object type: ", obj.type);

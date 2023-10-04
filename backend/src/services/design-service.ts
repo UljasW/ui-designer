@@ -184,7 +184,8 @@ export default class DesignService {
       },
     });
 
-    return objects;
+
+    return objects.map((obj) => JSON.parse(obj.data));;
   }
 
   private async authorize(user: User, id: string) {

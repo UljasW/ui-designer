@@ -128,6 +128,7 @@ export default function Properties(props: FabricCanvasProps) {
     const obj = canvasInstance.getActiveObject();
     if (obj && obj.type === "text") {
         const textObj = obj as fabric.Text;
+        textObj.text = event.currentTarget.value;
         textObj.set("text", event.currentTarget.value);
         setTextValue(event.currentTarget.value);
         canvasInstance.renderAll();
