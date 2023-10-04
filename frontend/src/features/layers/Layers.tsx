@@ -107,64 +107,100 @@ export default function Layers(props: FabricCanvasProps) {
   return (
     <div
       style={{
-        width: "200px",
+        width: "250px",
         background: "LightGrey",
         display: "flex",
         flexDirection: "column",
+        alignItems: "center",
+        padding: "20px",
+        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)"
       }}
     >
       {objList.map((obj, index) => {
         const reverseIndex = objList.length - 1 - index;
         const reverseObj = objList[reverseIndex];
-
+  
         return (
           <button
             key={reverseIndex}
-            style={
-              isObjectMatch(reverseObj, selectedObjects) ? { color: "red" } : {}
-            }
+            style={{
+              color: isObjectMatch(reverseObj, selectedObjects) ? "red" : "#555",
+              backgroundColor: "white",
+              borderRadius: "4px",
+              padding: "10px",
+              margin: "5px",
+              cursor: "pointer",
+              border: "none",
+              boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+              textAlign: "left",
+              width: "100%",
+              overflow: "hidden", // handle long text
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis"
+            }}
             onClick={() => {
               const canvasInstance = props.canvas.current;
               canvasInstance?.setActiveObject(reverseObj);
               canvasInstance?.renderAll();
             }}
           >
-            {" "}
             {reverseObj.layerIndex} - {reverseObj.type} - {reverseObj.fill}
           </button>
         );
       })}
-
+  
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-
+          alignItems: "center",
           justifyContent: "flex-end",
-          padding: "10px",
+          width: "100%",
+          marginTop: "auto"
         }}
       >
         <div
           style={{
-            display:
-              selectedObjects && selectedObjects.length === 1 ? "flex" : "none",
+            display: selectedObjects && selectedObjects.length === 1 ? "flex" : "none",
             flexDirection: "row",
-            justifyContent: "center",
-            padding: "10px",
+            justifyContent: "space-between",
+            width: "100%",
+            padding: "10px"
           }}
         >
-          <button onClick={moveUp}>Move up</button>
-          <button onClick={moveDown}>Move down</button>
+          {['Move up', 'Move down'].map((text, idx) => (
+            <button
+              key={idx}
+              onClick={idx === 0 ? moveUp : moveDown}
+              style={{
+                backgroundColor: "#4CAF50",
+                color: "white",
+                padding: "10px",
+                margin: "5px",
+                borderRadius: "4px",
+                cursor: "pointer",
+                border: "none",
+                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)"
+              }}
+            >
+              {text}
+            </button>
+          ))}
         </div>
         <button
           style={{
-            display:
-              selectedObjects? "flex" : "none",
-            background: "red",
+            display: selectedObjects ? "flex" : "none",
+            background: "#F44336",
+            color: "white",
             fontWeight: "bold",
-            fontSize: "20px",
+            fontSize: "16px",
+            padding: "10px",
+            margin: "5px",
+            borderRadius: "4px",
+            cursor: "pointer",
+            border: "none",
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)"
           }}
-
           onClick={() => {
             const canvasInstance = props.canvas.current;
             if (canvasInstance && selectedObjects) {
@@ -182,4 +218,5 @@ export default function Layers(props: FabricCanvasProps) {
       </div>
     </div>
   );
+  
 }
