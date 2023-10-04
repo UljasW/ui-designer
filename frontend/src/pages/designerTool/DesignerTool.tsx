@@ -53,6 +53,7 @@ export default function DesignerTool() {
         <Layers
           updateDb={updateDb}
           canvas={canvas}
+          deleteObjects={deleteObjects}
         ></Layers>
         <FabricCanvas canvas={canvas}></FabricCanvas>
         <Properties

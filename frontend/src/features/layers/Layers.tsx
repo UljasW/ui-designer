@@ -3,12 +3,12 @@ import React, { useEffect, useRef, useState } from "react";
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.Canvas | undefined>;
   updateDb: (objects: any) => void;
+  deleteObjects: (objects: any) => void
 }
 
 export default function Layers(props: FabricCanvasProps) {
   const [objList, setObjList] = useState<any[]>([]);
-  const [selectedObjects, setSelectedObjects] = useState<any[] | null>([]);
-
+  const [selectedObjects, setSelectedObjects] = useState<any[] | null>(null);
 
   useEffect(() => {
     const canvasInstance = props.canvas.current;
@@ -139,7 +139,9 @@ export default function Layers(props: FabricCanvasProps) {
         style={{
           display: "flex",
           flexDirection: "column",
+
           justifyContent: "flex-end",
+          padding: "10px",
         }}
       >
         <div
@@ -148,11 +150,35 @@ export default function Layers(props: FabricCanvasProps) {
               selectedObjects && selectedObjects.length === 1 ? "flex" : "none",
             flexDirection: "row",
             justifyContent: "center",
+            padding: "10px",
           }}
         >
           <button onClick={moveUp}>Move up</button>
           <button onClick={moveDown}>Move down</button>
         </div>
+        <button
+          style={{
+            display:
+              selectedObjects? "flex" : "none",
+            background: "red",
+            fontWeight: "bold",
+            fontSize: "20px",
+          }}
+
+          onClick={() => {
+            const canvasInstance = props.canvas.current;
+            if (canvasInstance && selectedObjects) {
+              selectedObjects.forEach((obj) => {
+                canvasInstance.remove(obj);
+              });
+              props.deleteObjects(selectedObjects);
+              canvasInstance.discardActiveObject().renderAll();
+              setSelectedObjects(null);
+            }
+          }}
+        >
+          Delete
+        </button>
       </div>
     </div>
   );

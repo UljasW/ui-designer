@@ -94,6 +94,7 @@ export default function Selection(props: FabricCanvasProps) {
   }, [canvas, mousePos]);
 
   return (
+    
     <div
       style={{
         height: "50px",
