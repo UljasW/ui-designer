@@ -20,7 +20,6 @@ export default function useRenderObjectsOnCanvas() {
           fabricObj = new fabric.Rect(obj);
           break;
         case 'text':
-          
           fabricObj = new fabric.Text(obj.text,obj);
           break;
         default:

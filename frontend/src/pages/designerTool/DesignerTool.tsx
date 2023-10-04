@@ -14,7 +14,7 @@ export default function DesignerTool() {
   const [currentColor, setCurrentColor] = useState<string>("black");
   const [searchParams] = useSearchParams();
   const { renderObjectsOnCanvas } = useRenderObjectsOnCanvas();
-  const { updateDb, moveUpDb, moveDownDb, getObjects } = useLiveCollaboration(
+  const { updateDb, getObjects } = useLiveCollaboration(
     searchParams.get("id") || ""
   );
   const [designId, setDesignId] = useState<string>();
@@ -52,8 +52,6 @@ export default function DesignerTool() {
       >
         <Layers
           updateDb={updateDb}
-          moveDown={moveDownDb}
-          moveUp={moveUpDb}
           canvas={canvas}
         ></Layers>
         <FabricCanvas canvas={canvas}></FabricCanvas>

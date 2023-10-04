@@ -44,22 +44,31 @@ export default function useLiveCollaboration(designId: string) {
   };
 
   //change layerIndex in db
-  const moveUpDb = (id: string) => {
-    if (!socketRef.current) return;
+  // const moveUpDb = (id: string) => {
+  //   if (!socketRef.current) return;
 
-    socketRef.current.emit("move-up-db", { id }, (response: any) => {
-      console.log("Server Acknowledgement:", response);
-    });
-  };
+  //   socketRef.current.emit("move-up-db", { id }, (response: any) => {
+  //     console.log("Server Acknowledgement:", response);
+  //   });
+  // };
 
-  //change layerIndex in db
-  const moveDownDb = (id: string) => {
-    if (!socketRef.current) return;
+  // //change layerIndex in db
+  // const moveDownDb = (id: string) => {
+  //   if (!socketRef.current) return;
 
-    socketRef.current.emit("move-down-db", { id }, (response: any) => {
-      console.log("Server Acknowledgement:", response);
-    });
-  };
+  //   socketRef.current.emit("move-down-db", { id }, (response: any) => {
+  //     console.log("Server Acknowledgement:", response);
+  //   });
+  // };
+
+  // const switchPlacesDb = (id1: string, id2: string) => {
+  //   if (!socketRef.current) return;
+  
+  //   socketRef.current.emit("switch-places-db", { id1, id2 }, (response: any) => {
+  //     console.log("Server Acknowledgement:", response);
+  //   });
+  // };
+  
 
   const getObjects = (): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -78,8 +87,6 @@ export default function useLiveCollaboration(designId: string) {
 
   return {
     updateDb,
-    moveUpDb,
-    moveDownDb,
     getObjects,
   };
 }

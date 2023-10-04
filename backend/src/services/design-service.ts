@@ -18,7 +18,16 @@ export default class DesignService {
     return design.id;
   }
   public async delete(user: User, id: string): Promise<string> {
-    this.authorize(user, id);
+    await this.authorize(user, id);
+
+    // Deleting related objects first
+    await this.prisma.objects.deleteMany({
+      where: {
+        designId: id,
+      },
+    });
+
+    // Deleting the design
     await this.prisma.design.delete({
       where: {
         id,
@@ -27,12 +36,13 @@ export default class DesignService {
 
     return "Design has been removed";
   }
+
   public async updateObjList(
     user: User,
     id: string,
     objects: any
   ): Promise<string> {
-    this.authorize(user, id);
+    await this.authorize(user, id);
 
     const objList = await this.prisma.objects.findMany({
       where: {
@@ -70,105 +80,148 @@ export default class DesignService {
     return "updated";
   }
 
-  public async moveUp(
-    user: User,
-    designId: string,
-    id: string
-  ): Promise<string> {
-    this.authorize(user, id);
+  // public async moveUp(
+  //   user: User,
+  //   designId: string,
+  //   id: string
+  // ): Promise<string> {
+  //   await this.authorize(user, designId );
 
-    const obj = await this.prisma.objects.findFirst({
-      where: {
-        id: id,
-        designId: designId,
-      },
-    });
+  //   const obj = await this.prisma.objects.findFirst({
+  //     where: {
+  //       id: id,
+  //       designId: designId,
+  //     },
+  //   });
 
-    if (!obj) {
-      throw new Error("No object was found");
-    }
+  //   if (!obj) {
+  //     throw new Error("No object was found");
+  //   }
 
-    const objAbove = await this.prisma.objects.findFirst({
-      where: {
-        designId: designId,
-        layerIndex: obj.layerIndex - 1,
-      },
-    });
+  //   const objAbove = await this.prisma.objects.findFirst({
+  //     where: {
+  //       designId: designId,
+  //       layerIndex: obj.layerIndex - 1,
+  //     },
+  //   });
 
-    if (!objAbove) {
-      throw new Error("No object above");
-    }
+  //   if (!objAbove) {
+  //     throw new Error("No object above");
+  //   }
 
-    await this.prisma.objects.update({
-      where: {
-        id: obj.id,
-      },
-      data: {
-        layerIndex: obj.layerIndex - 1,
-      },
-    });
+  //   await this.prisma.objects.update({
+  //     where: {
+  //       id: obj.id,
+  //     },
+  //     data: {
+  //       layerIndex: obj.layerIndex - 1,
+  //     },
+  //   });
 
-    await this.prisma.objects.update({
-      where: {
-        id: objAbove.id,
-      },
-      data: {
-        layerIndex: objAbove.layerIndex + 1,
-      },
-    });
+  //   await this.prisma.objects.update({
+  //     where: {
+  //       id: objAbove.id,
+  //     },
+  //     data: {
+  //       layerIndex: objAbove.layerIndex + 1,
+  //     },
+  //   });
 
-    return "moved up";
-  }
+  //   return "moved up";
+  // }
 
-  public async moveDown(
-    user: User,
-    designId: string,
-    id: string
-  ): Promise<string> {
-    this.authorize(user, designId);
+  // public async moveDown(
+  //   user: User,
+  //   designId: string,
+  //   id: string
+  // ): Promise<string> {
+  //   await this.authorize(user, designId);
 
-    const obj = await this.prisma.objects.findFirst({
-      where: {
-        id: id,
-        designId: designId,
-      },
-    });
+  //   const obj = await this.prisma.objects.findFirst({
+  //     where: {
+  //       id: id,
+  //       designId: designId,
+  //     },
+  //   });
 
-    if (!obj) {
-      throw new Error("No object was found");
-    }
+  //   if (!obj) {
+  //     throw new Error("No object was found");
+  //   }
 
-    const objBelow = await this.prisma.objects.findFirst({
-      where: {
-        designId: designId,
-        layerIndex: obj.layerIndex + 1,
-      },
-    });
+  //   const objBelow = await this.prisma.objects.findFirst({
+  //     where: {
+  //       designId: designId,
+  //       layerIndex: obj.layerIndex + 1,
+  //     },
+  //   });
 
-    if (!objBelow) {
-      throw new Error("No object below");
-    }
+  //   if (!objBelow) {
+  //     throw new Error("No object below");
+  //   }
 
-    await this.prisma.objects.update({
-      where: {
-        id: obj.id,
-      },
-      data: {
-        layerIndex: obj.layerIndex + 1,
-      },
-    });
+  //   await this.prisma.objects.update({
+  //     where: {
+  //       id: obj.id,
+  //     },
+  //     data: {
+  //       layerIndex: obj.layerIndex + 1,
+  //     },
+  //   });
 
-    await this.prisma.objects.update({
-      where: {
-        id: objBelow.id,
-      },
-      data: {
-        layerIndex: objBelow.layerIndex - 1,
-      },
-    });
+  //   await this.prisma.objects.update({
+  //     where: {
+  //       id: objBelow.id,
+  //     },
+  //     data: {
+  //       layerIndex: objBelow.layerIndex - 1,
+  //     },
+  //   });
 
-    return "moved down";
-  }
+  //   return "moved down";
+  // }
+
+  // public async switchPlaces(
+  //   user: User,
+  //   designId: string,
+  //   id1: string,
+  //   id2: string
+  // ): Promise<string> {
+  //   await this.authorize(user, designId);
+  
+  //   // Fetching objects
+  //   const obj1 = await this.prisma.objects.findUnique({
+  //     where: { id: id1 },
+  //   });
+  
+  //   const obj2 = await this.prisma.objects.findUnique({
+  //     where: { id: id2 },
+  //   });
+  
+  //   // Validating objects
+  //   if (!obj1 || !obj2) {
+  //     throw new Error("One or both objects not found");
+  //   }
+  
+  //   // Ensure the objects belong to the specified design
+  //   if (obj1.designId !== designId || obj2.designId !== designId) {
+  //     throw new Error("Mismatched designId");
+  //   }
+  
+  //   // Switching places using a transaction to ensure atomicity
+  //   await this.prisma.$transaction([
+  //     this.prisma.objects.update({
+  //       where: { id: id1 },
+  //       data: { layerIndex: obj2.layerIndex },
+  //     }),
+  //     this.prisma.objects.update({
+  //       where: { id: id2 },
+  //       data: { layerIndex: obj1.layerIndex },
+  //     }),
+  //   ]);
+  
+  //   return "Switched";
+  // }
+  
 
   public async getAll(user: User): Promise<string> {
     const designs = await this.prisma.design.findMany();
@@ -176,7 +229,7 @@ export default class DesignService {
   }
 
   public async getObjects(user: any, designId: string) {
-    this.authorize(user, designId);
+    await this.authorize(user, designId);
 
     const objects = await this.prisma.objects.findMany({
       where: {
@@ -184,8 +237,7 @@ export default class DesignService {
       },
     });
 
-
-    return objects.map((obj) => JSON.parse(obj.data));;
+    return objects.map((obj) => JSON.parse(obj.data));
   }
 
   private async authorize(user: User, id: string) {

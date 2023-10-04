@@ -32,11 +32,16 @@ export default class DesignController {
       }
     });
 
-    router.delete("/", verifyToken, async (req: Request, res: Response) => {
+    router.delete("/:id", verifyToken, async (req: Request, res: Response) => {
       try {
-        await authService.delete((req as any).user, req.body.id);
+        const id = req.params.id?.toString();
+        if (!id) {
+          throw new Error("ID parameter is missing");
+        }
+        await authService.delete((req as any).user, id);
         res.send("User has been deleted");
       } catch (error) {
+        console.error(error);
         res.status(400).send(error);
       }
     });

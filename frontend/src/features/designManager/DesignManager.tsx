@@ -2,6 +2,7 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import getDesignes from "../../api/design/getDesignes";
 import { useNavigate } from "react-router-dom";
 import createDesign from "../../api/design/createDesign";
+import deleteDesign from "../../api/design/deleteDesign";
 
 export default function DesignManager() {
   const [designList, setDesignList] = useState<any[]>();
@@ -35,9 +36,13 @@ export default function DesignManager() {
     }
   };
 
-  function handleDesignClick(e: any ,id: string): void {
+  function handleDesignStart(e: any ,id: string): void {
     e.preventDefault();
     navigate("/designer?id=" + id);
+  }
+  async function handleDesignDelete(id: string) {
+    await deleteDesign(id, localStorage.getItem("jwt") || "");
+    fetchDesignes();
   }
 
   return (
@@ -52,12 +57,19 @@ export default function DesignManager() {
       </form>
       <div>
         {designList?.map((design) => (
-          <button onClick={(e:any)=>{
-            handleDesignClick(e, design.id);
-          }} key={design.id}>
+          <div  key={design.id}>
             <h3>{design.name}</h3>
             <p>{design.id}</p>
-          </button>
+            <div>
+              <button onClick={(e:any)=>{
+            handleDesignStart(e, design.id);
+          }}>View</button>
+          <button onClick={(e:any)=>{
+            e.preventDefault();
+            handleDesignDelete(design.id);
+          }}>Delete</button>
+            </div>
+          </div>
         ))}
       </div>
     </div>

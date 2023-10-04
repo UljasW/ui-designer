@@ -3,8 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.Canvas | undefined>;
   updateDb: (objects: any) => void;
-  moveUp: (id: string) => void;
-  moveDown: (id: string) => void;
 }
 
 export default function Layers(props: FabricCanvasProps) {
@@ -80,7 +78,7 @@ export default function Layers(props: FabricCanvasProps) {
 
     setObjList(canvasInstance.getObjects());
     canvasInstance.renderAll();
-    props.moveDown(selectedObj.id);
+    //props.switchPlacesDb(selectedObj.id, (canvasInstance.getObjects()[idx - 1] as any ).id);
   }
 
   function moveUp() {
@@ -103,7 +101,7 @@ export default function Layers(props: FabricCanvasProps) {
 
     setObjList(canvasInstance.getObjects());
     canvasInstance.renderAll();
-    props.moveUp(selectedObj.id);
+    //props.switchPlacesDb(selectedObj.id, (canvasInstance.getObjects()[idx + 1] as any ).id);
   }
 
   const isObjectMatch = (obj: any, selectedObjs: any[] | null) => {
