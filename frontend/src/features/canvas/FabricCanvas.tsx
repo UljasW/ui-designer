@@ -38,6 +38,9 @@ const FabricCanvas: React.FC<FabricCanvasProps> = ({ canvas }) => {
   useEffect(() => {
     if (canvasRef.current && !fabricInstance.current) {
       const fabricCanvas = new fabric.Canvas(canvasRef.current);
+      fabricCanvas.width = window.innerWidth - 450;
+      fabricCanvas.height = window.innerHeight - 50;
+      
 
       fabricCanvas.preserveObjectStacking = true;
 
@@ -49,7 +52,7 @@ const FabricCanvas: React.FC<FabricCanvasProps> = ({ canvas }) => {
   return (
     <canvas
       ref={canvasRef}
-      width={window.innerWidth - 400}
+      width={window.innerWidth - 450}
       height={window.innerHeight - 50}
     />
   );
