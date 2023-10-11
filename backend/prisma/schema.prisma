@@ -9,32 +9,43 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-  designs   Design[]
+  id             String         @id @default(uuid())
+  email          String         @unique
+  password       String
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @default(now()) @updatedAt
+  designs        Design[]
+  designInvites  DesignInvitation[]
 }
 
 model Design {
-  id         String    @id @default(uuid())
-  designer   User      @relation(fields: [designerId], references: [id])
-  designerId String
-  name       String
-  objectList Objects[]
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id            String           @id @default(uuid())
+  designer      User             @relation(fields: [designerId], references: [id])
+  designerId    String
+  name          String
+  objectList    Objects[]
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  designInvites DesignInvitation[]
 
   @@index([designerId])
 }
 
 model Objects {
-  id         String @id
+  id         String @id @default(uuid())
   layerIndex Int
   design     Design @relation(fields: [designId], references: [id])
   designId   String
   data       String @db.LongText
 
   @@index([designId])
+}
+
+model DesignInvitation {
+  design    Design @relation(fields: [designId], references: [id])
+  designId  String
+  user      User   @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@id([designId, userId])
 }
