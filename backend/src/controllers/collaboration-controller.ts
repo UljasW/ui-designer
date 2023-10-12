@@ -1,9 +1,9 @@
 import { Router, Request, Response } from "express";
 import verifyToken from "../middlewares/verify-token";
-import DesignService from "../services/design-service";
+import CollaborationService from "../services/collaboration-service";
 import { PrismaClient } from "@prisma/client";
 
-export default class DesignController {
+export default class CollaborationController {
 
   private prisma: PrismaClient;
 
@@ -12,13 +12,13 @@ export default class DesignController {
   }
 
   public Router() {
-    const designService = new DesignService(this.prisma);
+    const collaborationService = new CollaborationService(this.prisma);
 
     const router = Router();
 
     router.post("/", verifyToken, async (req: Request, res: Response) => {
       try {
-        res.send(await designService.create((req as any).user, req.body.name));
+        collaborationService.createInvitation((req as any).user, req.body.userId, req.body.designId);
       } catch (error) {
         res.status(400).send(error);
       }
@@ -26,7 +26,6 @@ export default class DesignController {
 
     router.get("/", verifyToken, async (req: Request, res: Response) => {
       try {
-        res.send(await designService.getAll((req as any).user));
       } catch (error) {
         res.status(400).send(error);
       }
@@ -34,12 +33,8 @@ export default class DesignController {
 
     router.delete("/:id", verifyToken, async (req: Request, res: Response) => {
       try {
-        const id = req.params.id?.toString();
-        if (!id) {
-          throw new Error("ID parameter is missing");
-        }
-        await designService.delete((req as any).user, id);
-        res.send("User has been deleted");
+
+        
       } catch (error) {
         console.error(error);
         res.status(400).send(error);
