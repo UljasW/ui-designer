@@ -37,13 +37,34 @@ export default class DesignService {
     return "Design has been removed";
   }
 
-  public async deleteObjects(user: User, id: string, objects: any): Promise<string> {
+  public async getAll(user: User): Promise<string> {
+    const designs = await this.prisma.design.findMany();
+    return JSON.stringify(designs);
+  }
+
+  public async getObjects(user: any, designId: string) {
+    await this.authorize(user, designId);
+
+    const objects = await this.prisma.objects.findMany({
+      where: {
+        designId: designId,
+      },
+    });
+
+    return objects.map((obj) => JSON.parse(obj.data));
+  }
+
+  public async deleteObjects(
+    user: User,
+    id: string,
+    objects: any
+  ): Promise<string> {
     await this.authorize(user, id);
-    
+
     await this.prisma.objects.deleteMany({
       where: {
         id: {
-          in: objects.map((obj: any) => obj.id)
+          in: objects.map((obj: any) => obj.id),
         },
       },
     });
@@ -93,26 +114,6 @@ export default class DesignService {
 
     return "updated";
   }
-
-
-
-  public async getAll(user: User): Promise<string> {
-    const designs = await this.prisma.design.findMany();
-    return JSON.stringify(designs);
-  }
-
-  public async getObjects(user: any, designId: string) {
-    await this.authorize(user, designId);
-
-    const objects = await this.prisma.objects.findMany({
-      where: {
-        designId: designId,
-      },
-    });
-
-    return objects.map((obj) => JSON.parse(obj.data));
-  }
-
   private async authorize(user: User, id: string) {
     const design = await this.prisma.design.findFirst({
       where: {
