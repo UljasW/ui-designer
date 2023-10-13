@@ -7,7 +7,11 @@ export default class CollaborationService {
     this.prisma = prisma;
   }
 
-  public async createInvitation(user: User, userId: string, designId: string): Promise<string> {
+  public async createInvitation(
+    user: User,
+    userId: string,
+    designId: string
+  ): Promise<string> {
     await this.authorize(user, designId);
 
     const newInvitation = await this.prisma.designInvitation.create({
@@ -24,14 +28,17 @@ export default class CollaborationService {
     return newInvitation.id;
   }
 
-  public async acceptInvitation(user: User, invitationId: string): Promise<string> {
+  public async acceptInvitation(
+    user: User,
+    invitationId: string
+  ): Promise<string> {
     const invitation = await this.prisma.designInvitation.update({
       where: {
         id: invitationId,
         userId: user.id,
       },
       data: {
-        accepted: true,
+        isActive: false,
       },
     });
 
@@ -39,7 +46,62 @@ export default class CollaborationService {
       throw new Error("Invitation not found");
     }
 
+    await this.prisma.collaborators.create({
+      data: {
+        userId: user.id,
+        designId: invitation.designId,
+      },
+    });
+
     return "Invitation has been accepted";
+  }
+
+  public async deleteInvitation(
+    user: User,
+    invitationId: string
+  ): Promise<string> {
+    const invitation = await this.prisma.designInvitation.findFirst({
+      where: {
+        id: invitationId,
+      },
+    });
+
+    if (!invitation) {
+      throw new Error("Invitation not found");
+    }
+
+    this.authorize(user, invitation.designId);
+
+    await this.prisma.designInvitation.delete({
+      where: {
+        id: invitationId,
+      },
+    });
+
+    return "Invitation has been deleted";
+  }
+
+  public async kickCollaborator(
+    user: User,
+    designId: string,
+    collaborationId: string
+  ): Promise<string> {
+    await this.authorize(user, designId);
+
+    const collaborator = await this.prisma.collaborators.update({
+      where: {
+        id: collaborationId,
+      },
+      data: {
+        isActive: false,
+      },
+    });
+
+    if (!collaborator) {
+      throw new Error("Collaborator not found");
+    }
+
+    return "Collaborator has been kicked";
   }
 
   public async getInvitations(user: User): Promise<DesignInvitation[]> {
@@ -56,8 +118,23 @@ export default class CollaborationService {
     return invitations;
   }
 
-  public async deleteInvitation(user: User, invitationId: string): Promise<string> {
-    throw new Error("Not implemented");
+  public async getCollaborators(user: User, designId: string): Promise<User[]> {
+    await this.authorize(user, designId);
+
+    const collaborators = await this.prisma.collaborators.findMany({
+      where: {
+        designId,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    if (!collaborators) {
+      throw new Error("No collaborators found");
+    }
+
+    return collaborators.map((collaborator) => collaborator.user);
   }
 
   private async authorize(user: User, id: string): Promise<void> {

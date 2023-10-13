@@ -16,6 +16,7 @@ model User {
   updatedAt     DateTime           @default(now()) @updatedAt
   designs       Design[]
   designInvites DesignInvitation[]
+  collaborators Collaborators[]
 }
 
 model Design {
@@ -27,6 +28,8 @@ model Design {
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @updatedAt
   designInvites DesignInvitation[]
+  collaborators Collaborators[]
+
 
   @@index([designerId])
 }
@@ -47,7 +50,20 @@ model DesignInvitation {
   designId String
   user     User    @relation(fields: [userId], references: [id])
   userId   String
-  accepted Boolean @default(false)
+  isActive Boolean @default(true)
+
+  @@index([designId])
+  @@index([userId])
+}
+
+model Collaborators {
+  id       String  @id @default(uuid())
+  design   Design  @relation(fields: [designId], references: [id])
+  designId String
+  user     User    @relation(fields: [userId], references: [id])
+  userId   String
+  isActive Boolean @default(true)
+
 
   @@index([designId])
   @@index([userId])
