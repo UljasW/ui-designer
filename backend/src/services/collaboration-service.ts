@@ -121,7 +121,7 @@ export default class CollaborationService {
   }
 
   public async getCollaborators(user: User, designId: string): Promise<User[]> {
-    await this.authorize(user, designId);
+    await checkIfUserHasAccess(user, designId, this.prisma);
 
     const collaborators = await this.prisma.collaborators.findMany({
       where: {
