@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import AuthService from "../services/auth-service";
+import AuthService from "../services/auth/auth-service";
 import { error } from "console";
 import verifyToken from "../middlewares/verify-token";
 import { PrismaClient } from "@prisma/client";

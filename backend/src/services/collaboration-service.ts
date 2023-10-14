@@ -1,4 +1,5 @@
 import { PrismaClient, User, DesignInvitation } from "@prisma/client";
+import { checkIfUserIsDesigner, checkIfUserHasAccess } from "./auth/authorize";
 
 export default class CollaborationService {
   private prisma: PrismaClient;
@@ -12,7 +13,7 @@ export default class CollaborationService {
     userId: string,
     designId: string
   ): Promise<string> {
-    await this.authorize(user, designId);
+    await checkIfUserIsDesigner(user, designId, this.prisma);
 
     const newInvitation = await this.prisma.designInvitation.create({
       data: {
@@ -58,6 +59,7 @@ export default class CollaborationService {
 
   public async deleteInvitation(
     user: User,
+    designId: string,
     invitationId: string
   ): Promise<string> {
     const invitation = await this.prisma.designInvitation.findFirst({
@@ -70,7 +72,7 @@ export default class CollaborationService {
       throw new Error("Invitation not found");
     }
 
-    this.authorize(user, invitation.designId);
+    await checkIfUserIsDesigner(user, designId, this.prisma);
 
     await this.prisma.designInvitation.delete({
       where: {
@@ -86,7 +88,7 @@ export default class CollaborationService {
     designId: string,
     collaborationId: string
   ): Promise<string> {
-    await this.authorize(user, designId);
+    await checkIfUserIsDesigner(user, designId, this.prisma);
 
     const collaborator = await this.prisma.collaborators.update({
       where: {
@@ -137,19 +139,5 @@ export default class CollaborationService {
     return collaborators.map((collaborator) => collaborator.user);
   }
 
-  private async authorize(user: User, id: string): Promise<void> {
-    const design = await this.prisma.design.findFirst({
-      where: {
-        id: id,
-      },
-    });
-
-    if (!design) {
-      throw new Error("No design was found");
-    }
-
-    if (design.designerId !== user.id) {
-      throw new Error("Not your design");
-    }
-  }
+  
 }

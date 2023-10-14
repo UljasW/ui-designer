@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import UserInterface from "../interfaces/user-interface";
+import UserInterface from "../../interfaces/user-interface";
 import { PrismaClient, User } from "@prisma/client";
 
 export default class AuthService {

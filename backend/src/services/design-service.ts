@@ -1,6 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 import objectInterface from "../interfaces/object-interface";
-
+import { checkIfUserIsDesigner, checkIfUserHasAccess } from "./auth/authorize";
 export default class DesignService {
   private prisma: PrismaClient;
 
@@ -18,7 +18,7 @@ export default class DesignService {
     return design.id;
   }
   public async delete(user: User, id: string): Promise<string> {
-    await this.authorize(user, id);
+    await checkIfUserIsDesigner(user, id, this.prisma);
 
     // Deleting related objects first
     await this.prisma.objects.deleteMany({
@@ -43,7 +43,7 @@ export default class DesignService {
   }
 
   public async getObjects(user: any, designId: string) {
-    await this.authorize(user, designId);
+    await checkIfUserHasAccess(user, designId, this.prisma);
 
     const objects = await this.prisma.objects.findMany({
       where: {
@@ -59,7 +59,7 @@ export default class DesignService {
     id: string,
     objects: any
   ): Promise<string> {
-    await this.authorize(user, id);
+    await checkIfUserHasAccess(user, id, this.prisma);
 
     await this.prisma.objects.deleteMany({
       where: {
@@ -77,7 +77,7 @@ export default class DesignService {
     id: string,
     objects: any
   ): Promise<string> {
-    await this.authorize(user, id);
+    await checkIfUserHasAccess(user, id, this.prisma);
 
     const objList = await this.prisma.objects.findMany({
       where: {
@@ -114,19 +114,5 @@ export default class DesignService {
 
     return "updated";
   }
-  private async authorize(user: User, id: string) {
-    const design = await this.prisma.design.findFirst({
-      where: {
-        id: id,
-      },
-    });
 
-    if (!design) {
-      throw new Error("No design was found");
-    }
-
-    if (design.designerId !== user.id) {
-      throw new Error("Not your design");
-    }
-  }
 }
