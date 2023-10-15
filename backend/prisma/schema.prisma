@@ -16,7 +16,7 @@ model User {
   updatedAt     DateTime           @default(now()) @updatedAt
   designs       Design[]
   designInvites DesignInvitation[]
-  collaborators Collaborators[]
+  collaborators Collaborator[]
 }
 
 model Design {
@@ -28,7 +28,7 @@ model Design {
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @updatedAt
   designInvites DesignInvitation[]
-  collaborators Collaborators[]
+  collaborators Collaborator[]
 
 
   @@index([designerId])
@@ -56,7 +56,7 @@ model DesignInvitation {
   @@index([userId])
 }
 
-model Collaborators {
+model Collaborator {
   id       String  @id @default(uuid())
   design   Design  @relation(fields: [designId], references: [id])
   designId String

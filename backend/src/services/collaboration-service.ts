@@ -47,7 +47,7 @@ export default class CollaborationService {
       throw new Error("Invitation not found");
     }
 
-    await this.prisma.collaborators.create({
+    await this.prisma.collaborator.create({
       data: {
         userId: user.id,
         designId: invitation.designId,
@@ -72,7 +72,7 @@ export default class CollaborationService {
       throw new Error("Invitation not found");
     }
 
-    await checkIfUserIsDesigner(user, designId, this.prisma);
+    await checkIfUserHasAccess(user, designId, this.prisma);
 
     await this.prisma.designInvitation.delete({
       where: {
@@ -90,7 +90,7 @@ export default class CollaborationService {
   ): Promise<string> {
     await checkIfUserIsDesigner(user, designId, this.prisma);
 
-    const collaborator = await this.prisma.collaborators.update({
+    const collaborator = await this.prisma.collaborator.update({
       where: {
         id: collaborationId,
       },
@@ -123,7 +123,7 @@ export default class CollaborationService {
   public async getCollaborators(user: User, designId: string): Promise<User[]> {
     await checkIfUserHasAccess(user, designId, this.prisma);
 
-    const collaborators = await this.prisma.collaborators.findMany({
+    const collaborators = await this.prisma.collaborator.findMany({
       where: {
         designId,
       },
