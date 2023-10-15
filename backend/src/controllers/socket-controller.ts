@@ -1,15 +1,20 @@
 import { Server, Socket } from "socket.io";
 import DesignService from "../services/design-service";
+import ObjectService from "../services/object-service";
+
 import socketAuthMiddleware from "../middlewares/socket-auth-middleware";
 import { PrismaClient } from "@prisma/client";
 
 export default class SocketController {
   private io: Server;
   private designService: DesignService;
+  private objectService: ObjectService;
+
 
   constructor(io: Server, prisma: PrismaClient) {
     this.io = io;
     this.designService = new DesignService(prisma);
+    this.objectService = new ObjectService(prisma);
     this.setupEvents();
   }
 
@@ -46,7 +51,7 @@ export default class SocketController {
         : [data.objects];
         const user = (socket.request as any).user;
         const designId = socket.handshake.query.designId as string;
-        await this.designService.deleteObjects(user, designId, objects);
+        await this.objectService.deleteObjects(user, designId, objects);
         callback({ status: "success" });
       } catch (error) {
         console.error(`Error deleting objects: ${error}`);
@@ -72,7 +77,7 @@ export default class SocketController {
       const user = (socket.request as any).user;
       const designId = socket.handshake.query.designId as string;
 
-      await this.designService.updateObjList(user, designId, objects);
+      await this.objectService.updateObjList(user, designId, objects);
       callback({ status: "success" });
     } catch (error) {
       console.error(`Error updating design: ${error}`);
@@ -90,7 +95,7 @@ export default class SocketController {
       const user = (socket.request as any).user;
       const designId = socket.handshake.query.designId as string;
 
-      const objects = await this.designService.getObjects(user, designId);
+      const objects = await this.objectService.getObjects(user, designId);
       console.log("Objects:", objects);
       callback({ objects });
     } catch (error) {
