@@ -5,19 +5,9 @@ export async function checkIfUserIsDesigner(
   id: string,
   prisma: PrismaClient
 ) {
-  const design = await prisma.design.findFirst({
-    where: {
-      id: id,
-    },
-  });
+  const design = await getDesign(id, prisma);
 
-  if (!design) {
-    throw new Error("No design was found");
-  }
-
-  if (design.designerId !== user.id) {
-    throw new Error("Not your design");
-  }
+  autherizeDesigner(user, design.designerId);
 }
 
 export async function checkIfUserHasAccess(
@@ -25,6 +15,19 @@ export async function checkIfUserHasAccess(
   id: string,
   prisma: PrismaClient
 ) {
+  const design = await getDesign(id, prisma);
+
+
+  const collaborator = design.collaborators.find(
+    (collaborator) => collaborator.userId === user.id
+  );
+
+  if (design.designerId !== user.id || !collaborator) {
+    throw new Error("You dont have access to this design");
+  }
+}
+
+async function getDesign(id:string, prisma: PrismaClient){
   const design = await prisma.design.findFirst({
     where: {
       id: id,
@@ -38,11 +41,12 @@ export async function checkIfUserHasAccess(
     throw new Error("No design was found");
   }
 
-  const collaborator = design.collaborators.find(
-    (collaborator) => collaborator.userId === user.id
-  );
+  return design;
 
-  if (design.designerId !== user.id || !collaborator) {
-    throw new Error("You dont have access to this design");
+}
+
+function autherizeDesigner(user: User, id: string) {
+  if (user.id !== id) {
+    throw new Error("Not your design");
   }
 }
