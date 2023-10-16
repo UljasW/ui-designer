@@ -16,7 +16,7 @@ export default class CollaborationController {
 
     router.post("/invite", verifyToken, async (req: Request, res: Response) => {
       try {
-        res.send(await collaborationService.createInvitation((req as any).user, req.body.userId, req.body.designId));
+        res.send(await collaborationService.createInvitation((req as any).user, req.body.email, req.body.designId));
       } catch (error) {
         res.status(400).send(error);
       }

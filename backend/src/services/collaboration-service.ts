@@ -8,24 +8,44 @@ export default class CollaborationService {
     this.prisma = prisma;
   }
 
-  public async createInvitation(user: User, userId: string, designId: string): Promise<string> {
+  public async createInvitation(
+    user: User,
+    email: string,
+    designId: string
+  ): Promise<string> {
     await this.authorizeAsDesigner(user, designId);
-    return await this.createDesignInvitation(userId, designId);
+    throw new Error("Not implemented");
+    //return await this.createDesignInvitation(userId, designId);
   }
 
-  public async acceptInvitation(user: User, invitationId: string): Promise<string> {
-    const invitation = await this.updateInvitationStatus(invitationId, user.id, false);
+  public async acceptInvitation(
+    user: User,
+    invitationId: string
+  ): Promise<string> {
+    const invitation = await this.updateInvitationStatus(
+      invitationId,
+      user.id,
+      false
+    );
     await this.createCollaborator(user.id, invitation.designId);
     return "Invitation has been accepted";
   }
 
-  public async deleteInvitation(user: User, designId: string, invitationId: string): Promise<string> {
+  public async deleteInvitation(
+    user: User,
+    designId: string,
+    invitationId: string
+  ): Promise<string> {
     await this.authorizeForAccess(user, designId);
     await this.deleteDesignInvitation(invitationId);
     return "Invitation has been deleted";
   }
 
-  public async kickCollaborator(user: User, designId: string, collaborationId: string): Promise<string> {
+  public async kickCollaborator(
+    user: User,
+    designId: string,
+    collaborationId: string
+  ): Promise<string> {
     await this.authorizeAsDesigner(user, designId);
     await this.updateCollaboratorStatus(collaborationId, false);
     return "Collaborator has been kicked";
@@ -48,7 +68,10 @@ export default class CollaborationService {
     await checkIfUserHasAccess(user, designId, this.prisma);
   }
 
-  private async createDesignInvitation(userId: string, designId: string): Promise<string> {
+  private async createDesignInvitation(
+    userId: string,
+    designId: string
+  ): Promise<string> {
     const newInvitation = await this.prisma.designInvitation.create({
       data: {
         designId,
@@ -61,7 +84,11 @@ export default class CollaborationService {
     return newInvitation.id;
   }
 
-  private async updateInvitationStatus(invitationId: string, userId: string, isActive: boolean) {
+  private async updateInvitationStatus(
+    invitationId: string,
+    userId: string,
+    isActive: boolean
+  ) {
     const invitation = await this.prisma.designInvitation.update({
       where: {
         id: invitationId,
@@ -94,7 +121,10 @@ export default class CollaborationService {
     });
   }
 
-  private async updateCollaboratorStatus(collaborationId: string, isActive: boolean) {
+  private async updateCollaboratorStatus(
+    collaborationId: string,
+    isActive: boolean
+  ) {
     const collaborator = await this.prisma.collaborator.update({
       where: {
         id: collaborationId,
@@ -108,7 +138,9 @@ export default class CollaborationService {
     }
   }
 
-  private async findUserInvitations(userId: string): Promise<DesignInvitation[]> {
+  private async findUserInvitations(
+    userId: string
+  ): Promise<DesignInvitation[]> {
     const invitations = await this.prisma.designInvitation.findMany({
       where: {
         userId: userId,

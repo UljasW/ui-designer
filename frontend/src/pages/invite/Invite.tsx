@@ -1,32 +1,37 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
-
+import sendInvite from "../../api/collaboration/sendInvite";
+import { useSearchParams } from "react-router-dom";
 export default function Invite() {
-    const [designName, setDesignName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [searchParams] = useSearchParams();
 
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    sendInvite(
+      email,
+      searchParams.get("id") || "",
+      localStorage.getItem("jwt") || ""
+    );
+  };
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
-        console.log("Design Name: " + designName);
-        //createDesign(designName, localStorage.getItem("jwt") || "");
-      };
-    
-      const handleDesignNameChange = (event: ChangeEvent<HTMLInputElement>): void => {
-        setDesignName(event.target.value);
-      };
+  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    setEmail(event.target.value);
+  };
 
-      
   return (
     <div>
       <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
         <input
-          type="text"
-          placeholder="Design Name"
-          onChange={handleDesignNameChange}
+          type="email"
+          placeholder="Email"
+          onChange={handleEmailChange}
           style={{ padding: "10px", marginRight: "10px", fontSize: "16px" }}
         />
         <button type="submit" style={{ padding: "10px", fontSize: "16px" }}>
-          Create
+          Send Invite
         </button>
       </form>
     </div>
   );
 }
+

@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import AuthController from "./src/controllers/auth-controller";
 import DesignController from "./src/controllers/design-controller";
 import SocketController from "./src/controllers/socket-controller";
+import CollaborationController from "./src/controllers/collaboration-controller";
 import http from "http";
 import { Server } from "socket.io";
 import { PrismaClient } from "@prisma/client";
@@ -32,6 +33,8 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/auth", new AuthController(prisma).Router());
 app.use("/design", new DesignController(prisma).Router());
+app.use("/collab", new CollaborationController(prisma).Router());
+
 
 new SocketController(io, prisma);
 
