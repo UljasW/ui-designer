@@ -41,6 +41,11 @@ export default function DesignManager() {
     navigate("/designer?id=" + id);
   };
 
+  const handleDesignInvite = (e: any, id: string): void => {
+    e.preventDefault();
+    navigate("/invite?id=" + id);
+  };
+
   const handleDesignDelete = async (id: string) => {
     await deleteDesign(id, localStorage.getItem("jwt") || "");
     fetchDesignes();
@@ -80,6 +85,24 @@ export default function DesignManager() {
                 }}
               >
                 View
+              </button>
+              <button
+                onClick={(e: any) => {
+                  e.preventDefault();
+                  handleDesignInvite(e, design.id)
+                }}
+                style={{
+                  padding: "10px",
+                  fontSize: "16px",
+                  color: "#fff",
+                  backgroundColor: "blue",
+                  border: "none",
+                  cursor: "pointer",
+                  marginRight: "10px",
+
+                }}
+              >
+                Invite user
               </button>
               <button
                 onClick={(e: any) => {

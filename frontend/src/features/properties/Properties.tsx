@@ -144,6 +144,7 @@ export default function Properties(props: FabricCanvasProps) {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        zIndex: 100,
       }}
     >
        {selectedObj && selectedObj.type === "text" && (
