@@ -30,18 +30,11 @@ export default class AuthService {
     await this.deleteUser(user.id);
   }
 
-  public async getUserByEmail(email: string): Promise<User> {
+  private async getUserByEmail(email: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: { email },
     }) as UserInterface;
     return user;
-  }
-
-  public validateEmail(email: string) {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(email)) {
-      throw new Error("Invalid email address");
-    }
   }
 
   private async createUser(email: string, password: string) {
@@ -80,5 +73,10 @@ export default class AuthService {
     });
   }
 
-  
+  private validateEmail(email: string) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      throw new Error("Invalid email address");
+    }
+  }
 }
