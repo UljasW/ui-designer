@@ -4,7 +4,7 @@ import { apiUrl } from "../../constants";
 
 export default async (token: string) => {
     try {
-        const response = await axios.get(`${apiUrl}/getInvitations`, {
+        const response = await axios.get(`${apiUrl}/collab/invitations`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
