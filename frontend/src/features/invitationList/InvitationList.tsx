@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import getInvitations from '../../api/collaboration/getInvitations';
 
-export default function invitationList() {
+export default function InvitationList() {
     const [invitationList, setInvitationList] = useState<any[]>();
     useEffect(() => {
       fetchInvitations();
-      return () => {
-        console.log("Invitation List Unmounted");
-      };
     }, []);
     async function fetchInvitations() {
       setInvitationList(await getInvitations(localStorage.getItem("jwt") || ""));
+      console.log(invitationList);
     }
     return (
       <div>
