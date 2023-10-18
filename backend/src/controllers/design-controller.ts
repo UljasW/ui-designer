@@ -26,7 +26,7 @@ export default class DesignController {
 
     router.get("/", verifyToken, async (req: Request, res: Response) => {
       try {
-        res.send(await designService.getAll((req as any).user));
+        res.send(await designService.getAllByUser((req as any).user));
       } catch (error) {
         res.status(400).send(error);
       }

@@ -19,8 +19,8 @@ export default class DesignService {
     return "Design has been removed";
   }
 
-  public async getAll(user: User): Promise<string> {
-    return await this.findAllDesigns();
+  public async getAllByUser(user: User): Promise<string> {
+    return await this.findDesignsByUser(user);
   }
 
   private async createDesign(user: User, name: string): Promise<string> {
@@ -53,8 +53,9 @@ export default class DesignService {
     });
   }
 
-  private async findAllDesigns(): Promise<string> {
-    const designs = await this.prisma.design.findMany();
+  private async findDesignsByUser(user: User): Promise<string> {
+    const designs = await this.prisma.design.findMany({ where: { designerId: user.id } }) || [];
     return JSON.stringify(designs);
   }
+
 }
