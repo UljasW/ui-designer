@@ -14,8 +14,8 @@ export default class CollaborationService {
     designId: string
   ): Promise<string> {
     await this.authorizeAsDesigner(user, designId);
-    throw new Error("Not implemented");
-    //return await this.createDesignInvitation(userId, designId);
+    const userId = (await this.getUserByEmail(email)).id; 
+    return await this.createDesignInvitation(userId, designId);
   }
 
   public async acceptInvitation(
@@ -58,6 +58,18 @@ export default class CollaborationService {
   public async getCollaborators(user: User, designId: string): Promise<User[]> {
     await this.authorizeForAccess(user, designId);
     return await this.findDesignCollaborators(designId);
+  }
+
+  private async getUserByEmail(email: string): Promise<User> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user;
   }
 
   private async authorizeAsDesigner(user: User, designId: string) {
