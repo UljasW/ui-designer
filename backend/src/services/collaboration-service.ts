@@ -90,6 +90,8 @@ export default class CollaborationService {
         userId,
       },
     });
+
+    console.log(newInvitation);
     if (!newInvitation) {
       throw new Error("Failed to create invitation");
     }
@@ -157,12 +159,19 @@ export default class CollaborationService {
       where: {
         userId: userId,
       },
+      include: {
+        design: true,
+        user: true,
+      },
     });
     if (!invitations) {
       throw new Error("No invitations found");
     }
+
+    console.log(invitations);
     return invitations;
   }
+
 
   private async findDesignCollaborators(designId: string): Promise<User[]> {
     const collaborators = await this.prisma.collaborator.findMany({
