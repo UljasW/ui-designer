@@ -1,21 +1,20 @@
 import axios from "axios";
 import { apiUrl } from "../../constants";
 
-export default async (email: string, designId: string, token: string) => {
+export default async (invitationId: string, token: string) => {
   try {
     const response = await axios.post(
-      `${apiUrl}/collab/invite`,
+      `${apiUrl}/collab/accept-invitation`,
       {
-        email: email,
-        designId: designId
+        invitationId,
       },
       {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
-    alert("Invite sent!");
+    alert("Invite accepted!");
 
     return response.data;
   } catch (error) {

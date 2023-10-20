@@ -15,6 +15,12 @@ export default class CollaborationService {
   ): Promise<string> {
     await this.authorizeAsDesigner(user, designId);
     const userId = (await this.getUserByEmail(email)).id; 
+    if(await this.checkIfUserHasActiveInvatationById(userId, designId)){
+      throw new Error("User already has active invitation");
+    }
+    if(await this.isUserAlreadyCollaborator(userId, designId)){
+      throw new Error("User is already a collaborator for this design");
+    }
     return await this.createDesignInvitation(userId, designId);
   }
 
@@ -98,6 +104,23 @@ export default class CollaborationService {
     return newInvitation.id;
   }
 
+  private async checkIfUserHasActiveInvatationById(
+    userId: string,
+    designId: string
+  ): Promise<boolean> {
+    const invitation = await this.prisma.designInvitation.findFirst({
+      where: {
+        userId: userId,
+        designId: designId,
+        isActive: true,
+      },
+    });
+    if (invitation) {
+      return true;
+    }
+    return false
+  }
+
   private async updateInvitationStatus(
     invitationId: string,
     userId: string,
@@ -119,6 +142,13 @@ export default class CollaborationService {
   }
 
   private async createCollaborator(userId: string, designId: string) {
+    const isAlreadyCollaborator = await this.isUserAlreadyCollaborator(userId, designId);
+  
+    if (isAlreadyCollaborator) {
+      console.log("User is already a collaborator for this design.");
+      return;
+    }
+  
     await this.prisma.collaborator.create({
       data: {
         userId: userId,
@@ -126,6 +156,19 @@ export default class CollaborationService {
       },
     });
   }
+
+  
+  private async isUserAlreadyCollaborator(userId: string, designId: string): Promise<boolean> {
+    const collaborator = await this.prisma.collaborator.findFirst({
+      where: {
+        userId: userId,
+        designId: designId,
+      },
+    });
+    
+    return collaborator ? true : false;
+  }
+  
 
   private async deleteDesignInvitation(invitationId: string) {
     await this.prisma.designInvitation.delete({

@@ -12,6 +12,8 @@ export default function Invite() {
       searchParams.get("id") || "",
       localStorage.getItem("jwt") || ""
     );
+    
+
   };
 
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>): void => {

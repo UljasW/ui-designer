@@ -15,6 +15,8 @@ export default class DesignService {
   public async delete(user: User, id: string): Promise<string> {
     await this.authorizeUser(user, id);
     await this.deleteRelatedObjects(id);
+    await this.deleteDesignInvitation(id);
+    await this.deleteCollaborator(id);
     await this.deleteDesignById(id);
     return "Design has been removed";
   }
@@ -37,13 +39,7 @@ export default class DesignService {
     await checkIfUserIsDesigner(user, id, this.prisma);
   }
 
-  private async deleteRelatedObjects(id: string) {
-    await this.prisma.objects.deleteMany({
-      where: {
-        designId: id,
-      },
-    });
-  }
+ 
 
   private async deleteDesignById(id: string) {
     await this.prisma.design.delete({
@@ -53,9 +49,43 @@ export default class DesignService {
     });
   }
 
-  private async findDesignsByUser(user: User): Promise<string> {
-    const designs = await this.prisma.design.findMany({ where: { designerId: user.id } }) || [];
-    return JSON.stringify(designs);
+  private async deleteDesignInvitation(id: string) {
+    await this.prisma.designInvitation.deleteMany({
+      where: {
+        designId: id,
+      },
+    });
   }
 
+  private async deleteRelatedObjects(id: string) {
+    await this.prisma.objects.deleteMany({
+      where: {
+        designId: id,
+      },
+    });
+  }
+
+  private async deleteCollaborator(id: string) {
+    await this.prisma.collaborator.deleteMany({
+      where: {
+        designId: id,
+      },
+    });
+  }
+
+  private async findDesignsByUser(user: User): Promise<string> {
+    const myDesignes =
+      (await this.prisma.design.findMany({ where: { designerId: user.id } })) ||
+      [];
+    const sharedDesigns =
+      (await this.prisma.collaborator.findMany({
+        where: { userId: user.id },
+        include: { design: true },
+      })) || [];
+    const designs = [
+      ...myDesignes,
+      ...sharedDesigns.map((collaborator) => collaborator.design),
+    ].sort((a, b) => (a.updatedAt > b.updatedAt ? -1 : 1));
+    return JSON.stringify(designs);
+  }
 }
