@@ -10,7 +10,6 @@ export default class SocketController {
   private designService: DesignService;
   private objectService: ObjectService;
 
-
   constructor(io: Server, prisma: PrismaClient) {
     this.io = io;
     this.designService = new DesignService(prisma);
@@ -33,32 +32,40 @@ export default class SocketController {
       socket.on("delete-objects", (data, callback) =>
         this.handleDeleteObjects(socket, data, callback)
       );
-    
-      socket.on("get-objects", ( callback) => {
+
+      socket.on("get-objects", (callback) => {
         this.handleGetObjects(socket, callback);
+      });
+
+      socket.on("update-objects-live-visually", (data) => {
+        console.log(
+          "update-objects-live-visually received from client: ",
+          socket.rooms
+        );
+        socket.to(designId).emit("update-objects-live-visually", data);
       });
 
       socket.on("disconnect", () => this.handleDisconnect(socket));
     });
   }
-  private async handleDeleteObjects(socket: Socket,
+  private async handleDeleteObjects(
+    socket: Socket,
     data: any,
-    callback: CallableFunction) {
-      try {
-        console.log("delete-objects received from client: ", socket.rooms);
-        const objects = Array.isArray(data.objects)
+    callback: CallableFunction
+  ) {
+    try {
+      console.log("delete-objects received from client: ", socket.rooms);
+      const objects = Array.isArray(data.objects)
         ? data.objects
         : [data.objects];
-        const user = (socket.request as any).user;
-        const designId = socket.handshake.query.designId as string;
-        await this.objectService.deleteObjects(user, designId, objects);
-        callback({ status: "success" });
-      } catch (error) {
-        console.error(`Error deleting objects: ${error}`);
-        callback({ status: "error" });
-      }
-
-    
+      const user = (socket.request as any).user;
+      const designId = socket.handshake.query.designId as string;
+      await this.objectService.deleteObjects(user, designId, objects);
+      callback({ status: "success" });
+    } catch (error) {
+      console.error(`Error deleting objects: ${error}`);
+      callback({ status: "error" });
+    }
   }
 
   private async handleUpdateDb(
@@ -84,7 +91,6 @@ export default class SocketController {
       callback({ status: "error" });
     }
   }
-
 
   private async handleGetObjects(
     socket: Socket,
