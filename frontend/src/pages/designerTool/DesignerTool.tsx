@@ -7,6 +7,7 @@ import fabric from "fabric";
 import useLiveCollaboration from "../../hooks/useLiveCollaboration";
 import { useSearchParams } from "react-router-dom";
 import useRenderObjectsOnCanvas from "../../hooks/useRenderObjectsOnCanvas";
+import useSnapping from "../../hooks/useSnapping";
 
 export default function DesignerTool() {
   const canvas = useRef<fabric.fabric.Canvas>();
@@ -14,15 +15,16 @@ export default function DesignerTool() {
   const [currentColor, setCurrentColor] = useState<string>("black");
   const [searchParams] = useSearchParams();
   const [designId, setDesignId] = useState<string>();
+  const { checkSnapping } = useSnapping(canvas);
 
   const { renderObjectsOnCanvas } = useRenderObjectsOnCanvas();
-  
-  const { updateDb, getObjects, deleteObjects, updateObjectsLiveVisually } = useLiveCollaboration(
-    searchParams.get("id") || "",
-    renderObjectsOnCanvas,
-    canvas
-  );
-  
+
+  const { updateDb, getObjects, deleteObjects, updateObjectsLiveVisually } =
+    useLiveCollaboration(
+      searchParams.get("id") || "",
+      renderObjectsOnCanvas,
+      canvas
+    );
 
   useEffect(() => {
     const fetchObjectsAndRender = async () => {
@@ -41,16 +43,23 @@ export default function DesignerTool() {
   }, [canvas]);
 
   useEffect(() => {
-    if (canvas.current) {
-      canvas.current.on("object:modified", (e: any) => {
-        updateObjectsLiveVisually(canvas.current?.getObjects());
-      });
+    if (!canvas.current) return;
+    canvas.current.on("object:modified", (e: any) => {
+      console.log("Object modified"); // Added for debug
+      updateObjectsLiveVisually(canvas.current?.getObjects());
+    });
+
+    canvas.current.on("mouse:move", (e: any) => {
+      console.log("Mouse moved"); // Added for debug
+    });
+
+    return () => {
+      canvas.current?.off("object:modified");
+      canvas.current?.off("mouse:move");
     }
-  }, [canvas]);
 
-  
     
-
+  }, [canvas.current]);
 
   return (
     <div style={{ width: "100%", height: "100%" }}>

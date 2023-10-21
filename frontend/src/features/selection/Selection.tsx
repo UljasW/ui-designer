@@ -32,7 +32,6 @@ export default function Selection(props: FabricCanvasProps) {
         if (!object) {
           return;
         } 
-
         object.set({ left: pointer.x, top: pointer.y });
         canvas.renderAll();
     
