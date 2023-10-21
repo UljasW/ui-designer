@@ -42,7 +42,7 @@ export default class SocketController {
           "update-objects-live-visually received from client: ",
           socket.rooms
         );
-        socket.to(designId).emit("update-objects-live-visually", data);
+        socket.to(designId).emit("updated-objects-live-visually", data);
       });
 
       socket.on("disconnect", () => this.handleDisconnect(socket));

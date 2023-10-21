@@ -13,11 +13,16 @@ export default function DesignerTool() {
   const [isCanvasInitialized, setCanvasInitialized] = useState(false);
   const [currentColor, setCurrentColor] = useState<string>("black");
   const [searchParams] = useSearchParams();
-  const { renderObjectsOnCanvas } = useRenderObjectsOnCanvas();
-  const { updateDb, getObjects, deleteObjects } = useLiveCollaboration(
-    searchParams.get("id") || ""
-  );
   const [designId, setDesignId] = useState<string>();
+
+  const { renderObjectsOnCanvas } = useRenderObjectsOnCanvas();
+  
+  const { updateDb, getObjects, deleteObjects, updateObjectsLiveVisually } = useLiveCollaboration(
+    searchParams.get("id") || "",
+    renderObjectsOnCanvas,
+    canvas
+  );
+  
 
   useEffect(() => {
     const fetchObjectsAndRender = async () => {
@@ -34,6 +39,18 @@ export default function DesignerTool() {
 
     fetchObjectsAndRender();
   }, [canvas]);
+
+  useEffect(() => {
+    if (canvas.current) {
+      canvas.current.on("object:modified", (e: any) => {
+        updateObjectsLiveVisually(canvas.current?.getObjects());
+      });
+    }
+  }, [canvas]);
+
+  
+    
+
 
   return (
     <div style={{ width: "100%", height: "100%" }}>

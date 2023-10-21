@@ -5,6 +5,7 @@ export default function useRenderObjectsOnCanvas() {
     canvasInstance: fabric.Canvas,
     objectsContainer: any
   ) => {
+    canvasInstance.clear();
     console.log("Original objects:", objectsContainer);
 
     const sortedDataObjects = objectsContainer.objects
