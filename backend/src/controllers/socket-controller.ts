@@ -85,6 +85,9 @@ export default class SocketController {
       const designId = socket.handshake.query.designId as string;
 
       await this.objectService.updateObjList(user, designId, objects);
+      const allObjects = await this.objectService.getObjects(user, designId);
+      socket.to(designId).emit("updated-objects-live-visually", {objects: allObjects});
+
       callback({ status: "success" });
     } catch (error) {
       console.error(`Error updating design: ${error}`);

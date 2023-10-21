@@ -71,6 +71,7 @@ export default function DesignerTool() {
           updateDb={updateDb}
           canvas={canvas}
           deleteObjects={deleteObjects}
+          updateObjectsLiveVisually={updateObjectsLiveVisually}
         ></Layers>
         <FabricCanvas canvas={canvas}></FabricCanvas>
         <Properties

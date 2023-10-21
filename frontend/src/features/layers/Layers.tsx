@@ -4,6 +4,7 @@ interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.Canvas | undefined>;
   updateDb: (objects: any) => void;
   deleteObjects: (objects: any) => void
+  updateObjectsLiveVisually: (objects: any) => void;
 }
 
 export default function Layers(props: FabricCanvasProps) {
@@ -73,6 +74,8 @@ export default function Layers(props: FabricCanvasProps) {
 
     setObjList(canvasInstance.getObjects());
     canvasInstance.renderAll();
+    props.updateObjectsLiveVisually(canvasInstance.getObjects());
+
     //props.switchPlacesDb(selectedObj.id, (canvasInstance.getObjects()[idx - 1] as any ).id);
   }
 
@@ -96,6 +99,7 @@ export default function Layers(props: FabricCanvasProps) {
 
     setObjList(canvasInstance.getObjects());
     canvasInstance.renderAll();
+    props.updateObjectsLiveVisually(canvasInstance.getObjects());
     //props.switchPlacesDb(selectedObj.id, (canvasInstance.getObjects()[idx + 1] as any ).id);
   }
 
