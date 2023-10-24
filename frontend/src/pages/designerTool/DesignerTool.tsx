@@ -42,24 +42,27 @@ export default function DesignerTool() {
     fetchObjectsAndRender();
   }, [canvas]);
 
+
   useEffect(() => {
-    if (!canvas.current) return;
-    canvas.current.on("object:modified", (e: any) => {
-      console.log("Object modified"); // Added for debug
-      updateObjectsLiveVisually(canvas.current?.getObjects());
-    });
+    if (canvas.current && isCanvasInitialized) {
+      console.log("Adding event listeners"); // Added for debug
+      
+      canvas.current.on("mouse:move", (e: any) => {
+        console.log("Mouse moved");
+         // Added for debug
+      });
 
-    canvas.current.on("mouse:move", (e: any) => {
-      console.log("Mouse moved"); // Added for debug
-    });
+      canvas.current.on("object:modified", (e: any) => {
+        console.log("Object modified"); // Added for debug
+        updateObjectsLiveVisually(canvas.current?.getObjects());
+      });
 
-    return () => {
-      canvas.current?.off("object:modified");
-      canvas.current?.off("mouse:move");
+      return () => {
+        canvas.current?.off("object:modified");
+        canvas.current?.off("mouse:move");
+      };
     }
-
-    
-  }, [canvas.current]);
+  }, [canvas.current, isCanvasInitialized]);
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
