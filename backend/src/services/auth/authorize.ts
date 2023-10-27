@@ -10,6 +10,7 @@ export async function checkIfUserIsDesigner(
 ) {
   const design = await getDesign(id, prisma);
   authorizeDesigner(user, design.designerId);
+  console.log("User is designer");
 }
 
 /**
@@ -28,6 +29,8 @@ export async function checkIfUserHasAccess(
   if (design.designerId !== user.id && !collaborator) {
     throw new Error("You do not have access to this design");
   }
+
+  console.log("User has access");
 }
 
 /**
@@ -55,6 +58,7 @@ async function getDesign(id: string, prisma: PrismaClient) {
  */
 function authorizeDesigner(user: User, id: string) {
   if (user.id !== id) {
+    console.log("User is not designer");
     throw new Error("Unauthorized: This is not your design");
   }
 }

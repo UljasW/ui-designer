@@ -2,13 +2,16 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import sendInvite from "../../api/collaboration/sendInvite";
 import { useSearchParams } from "react-router-dom";
 import getCollaborators from "../../api/collaboration/getCollaborators";
+import getInvitationsByDesign from "../../api/collaboration/getInvitationsByDesign";
 export default function Invite() {
   const [email, setEmail] = useState<string>("");
   const [searchParams] = useSearchParams();
   const [collaborators, setCollaborators] = useState<any[]>();
+  const [invitations, setInvitations] = useState<any[]>();
 
   useEffect(() => {
     fetchCollaborators();
+    fetchInvitations();
   }, []);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
@@ -29,6 +32,18 @@ export default function Invite() {
       console.log(err);
     }
   }
+
+  const fetchInvitations = async () => {
+    try {
+      const response = await getInvitationsByDesign(localStorage.getItem("jwt") || "", searchParams.get("id") || "");
+      setInvitations(response);
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+
 
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setEmail(event.target.value);
@@ -51,6 +66,10 @@ export default function Invite() {
       <div style={{display:"flex", flexDirection:"row"}}>
         <div>
           {collaborators?.map((collaborator) => (<div>{collaborator.email}</div>))}
+        </div>
+
+        <div>
+          {invitations?.map((invite) => (<div>{invite.user.email}</div>))}
         </div>
       </div>
     </div>

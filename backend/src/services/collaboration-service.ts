@@ -14,11 +14,11 @@ export default class CollaborationService {
     designId: string
   ): Promise<string> {
     await this.authorizeAsDesigner(user, designId);
-    const userId = (await this.getUserByEmail(email)).id; 
-    if(await this.checkIfUserHasActiveInvatationById(userId, designId)){
+    const userId = (await this.getUserByEmail(email)).id;
+    if (await this.checkIfUserHasActiveInvatationById(userId, designId)) {
       throw new Error("User already has active invitation");
     }
-    if(await this.isUserAlreadyCollaborator(userId, designId)){
+    if (await this.isUserAlreadyCollaborator(userId, designId)) {
       throw new Error("User is already a collaborator for this design");
     }
     return await this.createDesignInvitation(userId, designId);
@@ -61,6 +61,17 @@ export default class CollaborationService {
     return await this.findUserInvitations(user.id);
   }
 
+  public async getInvitationsByDesign(
+    user: any,
+    designId: string
+  ): Promise<DesignInvitation[]> {
+    await this.authorizeAsDesigner(user, designId);
+
+    const invitations = await this.findDesignInvitations(designId);
+
+    return invitations;
+  }
+
   public async getCollaborators(user: User, designId: string): Promise<User[]> {
     await this.authorizeAsDesigner(user, designId);
     return await this.findDesignCollaborators(designId);
@@ -80,10 +91,12 @@ export default class CollaborationService {
 
   private async authorizeAsDesigner(user: User, designId: string) {
     await checkIfUserIsDesigner(user, designId, this.prisma);
+
   }
 
   private async authorizeForAccess(user: User, designId: string) {
     await checkIfUserHasAccess(user, designId, this.prisma);
+
   }
 
   private async createDesignInvitation(
@@ -118,7 +131,7 @@ export default class CollaborationService {
     if (invitation) {
       return true;
     }
-    return false
+    return false;
   }
 
   private async updateInvitationStatus(
@@ -142,13 +155,16 @@ export default class CollaborationService {
   }
 
   private async createCollaborator(userId: string, designId: string) {
-    const isAlreadyCollaborator = await this.isUserAlreadyCollaborator(userId, designId);
-  
+    const isAlreadyCollaborator = await this.isUserAlreadyCollaborator(
+      userId,
+      designId
+    );
+
     if (isAlreadyCollaborator) {
       console.log("User is already a collaborator for this design.");
       return;
     }
-  
+
     await this.prisma.collaborator.create({
       data: {
         userId: userId,
@@ -157,18 +173,19 @@ export default class CollaborationService {
     });
   }
 
-  
-  private async isUserAlreadyCollaborator(userId: string, designId: string): Promise<boolean> {
+  private async isUserAlreadyCollaborator(
+    userId: string,
+    designId: string
+  ): Promise<boolean> {
     const collaborator = await this.prisma.collaborator.findFirst({
       where: {
         userId: userId,
         designId: designId,
       },
     });
-    
+
     return collaborator ? true : false;
   }
-  
 
   private async deleteDesignInvitation(invitationId: string) {
     await this.prisma.designInvitation.delete({
@@ -215,6 +232,24 @@ export default class CollaborationService {
     return invitations;
   }
 
+  private async findDesignInvitations(
+    designId: string
+  ): Promise<DesignInvitation[]> {
+    const invitations = await this.prisma.designInvitation.findMany({
+      where: {
+        designId: designId,
+      },
+      include: {
+        user: true,
+      },
+    });
+    if (!invitations) {
+      throw new Error("No invitations found");
+    }
+
+    console.log(invitations);
+    return invitations;
+  }
 
   private async findDesignCollaborators(designId: string): Promise<User[]> {
     const collaborators = await this.prisma.collaborator.findMany({
