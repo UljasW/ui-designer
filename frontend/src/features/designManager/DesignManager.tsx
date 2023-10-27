@@ -66,8 +66,10 @@ export default function DesignManager() {
       </form>
       <div>
         {designList?.map((design) => (
-          <div key={design.id} style={{ marginBottom: "15px" }}>
+          <div key={design.id} style={{ marginBottom: "15px"}}>
             <h3 style={{ color: "#333" }}>{design.name}</h3>
+            <h4>Is owner: {design.isOwner.toString()}</h4>
+            
             <p style={{ color: "#666" }}>{design.id}</p>
             <div>
               <button

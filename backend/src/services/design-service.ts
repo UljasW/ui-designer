@@ -74,17 +74,26 @@ export default class DesignService {
   }
 
   private async findDesignsByUser(user: User): Promise<string> {
-    const myDesignes =
+    const myFoundDesignes =
       (await this.prisma.design.findMany({ where: { designerId: user.id } })) ||
       [];
-    const sharedDesigns =
+    const myDesignes = myFoundDesignes.map((design) => ({...design, isOwner: true}));
+
+    const foundSharedDesigns =
       (await this.prisma.collaborator.findMany({
         where: { userId: user.id },
         include: { design: true },
       })) || [];
+
+    const sharedDesigns = foundSharedDesigns.map((collaborator) => ({
+      ...collaborator.design,
+      isOwner: false,
+    }));
+    
+
     const designs = [
       ...myDesignes,
-      ...sharedDesigns.map((collaborator) => collaborator.design),
+      ...sharedDesigns,
     ].sort((a, b) => (a.updatedAt > b.updatedAt ? -1 : 1));
     return JSON.stringify(designs);
   }

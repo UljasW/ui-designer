@@ -62,7 +62,7 @@ export default class CollaborationService {
   }
 
   public async getCollaborators(user: User, designId: string): Promise<User[]> {
-    await this.authorizeForAccess(user, designId);
+    await this.authorizeAsDesigner(user, designId);
     return await this.findDesignCollaborators(designId);
   }
 
