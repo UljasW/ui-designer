@@ -25,25 +25,29 @@ export default function Invite() {
 
   const fetchCollaborators = async () => {
     try {
-      const response = await getCollaborators(localStorage.getItem("jwt") || "", searchParams.get("id") || "");
+      const response = await getCollaborators(
+        localStorage.getItem("jwt") || "",
+        searchParams.get("id") || ""
+      );
       setCollaborators(response);
       console.log(response);
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   const fetchInvitations = async () => {
     try {
-      const response = await getInvitationsByDesign(localStorage.getItem("jwt") || "", searchParams.get("id") || "");
+      const response = await getInvitationsByDesign(
+        localStorage.getItem("jwt") || "",
+        searchParams.get("id") || ""
+      );
       setInvitations(response);
       console.log(response);
     } catch (err) {
       console.log(err);
     }
-  }
-
-
+  };
 
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setEmail(event.target.value);
@@ -63,16 +67,21 @@ export default function Invite() {
         </button>
       </form>
 
-      <div style={{display:"flex", flexDirection:"row"}}>
-        <div>
-          {collaborators?.map((collaborator) => (<div>{collaborator.email}</div>))}
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ width: "200px", backgroundColor:"lightgrey", padding:"10px", margin:"5px", borderRadius:"10px", display:"flex",flexDirection:"column" ,justifyContent:"center", alignItems:"flex-start" }}>
+          <h2>Collaborators</h2>
+          {collaborators?.map((collaborator) => (
+            <div>{collaborator.email}</div>
+          ))}
         </div>
 
-        <div>
-          {invitations?.map((invite) => (<div>{invite.user.email}</div>))}
+        <div style={{ width: "200px", backgroundColor:"lightgrey", padding:"10px", margin:"5px", borderRadius:"10px", display:"flex",flexDirection:"column", justifyContent:"center", alignItems:"flex-start"  }}>
+          <h2>Invitations</h2>
+          {invitations?.map((invite) => (
+            <div style={{ width: "150px", backgroundColor:"grey", padding:"10px", borderRadius:"10px" }}>{invite.user.email}</div>
+          ))}
         </div>
       </div>
     </div>
   );
 }
-

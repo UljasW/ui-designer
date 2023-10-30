@@ -66,9 +66,7 @@ export default class CollaborationService {
     designId: string
   ): Promise<DesignInvitation[]> {
     await this.authorizeAsDesigner(user, designId);
-
     const invitations = await this.findDesignInvitations(designId);
-
     return invitations;
   }
 

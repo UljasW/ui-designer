@@ -56,7 +56,7 @@ export default class CollaborationController {
       }
     });
 
-    router.get("/invitations:designId", verifyToken, async (req: Request, res: Response) => {
+    router.get("/invitations/:designId", verifyToken, async (req: Request, res: Response) => {
       try {
         const designId = req.params.designId;
         res.send(await collaborationService.getInvitationsByDesign((req as any).user, designId));
