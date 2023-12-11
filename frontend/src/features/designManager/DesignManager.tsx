@@ -3,6 +3,8 @@ import getDesignes from "../../api/design/getDesignes";
 import { useNavigate } from "react-router-dom";
 import createDesign from "../../api/design/createDesign";
 import deleteDesign from "../../api/design/deleteDesign";
+import Button from "../../components/Button";
+import Input from "../../components/Input";
 
 export default function DesignManager() {
   const [designList, setDesignList] = useState<any[]>();
@@ -54,77 +56,45 @@ export default function DesignManager() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
-        <input
-          type="text"
-          placeholder="Design Name"
-          onChange={handleDesignNameChange}
-          style={{ padding: "10px", marginRight: "10px", fontSize: "16px" }}
-        />
-        <button type="submit" style={{ padding: "10px", fontSize: "16px" }}>
-          Create
-        </button>
+    <div style={{ padding: "20px", width:"100%" }}>
+      <div style={{display:"flex", justifyContent:"space-between"}}> <form  style={{ marginBottom: "20px" }}>
+
+<Input
+          value={designName} type={"Text"} placeholder={"Design Name"} onChange={handleDesignNameChange}  />
+      
+
+        <Button  onClick={(e: any) => {
+                  handleSubmit(e);
+                }} color="primary" content={"Create"} />
       </form>
-      <div>
+      <Button  onClick={(e: any) => {
+                }} color="primary" content={"Notification"} />
+      </div>
+     
+
+      <div style={{display:"flex", flexWrap:"wrap", gap:"20px" }}>
         {designList?.map((design) => (
-          <div key={design.id} style={{ marginBottom: "15px" }}>
+          <div key={design.id} style={{ borderRadius:"10px", border: '1px solid #ced4da', padding: "10px" }}
+          >
             <h3 style={{ color: "#333" }}>{design.name}</h3>
             <h4>Is owner: {design.isOwner.toString()}</h4>
 
             <p style={{ color: "#666" }}>{design.id}</p>
             <div style={{display:"flex", flexDirection:"row"}}>
-              <button
-                onClick={(e: any) => {
+            <Button onClick={(e: any) => {
                   handleDesignStart(e, design.id);
-                }}
-                style={{
-                  padding: "10px",
-                  marginRight: "10px",
-                  fontSize: "16px",
-                  color: "#fff",
-                  backgroundColor: "#4CAF50",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                View
-              </button>
+                }} color="primary" content={"View/Edit"} />
+              
               {design.isOwner ? (
                 <div>
-                  <button
-                    onClick={(e: any) => {
-                      e.preventDefault();
-                      handleDesignInvite(e, design.id);
-                    }}
-                    style={{
-                      padding: "10px",
-                      fontSize: "16px",
-                      color: "#fff",
-                      backgroundColor: "blue",
-                      border: "none",
-                      cursor: "pointer",
-                      marginRight: "10px",
-                    }}
-                  >
-                    Invite user
-                  </button>
-                  <button
-                    onClick={(e: any) => {
-                      e.preventDefault();
-                      handleDesignDelete(design.id);
-                    }}
-                    style={{
-                      padding: "10px",
-                      fontSize: "16px",
-                      color: "#fff",
-                      backgroundColor: "#f44336",
-                      border: "none",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Delete
-                  </button>{" "}
+                  <Button onClick={(e: any) => {
+                  handleDesignInvite(e, design.id);
+                }} color="secondary"
+                content={"Invite user"} />
+                  <Button onClick={(e: any) => {
+                  handleDesignDelete( design.id);
+                }} color="delete" 
+                content={"Delete"}/>
                 </div>
               ) : (
                 <div></div>

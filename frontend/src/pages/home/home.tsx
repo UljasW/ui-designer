@@ -6,7 +6,6 @@ export default function home() {
   return (
     <div style={{display:"flex", flexDirection:"row"}}>
       <DesignManager></DesignManager>
-      <InvitationList></InvitationList>
     </div>
   );
 }

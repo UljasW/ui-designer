@@ -112,12 +112,14 @@ export default function Layers(props: FabricCanvasProps) {
     <div
       style={{
         width: "250px",
-        background: "LightGrey",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         padding: "20px",
-        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)"
+        background: "#F3F4F6", // Replace with the background color used in your app
+        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+        borderRight: "1px solid #ced4da",
+
       }}
     >
       {objList.map((obj, index) => {

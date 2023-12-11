@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fabric } from "fabric";
+import Input from "../../components/Input";
 
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.Canvas | undefined>;
@@ -138,60 +139,77 @@ export default function Properties(props: FabricCanvasProps) {
 
   return (
     <div
-      style={{
-        width: "200px",
-        background: "LightGrey",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        zIndex: 100,
-      }}
+    style={{
+      width: "200px",
+      padding: "20px", // Assuming your app uses 20px padding, for example
+      background: "#F3F4F6", // Replace with the background color used in your app
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1)", // Replace with the shadow style used in your app
+      display: "flex",
+      flexDirection: "column",
+      gap: "10px", // Adjust the gap to match the spacing in your app
+      zIndex: 100,
+      borderLeft: "1px solid #ced4da",
+
+    }}
     >
        {selectedObj && selectedObj.type === "text" && (
             <div>
                 <label>Text Content</label>
-                <input
-                    style={{ width: "150px" }}
-                    type="text"
-                    value={textValue}
-                    onChange={handleTextChange}
-                ></input>
+                <Input
+          type={"text"}
+          placeholder={"Enter text"}
+          value={textValue}
+          onChange={handleTextChange}
+          width="150px"
+        ></Input>
+
+                
             </div>
         )}
       <h4>Current color: {selectedObj ? selectedObj.fill : null} </h4>
       <label>Select color</label>
       <input
-        style={{ width: "150px" }}
+        style={{ width: "150px", border: '1px solid #ced4da',borderRadius: '5px'}}
         type="color"
         value={fillColor}
         onChange={handleColorChange}
       ></input>
+      
 
       <label>Select borderradius</label>
-      <input
-        style={{ width: "150px" }}
-        type="number"
-        value={borderRadius}
-        onChange={handleRadiusChange}
-      ></input>
+      
+   
+
+<Input
+
+          type={"number"}
+          placeholder={"Enter radius"}
+          value={borderRadius}
+          onChange={handleRadiusChange}
+          width="150px"
+        ></Input>
 
       {/* New Inputs */}
       <h4>Current stroke color: {selectedObj ? selectedObj.stroke : null} </h4>
       <label>Select stroke color</label>
       <input
-        style={{ width: "150px" }}
+        style={{ width: "150px", border: '1px solid #ced4da', borderRadius: '5px'}}
         type="color"
         value={strokeColor}
         onChange={handleStrokeColorChange}
       ></input>
 
       <label>Select stroke width</label>
-      <input
-        style={{ width: "150px" }}
-        type="number"
-        value={strokeWidth}
-        onChange={handleStrokeWidthChange}
-      ></input>
+
+
+<Input
+
+type={"number"}
+placeholder={"Enter stroke width"}
+value={strokeWidth}
+onChange={handleStrokeWidthChange}
+width="150px"
+></Input>
     </div>
   );
 }

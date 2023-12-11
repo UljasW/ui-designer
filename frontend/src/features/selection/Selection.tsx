@@ -1,6 +1,7 @@
 import fabric from "fabric";
 import React, { useCallback, useEffect, useState } from "react";
 import { nanoid } from "nanoid";
+import Button from "../../components/Button";
 
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.fabric.Canvas | undefined>;
@@ -97,18 +98,22 @@ export default function Selection(props: FabricCanvasProps) {
     <div
       style={{
         height: "50px",
-        background: "LightGrey",
         display: "flex",
         flexDirection: "row",
+        background: "#F3F4F6", // Replace with the background color used in your app
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+      borderBottom: "1px solid #ced4da",
+
       }}
     >
-      <button disabled={object ? true : false} onClick={addRect}>
-        ADD RECT
-      </button>
+      <Button onClick={function (e: any): void {
+        addRect()
+      } } color={"primary"} content={"Add rectangle"}></Button>
 
-      <button disabled={object ? true : false} onClick={addText}>
-        ADD TEXT
-      </button>
+<Button onClick={function (e: any): void {
+        addText()
+      } } color={"primary"} content={"Add text"}></Button>
+   
     </div>
   );
 }
