@@ -3,6 +3,8 @@ import sendInvite from "../../api/collaboration/sendInvite";
 import { useSearchParams } from "react-router-dom";
 import getCollaborators from "../../api/collaboration/getCollaborators";
 import getInvitationsByDesign from "../../api/collaboration/getInvitationsByDesign";
+import Button from "../../components/Button";
+import Input from "../../components/Input";
 export default function Invite() {
   const [email, setEmail] = useState<string>("");
   const [searchParams] = useSearchParams();
@@ -55,30 +57,68 @@ export default function Invite() {
 
   return (
     <div>
-      <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
-        <input
-          type="email"
-          placeholder="Email"
+      <form style={{ marginBottom: "20px" }}>
+        <Input
+          value={email}
+          type={"email"}
+          placeholder={"Email"}
           onChange={handleEmailChange}
-          style={{ padding: "10px", marginRight: "10px", fontSize: "16px" }}
         />
-        <button type="submit" style={{ padding: "10px", fontSize: "16px" }}>
-          Send Invite
-        </button>
+
+        <Button
+          onClick={(e: any) => {
+            handleSubmit(e);
+          }}
+          color="primary"
+          content={"Send Invite"}
+        />
       </form>
 
       <div style={{ display: "flex", flexDirection: "row" }}>
-        <div style={{ width: "200px", backgroundColor:"lightgrey", padding:"10px", margin:"5px", borderRadius:"10px", display:"flex",flexDirection:"column" ,justifyContent:"center", alignItems:"flex-start" }}>
+        <div
+          style={{
+            width: "200px",
+            backgroundColor: "lightgrey",
+            padding: "10px",
+            margin: "5px",
+            borderRadius: "10px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "flex-start",
+          }}
+        >
           <h2>Collaborators</h2>
           {collaborators?.map((collaborator) => (
             <div>{collaborator.email}</div>
           ))}
         </div>
 
-        <div style={{ width: "200px", backgroundColor:"lightgrey", padding:"10px", margin:"5px", borderRadius:"10px", display:"flex",flexDirection:"column", justifyContent:"center", alignItems:"flex-start"  }}>
+        <div
+          style={{
+            width: "200px",
+            backgroundColor: "lightgrey",
+            padding: "10px",
+            margin: "5px",
+            borderRadius: "10px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "flex-start",
+          }}
+        >
           <h2>Invitations</h2>
           {invitations?.map((invite) => (
-            <div style={{ width: "150px", backgroundColor:"grey", padding:"10px", borderRadius:"10px" }}>{invite.user.email}</div>
+            <div
+              style={{
+                width: "150px",
+                backgroundColor: "grey",
+                padding: "10px",
+                borderRadius: "10px",
+              }}
+            >
+              {invite.user.email}
+            </div>
           ))}
         </div>
       </div>
