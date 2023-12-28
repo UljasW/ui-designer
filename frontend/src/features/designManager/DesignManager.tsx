@@ -6,6 +6,7 @@ import deleteDesign from "../../api/design/deleteDesign";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import MyInvites from "../myInvites/MyInvites";
+import TopBar from "../../components/TopBar";
 
 export default function DesignManager() {
   const [designList, setDesignList] = useState<any[]>();
@@ -58,79 +59,84 @@ export default function DesignManager() {
   };
 
   return (
-    <div style={{ padding: "20px", width: "100%" }}>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        {" "}
-        <form style={{ marginBottom: "20px" }}>
-          <Input
-            value={designName}
-            type={"Text"}
-            placeholder={"Design Name"}
-            onChange={handleDesignNameChange}
-          />
+    <div style={{width:"100%"}}>
+      <TopBar>
+        <div style={{ width:"100%", display: "flex", justifyContent: "space-between" }}>
+          {" "}
+          <form style={{ marginBottom: "20px" }}>
+            <Input
+              value={designName}
+              type={"Text"}
+              placeholder={"Design Name"}
+              onChange={handleDesignNameChange}
+            />
 
+            <Button
+              onClick={(e: any) => {
+                handleSubmit(e);
+              }}
+              color="primary"
+              content={"Create"}
+            />
+          </form>
           <Button
             onClick={(e: any) => {
-              handleSubmit(e);
+              setShowInvite(!showInvite);
             }}
             color="primary"
-            content={"Create"}
+            content={"Notification"}
           />
-        </form>
-        <Button
-          onClick={(e: any) => {setShowInvite(!showInvite)}}
-          color="primary"
-          content={"Notification"}
-        />
-        <MyInvites show={showInvite}/>
-      </div>
+          <MyInvites show={showInvite} />
+        </div>
+      </TopBar>
+      <div style={{ padding: "20px", width: "100%" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+          {designList?.map((design) => (
+            <div
+              key={design.id}
+              style={{
+                borderRadius: "10px",
+                border: "1px solid #ced4da",
+                padding: "10px",
+              }}
+            >
+              <h3 style={{ color: "#333" }}>{design.name}</h3>
+              <h4>Is owner: {design.isOwner.toString()}</h4>
 
-      <div style={{ display: "flex",  flexWrap: "wrap", gap: "20px" }}>
-        {designList?.map((design) => (
-          <div
-            key={design.id}
-            style={{
-              borderRadius: "10px",
-              border: "1px solid #ced4da",
-              padding: "10px",
-            }}
-          >
-            <h3 style={{ color: "#333" }}>{design.name}</h3>
-            <h4>Is owner: {design.isOwner.toString()}</h4>
+              <p style={{ color: "#666" }}>{design.id}</p>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <Button
+                  onClick={(e: any) => {
+                    handleDesignStart(e, design.id);
+                  }}
+                  color="primary"
+                  content={"View/Edit"}
+                />
 
-            <p style={{ color: "#666" }}>{design.id}</p>
-            <div style={{ display: "flex", flexDirection: "row" }}>
-              <Button
-                onClick={(e: any) => {
-                  handleDesignStart(e, design.id);
-                }}
-                color="primary"
-                content={"View/Edit"}
-              />
-
-              {design.isOwner ? (
-                <div>
-                  <Button
-                    onClick={(e: any) => {
-                      handleDesignInvite(e, design.id);
-                    }}
-                    color="secondary"
-                    content={"Invite user"}
-                  />
-                  <Button
-                    onClick={(e: any) => {
-                      handleDesignDelete(design.id);
-                    }}
-                    color="delete"
-                    content={"Delete"}
-                  />
-                </div>
-              ) : (
-                <div></div>
-              )}
+                {design.isOwner ? (
+                  <div>
+                    <Button
+                      onClick={(e: any) => {
+                        handleDesignInvite(e, design.id);
+                      }}
+                      color="secondary"
+                      content={"Invite user"}
+                    />
+                    <Button
+                      onClick={(e: any) => {
+                        handleDesignDelete(design.id);
+                      }}
+                      color="delete"
+                      content={"Delete"}
+                    />
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

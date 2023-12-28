@@ -29,13 +29,12 @@ export default function Selection(props: FabricCanvasProps) {
       canvas.on("mouse:move", (options) => {
         const pointer = canvas.getPointer(options.e);
         setMousePos([pointer.x, pointer.y]);
-        
+
         if (!object) {
           return;
-        } 
+        }
         object.set({ left: pointer.x, top: pointer.y });
         canvas.renderAll();
-    
       });
     }
 
@@ -60,11 +59,9 @@ export default function Selection(props: FabricCanvasProps) {
         fill: props.currentColor,
       });
 
-
       (rect as any).id = nanoid();
       (rect as any).layerIndex = canvas.getObjects().length;
 
-      
       setObject(rect);
       canvas.add(rect);
     }
@@ -82,7 +79,6 @@ export default function Selection(props: FabricCanvasProps) {
         fill: props.currentColor,
       });
 
-
       console.log(text);
 
       (text as any).id = nanoid();
@@ -94,26 +90,23 @@ export default function Selection(props: FabricCanvasProps) {
   }, [canvas, mousePos]);
 
   return (
-    
-    <div
-      style={{
-        height: "50px",
-        display: "flex",
-        flexDirection: "row",
-        background: "#F3F4F6", // Replace with the background color used in your app
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-      borderBottom: "1px solid #ced4da",
+    <div>
+      <Button
+        onClick={function (e: any): void {
+          addRect();
+        }}
+        color={"primary"}
+        content={"Add rectangle"}
+      ></Button>
 
-      }}
-    >
-      <Button onClick={function (e: any): void {
-        addRect()
-      } } color={"primary"} content={"Add rectangle"}></Button>
-
-<Button onClick={function (e: any): void {
-        addText()
-      } } color={"primary"} content={"Add text"}></Button>
-   
+      <Button
+        onClick={function (e: any): void {
+          addText();
+        }}
+        color={"primary"}
+        content={"Add text"}
+      ></Button>
     </div>
+   
   );
 }

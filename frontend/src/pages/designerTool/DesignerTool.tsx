@@ -8,6 +8,7 @@ import useLiveCollaboration from "../../hooks/useLiveCollaboration";
 import { useSearchParams } from "react-router-dom";
 import useRenderObjectsOnCanvas from "../../hooks/useRenderObjectsOnCanvas";
 import useSnapping from "../../hooks/useSnapping";
+import TopBar from "../../components/TopBar";
 
 export default function DesignerTool() {
   const canvas = useRef<fabric.fabric.Canvas>();
@@ -42,14 +43,13 @@ export default function DesignerTool() {
     fetchObjectsAndRender();
   }, [canvas]);
 
-
   useEffect(() => {
     if (canvas.current && isCanvasInitialized) {
       console.log("Adding event listeners"); // Added for debug
-      
+
       canvas.current.on("mouse:move", (e: any) => {
         console.log("Mouse moved");
-         // Added for debug
+        // Added for debug
       });
 
       canvas.current.on("object:modified", (e: any) => {
@@ -65,18 +65,20 @@ export default function DesignerTool() {
   }, [canvas.current, isCanvasInitialized]);
 
   return (
-    <div style={{ width: "100%", height: "100%" }}>
-      {isCanvasInitialized && (
-        <Selection canvas={canvas} currentColor={currentColor}></Selection>
-      )}
+    <div style={{ display: 'flex', flexDirection: 'column', width: "100vw", height: "100vh" }}>
+      <TopBar>
+        {isCanvasInitialized && (
+          <Selection canvas={canvas} currentColor={currentColor}></Selection>
+        )}
+      </TopBar>
 
       <div
         style={{
           display: "flex",
           justifyContent: "center",
           flexDirection: "row",
-          width: "100vw",
-          height: "100vh",
+          flex: 1, 
+          width: "100%",
         }}
       >
         <Layers
