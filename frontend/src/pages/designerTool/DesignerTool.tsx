@@ -16,7 +16,6 @@ export default function DesignerTool() {
   const [currentColor, setCurrentColor] = useState<string>("black");
   const [searchParams] = useSearchParams();
   const [designId, setDesignId] = useState<string>();
-  const { checkSnapping } = useSnapping(canvas);
 
   const { renderObjectsOnCanvas } = useRenderObjectsOnCanvas();
 
@@ -45,27 +44,31 @@ export default function DesignerTool() {
 
   useEffect(() => {
     if (canvas.current && isCanvasInitialized) {
-      console.log("Adding event listeners"); // Added for debug
+      console.log("Adding event listeners");
 
-      canvas.current.on("mouse:move", (e: any) => {
-        console.log("Mouse moved");
-        // Added for debug
-      });
-
-      canvas.current.on("object:modified", (e: any) => {
-        console.log("Object modified"); // Added for debug
+      const handleObjectModified = (e: any) => {
+        console.log("Object modified");
         updateObjectsLiveVisually(canvas.current?.getObjects());
-      });
+      };
+
+      canvas.current.on("object:modified", handleObjectModified);
 
       return () => {
-        canvas.current?.off("object:modified");
-        canvas.current?.off("mouse:move");
+        canvas.current?.off("object:modified", handleObjectModified);
       };
     }
   }, [canvas.current, isCanvasInitialized]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: "100vw", height: "100vh", maxHeight:"100vh", }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        width: "100vw",
+        height: "100vh",
+        maxHeight: "100vh",
+      }}
+    >
       <TopBar>
         {isCanvasInitialized && (
           <Selection canvas={canvas} currentColor={currentColor}></Selection>
@@ -79,7 +82,7 @@ export default function DesignerTool() {
           flexDirection: "row",
           flex: 1, // This will make this div take up the remaining space
           width: "100%",
-          overflow: 'auto', // This will add a scrollbar to this div if the content overflows
+          overflow: "auto", // This will add a scrollbar to this div if the content overflows
         }}
       >
         <Layers

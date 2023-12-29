@@ -22,7 +22,7 @@ export default function useSnapping(
   const snapDistance = 10;
 
   //objects outside this area will not be taken into account
-  const snappingArea = 100;
+  const snappingArea = 500;
 
   /* 
 run every time a mouse moves
@@ -39,9 +39,12 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
  */
 
   const checkSnapping = () => {
+
     const currentCanvas = canvas.current;
     const activeObjects = currentCanvas?.getActiveObjects();
-    if (!activeObjects || !currentCanvas || activeObjects?.length > 1) return;
+
+
+    if (!activeObjects || !currentCanvas || activeObjects?.length < 1) return;
 
     const activeObject = activeObjects[0];
 
@@ -56,6 +59,8 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
       activeObject,
       objectsNearActiveObject
     );
+
+    const snapped = snap(activeObject, activeObjectLines, objectsLines);
   };
 
   const snap = (
@@ -63,15 +68,19 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     activeObjectLines: Lines,
     objectsLines: Lines[]
   ) => {
-
     //for each object that is close to the active object
     //check if any of the lines in the same plane are close to any of the active object's lines
     //if they are close, move the active object to the other line
 
     objectsLines.forEach((element) => {
-      checkIfLinesAreCloseAndAdjust(activeObject, activeObjectLines, element);
-      
+      if (
+        checkIfLinesAreCloseAndAdjust(activeObject, activeObjectLines, element)
+      ) {
+        return true;
+      }
     });
+
+    return false;
   };
 
   const checkIfLinesAreCloseAndAdjust = (
@@ -82,29 +91,58 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     // Check each line of the active object against each line of the other object
     // Adjust position if any lines are close
     // Example: Check if the horizontal center lines are close
-    if (Math.abs(activeObjectLines.x.center - objectLines.x.center) < snapDistance) {
-      activeObject.set("left", objectLines.x.center - activeObject.getScaledWidth() / 2);
+    if (
+      Math.abs(activeObjectLines.x.center - objectLines.x.center) < snapDistance
+    ) {
+      activeObject.set(
+        "left",
+        objectLines.x.center - activeObject.getScaledWidth() / 2
+      );
+      return true;
     }
-    if (Math.abs(activeObjectLines.y.center - objectLines.y.center) < snapDistance) {
-      activeObject.set("top", objectLines.y.center - activeObject.getScaledHeight() / 2);
+    if (
+      Math.abs(activeObjectLines.y.center - objectLines.y.center) < snapDistance
+    ) {
+      activeObject.set(
+        "top",
+        objectLines.y.center - activeObject.getScaledHeight() / 2
+      );
+      return true;
     }
 
-    if (Math.abs(activeObjectLines.x.left - objectLines.x.left) < snapDistance) {
+    if (
+      Math.abs(activeObjectLines.x.left - objectLines.x.left) < snapDistance
+    ) {
       activeObject.set("left", objectLines.x.left);
+      return true;
     }
     if (Math.abs(activeObjectLines.y.top - objectLines.y.top) < snapDistance) {
       activeObject.set("top", objectLines.y.top);
+      return true;
     }
 
-    if (Math.abs(activeObjectLines.x.right - objectLines.x.right) < snapDistance) {
-      activeObject.set("left", objectLines.x.right - activeObject.getScaledWidth());
+    if (
+      Math.abs(activeObjectLines.x.right - objectLines.x.right) < snapDistance
+    ) {
+      activeObject.set(
+        "left",
+        objectLines.x.right - activeObject.getScaledWidth()
+      );
+      return true;
     }
 
-    if (Math.abs(activeObjectLines.y.bottom - objectLines.y.bottom) < snapDistance) {
-      activeObject.set("top", objectLines.y.bottom - activeObject.getScaledHeight());
+    if (
+      Math.abs(activeObjectLines.y.bottom - objectLines.y.bottom) < snapDistance
+    ) {
+      activeObject.set(
+        "top",
+        objectLines.y.bottom - activeObject.getScaledHeight()
+      );
+      return true;
     }
+
+    return false;
   };
-
 
   const filterObjectsNearActiveObject = (
     activeObject: fabric.fabric.Object,
@@ -140,14 +178,18 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     };
   };
 
-  const callculateLines = (object: fabric.fabric.Object) => {
+  const callculateLines = (object: fabric.fabric.Object): Lines => {
     const centerPoint = object.getCenterPoint();
 
     const top = object.top;
 
     const left = object.left;
 
-    if (!centerPoint || !top || !left) return;
+    if (!centerPoint || !top || !left)
+      return {
+        y: { top: 0, center: 0, bottom: 0 },
+        x: { left: 0, center: 0, right: 0 },
+      };
 
     const lines: Lines = {
       y: {

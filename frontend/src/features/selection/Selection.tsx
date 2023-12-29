@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { nanoid } from "nanoid";
 import Button from "../../components/Button";
 import { useNavigate } from "react-router-dom";
+import useSnapping from "../../hooks/useSnapping";
 
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.fabric.Canvas | undefined>;
@@ -14,6 +15,7 @@ export default function Selection(props: FabricCanvasProps) {
   const [mousePos, setMousePos] = useState<[number, number] | undefined>();
   const [object, setObject] = useState<fabric.fabric.Object | undefined>();
   const navigate = useNavigate();
+  const { checkSnapping } = useSnapping(props.canvas);
 
   useEffect(() => {
     if (canvas) {
@@ -29,13 +31,9 @@ export default function Selection(props: FabricCanvasProps) {
       });
 
       canvas.on("mouse:move", (options) => {
-        const pointer = canvas.getPointer(options.e);
-        setMousePos([pointer.x, pointer.y]);
+        setObjPos(canvas, options);
+        checkSnapping();
 
-        if (!object) {
-          return;
-        }
-        object.set({ left: pointer.x, top: pointer.y });
         canvas.renderAll();
       });
     }
@@ -48,6 +46,16 @@ export default function Selection(props: FabricCanvasProps) {
       }
     };
   }, [canvas, object]);
+
+  const setObjPos = (canvas: any, options:any ) => {
+    const pointer = canvas.getPointer(options.e);
+    setMousePos([pointer.x, pointer.y]);
+
+    if (!object) {
+      return;
+    }
+    object.set({ left: pointer.x, top: pointer.y });
+  };
 
   const addRect = useCallback(() => {
     if (canvas && !object) {
@@ -92,23 +100,30 @@ export default function Selection(props: FabricCanvasProps) {
   }, [canvas, mousePos]);
 
   return (
-    <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", width:"100%"}}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: "100%",
+      }}
+    >
       <div>
-      <Button
-        onClick={function (e: any): void {
-          addRect();
-        }}
-        color={"primary"}
-        content={"Add rectangle"}
-      ></Button>
+        <Button
+          onClick={function (e: any): void {
+            addRect();
+          }}
+          color={"primary"}
+          content={"Add rectangle"}
+        ></Button>
 
-      <Button
-        onClick={function (e: any): void {
-          addText();
-        }}
-        color={"primary"}
-        content={"Add text"}
-      ></Button>
+        <Button
+          onClick={function (e: any): void {
+            addText();
+          }}
+          color={"primary"}
+          content={"Add text"}
+        ></Button>
       </div>
 
       <Button
@@ -118,10 +133,6 @@ export default function Selection(props: FabricCanvasProps) {
         color={"primary"}
         content={"Home"}
       ></Button>
-
-
-      
     </div>
-   
   );
 }
