@@ -2,6 +2,7 @@ import fabric from "fabric";
 import React, { useCallback, useEffect, useState } from "react";
 import { nanoid } from "nanoid";
 import Button from "../../components/Button";
+import { useNavigate } from "react-router-dom";
 
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.fabric.Canvas | undefined>;
@@ -12,6 +13,7 @@ export default function Selection(props: FabricCanvasProps) {
   const canvas = props.canvas.current;
   const [mousePos, setMousePos] = useState<[number, number] | undefined>();
   const [object, setObject] = useState<fabric.fabric.Object | undefined>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (canvas) {
@@ -90,7 +92,8 @@ export default function Selection(props: FabricCanvasProps) {
   }, [canvas, mousePos]);
 
   return (
-    <div>
+    <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", width:"100%"}}>
+      <div>
       <Button
         onClick={function (e: any): void {
           addRect();
@@ -106,6 +109,18 @@ export default function Selection(props: FabricCanvasProps) {
         color={"primary"}
         content={"Add text"}
       ></Button>
+      </div>
+
+      <Button
+        onClick={function (e: any): void {
+          navigate("/home");
+        }}
+        color={"primary"}
+        content={"Home"}
+      ></Button>
+
+
+      
     </div>
    
   );

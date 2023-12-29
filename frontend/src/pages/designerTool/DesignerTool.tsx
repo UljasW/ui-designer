@@ -65,7 +65,7 @@ export default function DesignerTool() {
   }, [canvas.current, isCanvasInitialized]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: "100vw", height: "100vh" }}>
+    <div style={{ display: 'flex', flexDirection: 'column', width: "100vw", height: "100vh", maxHeight:"100vh", }}>
       <TopBar>
         {isCanvasInitialized && (
           <Selection canvas={canvas} currentColor={currentColor}></Selection>
@@ -77,8 +77,9 @@ export default function DesignerTool() {
           display: "flex",
           justifyContent: "center",
           flexDirection: "row",
-          flex: 1, 
+          flex: 1, // This will make this div take up the remaining space
           width: "100%",
+          overflow: 'auto', // This will add a scrollbar to this div if the content overflows
         }}
       >
         <Layers
