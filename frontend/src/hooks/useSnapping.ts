@@ -39,10 +39,8 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
  */
 
   const checkSnapping = () => {
-
     const currentCanvas = canvas.current;
     const activeObjects = currentCanvas?.getActiveObjects();
-
 
     if (!activeObjects || !currentCanvas || activeObjects?.length < 1) return;
 
@@ -88,78 +86,107 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     activeObjectLines: Lines,
     objectLines: Lines
   ) => {
-    // Check each line of the active object against each line of the other object
-    // Adjust position if any lines are close
-    // Example: Check if the horizontal center lines are close
-    
-    if (
-      Math.abs(activeObjectLines.x.center - objectLines.x.center) < snapDistance
-    ) {
-      activeObject.set(
-        "left",
-        objectLines.x.center - activeObject.getScaledWidth() / 2
-      );
-      return true;
+    const xLinesActive = [
+      activeObjectLines.x.left,
+      activeObjectLines.x.center,
+      activeObjectLines.x.right,
+    ];
+    const yLinesActive = [
+      activeObjectLines.y.top,
+      activeObjectLines.y.center,
+      activeObjectLines.y.bottom,
+    ];
+  
+    const xLinesObj = [
+      objectLines.x.left,
+      objectLines.x.center,
+      objectLines.x.right,
+    ];
+    const yLinesObj = [
+      objectLines.y.top,
+      objectLines.y.center,
+      objectLines.y.bottom,
+    ];
+  
+    // Check and snap x lines
+    for (let index = 0; index < xLinesActive.length; index++) {
+      for (let index2 = 0; index2 < xLinesObj.length; index2++) {
+        if (Math.abs(xLinesActive[index] - xLinesObj[index2]) < snapDistance) {
+          switch (index) {
+            case 0:
+              activeObject.set("left", xLinesObj[index2]);
+              return true;
+            case 1:
+              activeObject.set("left", xLinesObj[index2] - activeObject.getScaledWidth() / 2);
+              return true;
+            case 2:
+              activeObject.set("left", xLinesObj[index2] - activeObject.getScaledWidth());
+              return true;
+          }
+        }
+      }
     }
-    if (
-      Math.abs(activeObjectLines.y.center - objectLines.y.center) < snapDistance
-    ) {
-      activeObject.set(
-        "top",
-        objectLines.y.center - activeObject.getScaledHeight() / 2
-      );
-      return true;
+  
+    // Check and snap y lines
+    for (let index = 0; index < yLinesActive.length; index++) {
+      for (let index2 = 0; index2 < yLinesObj.length; index2++) {
+        if (Math.abs(yLinesActive[index] - yLinesObj[index2]) < snapDistance) {
+          switch (index) {
+            case 0:
+              activeObject.set("top", yLinesObj[index2]);
+              return true;
+            case 1:
+              activeObject.set("top", yLinesObj[index2] - activeObject.getScaledHeight() / 2);
+              return true;
+            case 2:
+              activeObject.set("top", yLinesObj[index2] - activeObject.getScaledHeight());
+              return true;
+          }
+        }
+      }
     }
-
-    if (
-      Math.abs(activeObjectLines.x.left - objectLines.x.left) < snapDistance
-    ) {
-      activeObject.set("left", objectLines.x.left);
-      return true;
-    }
-    if (Math.abs(activeObjectLines.y.top - objectLines.y.top) < snapDistance) {
-      activeObject.set("top", objectLines.y.top);
-      return true;
-    }
-
-    if (
-      Math.abs(activeObjectLines.x.right - objectLines.x.right) < snapDistance
-    ) {
-      activeObject.set(
-        "left",
-        objectLines.x.right - activeObject.getScaledWidth()
-      );
-      return true;
-    }
-
-    if (
-      Math.abs(activeObjectLines.y.bottom - objectLines.y.bottom) < snapDistance
-    ) {
-      activeObject.set(
-        "top",
-        objectLines.y.bottom - activeObject.getScaledHeight()
-      );
-      return true;
-    }
-
+  
     return false;
   };
+  
+
+    /* xLinesActive.forEach((xLineActive) => {
+      xLinesObj.forEach((xLineObj) => {
+        if (Math.abs(xLineActive - xLineObj) < snapDistance) {
+          activeObject.set("left", xLineObj);
+          return true;
+        }
+      });
+    });
+
+    yLinesActive.forEach((yLineActive) => {
+      yLinesObj.forEach((yLineObj) => {
+        if (Math.abs(yLineActive - yLineObj) < snapDistance) {
+          activeObject.set("top", yLineObj);
+          return true;
+        }
+      });
+    }); */
+
+  
 
   const filterObjectsNearActiveObject = (
     activeObject: fabric.fabric.Object,
     allObjects: fabric.fabric.Object[]
   ) => {
-    const activeObjectCenter = activeObject.getCenterPoint();
+    //const activeObjectCenter = activeObject.getCenterPoint();
 
     const objectsNearActiveObject = allObjects.filter((object) => {
       if (object === activeObject) return false;
 
-      const objectCenter = object.getCenterPoint();
+      /* const objectCenter = object.getCenterPoint();
       const distance = Math.sqrt(
         Math.pow(activeObjectCenter.x - objectCenter.x, 2) +
           Math.pow(activeObjectCenter.y - objectCenter.y, 2)
       );
-      return distance < snappingArea;
+      return distance < snappingArea; */
+
+      return true;
     });
 
     return objectsNearActiveObject;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import getInvitations from "../../api/collaboration/getInvitations";
 import Button from "../../components/Button";
+import acceptInvite from "../../api/collaboration/acceptInvite";
 interface Props {
   show: boolean;
 }
@@ -53,12 +54,12 @@ useEffect(() => {
                     marginBottom: "0.25rem",
                   }}
                 >
-                  <p style={{ marginBottom: "0.25rem" }}>Name</p>
-                  <small style={{ color: "#4a5568" }}>User</small>
+                  <p style={{ marginBottom: "0.25rem" }}>{invite.design.name}</p>
+                  <small style={{ color: "#4a5568" }}>{invite.user.email}</small>
                   
                 </li>
                     <Button onClick={function (e: any): void {
-                          throw new Error("Function not implemented.");
+                      acceptInvite(invite.id, localStorage.getItem("jwt") || "");
                       } } color={"primary"} content={"Accept"}></Button>
                 </div>
                 
