@@ -32,6 +32,7 @@ export default function Selection(props: FabricCanvasProps) {
 
       canvas.on("mouse:move", (options) => {
         setObjPos(canvas, options);
+
         checkSnapping();
 
         canvas.renderAll();
