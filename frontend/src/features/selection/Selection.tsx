@@ -58,6 +58,8 @@ export default function Selection(props: FabricCanvasProps) {
   };
 
   const addRect = useCallback(() => {
+
+    
     if (canvas && !object) {
       const rect = new fabric.fabric.Rect({
         top: mousePos ? mousePos[1] : 100,
@@ -74,6 +76,8 @@ export default function Selection(props: FabricCanvasProps) {
 
       setObject(rect);
       canvas.add(rect);
+      canvas.setActiveObject(rect);
+
     }
   }, [canvas, mousePos]);
 
@@ -96,6 +100,7 @@ export default function Selection(props: FabricCanvasProps) {
 
       setObject(text);
       canvas.add(text);
+      canvas.setActiveObject(text);
     }
   }, [canvas, mousePos]);
 

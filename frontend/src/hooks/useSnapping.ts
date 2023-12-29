@@ -91,6 +91,7 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     // Check each line of the active object against each line of the other object
     // Adjust position if any lines are close
     // Example: Check if the horizontal center lines are close
+    
     if (
       Math.abs(activeObjectLines.x.center - objectLines.x.center) < snapDistance
     ) {
