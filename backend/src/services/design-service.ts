@@ -91,10 +91,15 @@ export default class DesignService {
     }));
     
 
+    //sort by date updatedAt
     const designs = [
       ...myDesignes,
       ...sharedDesigns,
-    ].sort((a, b) => (a.updatedAt > b.updatedAt ? -1 : 1));
+    ].sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
+
+
+
+
     return JSON.stringify(designs);
   }
 }

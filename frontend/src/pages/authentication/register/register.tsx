@@ -52,13 +52,13 @@ export default function Register() {
           padding: "10px",
         }}
       >
-                <h3>Register</h3>
+        <h3>Register</h3>
 
         <Input
           type={"email"}
           placeholder={"Enter email"}
           value={email}
-          onChange={handlePasswordChange}
+          onChange={handleEmailChange}
         ></Input>
         <Input
           type={"password"}
@@ -71,7 +71,7 @@ export default function Register() {
             handleSubmit(e);
           }}
           color={"primary"}
-          content={"Login"}
+          content={"Register"}
         ></Button>
       </form>
     </div>

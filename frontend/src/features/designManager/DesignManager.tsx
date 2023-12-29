@@ -36,6 +36,9 @@ export default function DesignManager() {
   const fetchDesignes = async () => {
     try {
       const response = await getDesignes(localStorage.getItem("jwt") || "");
+      console.log(response);
+  
+
       setDesignList(response);
       console.log(response);
     } catch (err) {
@@ -59,9 +62,15 @@ export default function DesignManager() {
   };
 
   return (
-    <div style={{width:"100%"}}>
+    <div style={{ width: "100%" }}>
       <TopBar>
-        <div style={{ width:"100%", display: "flex", justifyContent: "space-between" }}>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
           {" "}
           <form style={{ marginBottom: "20px" }}>
             <Input
