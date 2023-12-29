@@ -55,7 +55,7 @@ useEffect(() => {
                   }}
                 >
                   <p style={{ marginBottom: "0.25rem" }}>{invite.design.name}</p>
-                  <small style={{ color: "#4a5568" }}>{invite.user.email}</small>
+                  <small style={{ color: "#4a5568" }}>{invite.design.designer.email}</small>
                   
                 </li>
                     <Button onClick={function (e: any): void {

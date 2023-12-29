@@ -23,6 +23,7 @@ export default function useSnapping(
 
   //objects outside this area will not be taken into account
   const snappingArea = 500;
+  
 
   /* 
 run every time a mouse moves

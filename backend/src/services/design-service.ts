@@ -39,8 +39,6 @@ export default class DesignService {
     await checkIfUserIsDesigner(user, id, this.prisma);
   }
 
- 
-
   private async deleteDesignById(id: string) {
     await this.prisma.design.delete({
       where: {
@@ -77,7 +75,10 @@ export default class DesignService {
     const myFoundDesignes =
       (await this.prisma.design.findMany({ where: { designerId: user.id } })) ||
       [];
-    const myDesignes = myFoundDesignes.map((design) => ({...design, isOwner: true}));
+    const myDesignes = myFoundDesignes.map((design) => ({
+      ...design,
+      isOwner: true,
+    }));
 
     const foundSharedDesigns =
       (await this.prisma.collaborator.findMany({
@@ -89,16 +90,11 @@ export default class DesignService {
       ...collaborator.design,
       isOwner: false,
     }));
-    
 
     //sort by date updatedAt
-    const designs = [
-      ...myDesignes,
-      ...sharedDesigns,
-    ].sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
-
-
-
+    const designs = [...myDesignes, ...sharedDesigns].sort(
+      (a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()
+    );
 
     return JSON.stringify(designs);
   }

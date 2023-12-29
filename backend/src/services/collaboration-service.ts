@@ -89,12 +89,10 @@ export default class CollaborationService {
 
   private async authorizeAsDesigner(user: User, designId: string) {
     await checkIfUserIsDesigner(user, designId, this.prisma);
-
   }
 
   private async authorizeForAccess(user: User, designId: string) {
     await checkIfUserHasAccess(user, designId, this.prisma);
-
   }
 
   private async createDesignInvitation(
@@ -217,8 +215,13 @@ export default class CollaborationService {
       where: {
         userId: userId,
       },
+
       include: {
-        design: true,
+        design: {
+          include: {
+            designer: true,
+          },
+        },
         user: true,
       },
     });
