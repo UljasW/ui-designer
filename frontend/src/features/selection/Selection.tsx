@@ -19,6 +19,7 @@ export default function Selection(props: FabricCanvasProps) {
   const navigate = useNavigate();
   const [enableSnapping, setEnableSnapping] = useState(true);
   const [snappingDistance, setSnappingDistance] = useState<number>(5);
+  const [snappingArea, setSnappingArea] = useState<number>(500);
 
   const { checkSnapping } = useSnapping(props.canvas);
 
@@ -39,7 +40,7 @@ export default function Selection(props: FabricCanvasProps) {
         setObjPos(canvas, options);
 
         if (enableSnapping) {
-          checkSnapping(snappingDistance);
+          checkSnapping(snappingDistance, snappingArea);
         }
 
         canvas.renderAll();
@@ -53,7 +54,7 @@ export default function Selection(props: FabricCanvasProps) {
         canvas.off("mouse:move");
       }
     };
-  }, [canvas, object, enableSnapping, snappingDistance]);
+  }, [canvas, object, enableSnapping, snappingDistance, snappingArea]);
 
   const setObjPos = (canvas: any, options: any) => {
     const pointer = canvas.getPointer(options.e);
@@ -152,6 +153,20 @@ export default function Selection(props: FabricCanvasProps) {
             }}
           />
           <label>Snapping distance</label>
+        </div>
+        <div>
+          <Input
+            type={"number"}
+            placeholder=""
+            value={snappingArea}
+            height="10px"
+            width="50px"
+            onChange={(e: any) => {
+              console.log(e.target.value);
+              setSnappingArea(e.target.value);
+            }}
+          />
+          <label>Snapping area</label>
         </div>
       </div>
 

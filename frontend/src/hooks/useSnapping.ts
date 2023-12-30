@@ -21,7 +21,6 @@ export default function useSnapping(
   //object will teleport this many pixels maximum
 
   //objects outside this area will not be taken into account
-  const snappingArea = 500;
 
   /* 
 run every time a mouse moves
@@ -37,7 +36,7 @@ if a line is close, it moves the active object to the other line
 a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. One in the middle and one on each side.
  */
 
-  const checkSnapping = (snapDistance: number) => {
+  const checkSnapping = (snapDistance: number, snappingArea:number) => {
     const currentCanvas = canvas.current;
     const activeObjects = currentCanvas?.getActiveObjects();
 
@@ -49,7 +48,8 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
 
     const objectsNearActiveObject = filterObjectsNearActiveObject(
       activeObject,
-      allObjects
+      allObjects,
+      snappingArea
     );
 
     const { activeObjectLines, objectsLines } = getAllLines(
@@ -57,7 +57,12 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
       objectsNearActiveObject
     );
 
-    const snapped = snap(activeObject, activeObjectLines, objectsLines, snapDistance);
+    const snapped = snap(
+      activeObject,
+      activeObjectLines,
+      objectsLines,
+      snapDistance
+    );
   };
 
   const snap = (
@@ -72,7 +77,12 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
 
     objectsLines.forEach((element) => {
       if (
-        checkIfLinesAreCloseAndAdjust(activeObject, activeObjectLines, element, snapDistance)
+        checkIfLinesAreCloseAndAdjust(
+          activeObject,
+          activeObjectLines,
+          element,
+          snapDistance
+        )
       ) {
         return true;
       }
@@ -111,7 +121,6 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
 
     let snappedX = false;
     let snappedY = false;
-
 
     // Check and snap x lines
     for (let index = 0; index < xLinesActive.length; index++) {
@@ -182,21 +191,39 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
 
   const filterObjectsNearActiveObject = (
     activeObject: fabric.fabric.Object,
-    allObjects: fabric.fabric.Object[]
+    allObjects: fabric.fabric.Object[],
+    snappingArea: number
   ) => {
-    //const activeObjectCenter = activeObject.getCenterPoint();
+    const activeObjectCenter = activeObject.getCenterPoint();
+
+    const activeObjectTop = activeObject.top;
+    const activeObjectLeft = activeObject.left;
+    if (!activeObjectTop || !activeObjectLeft || !activeObjectCenter) return [];
+
+    const activeObjectBottom = activeObjectTop + activeObject.getScaledHeight();
+    const activeObjectRight = activeObjectLeft + activeObject.getScaledWidth();
 
     const objectsNearActiveObject = allObjects.filter((object) => {
       if (object === activeObject) return false;
 
-      /* const objectCenter = object.getCenterPoint();
-      const distance = Math.sqrt(
-        Math.pow(activeObjectCenter.x - objectCenter.x, 2) +
-          Math.pow(activeObjectCenter.y - objectCenter.y, 2)
-      );
-      return distance < snappingArea; */
+      const centerPointObj = object.getCenterPoint();
 
-      return true;
+      const topObj = object.top;
+      const leftObj = object.left;
+
+      if (!centerPointObj || !topObj || !leftObj) return false;
+
+      const bottomObj = topObj + object.getScaledHeight();
+      const rightObj = leftObj + object.getScaledWidth();
+
+      const isWithinVerticalBounds =
+        topObj < activeObjectBottom + snappingArea &&
+        bottomObj > activeObjectTop - snappingArea;
+      const isWithinHorizontalBounds =
+        leftObj < activeObjectRight + snappingArea &&
+        rightObj > activeObjectLeft - snappingArea;
+
+      return isWithinVerticalBounds && isWithinHorizontalBounds;
     });
 
     return objectsNearActiveObject;
