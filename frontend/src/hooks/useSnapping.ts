@@ -36,7 +36,7 @@ if a line is close, it moves the active object to the other line
 a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. One in the middle and one on each side.
  */
 
-  const checkSnapping = (snapDistance: number, snappingArea:number) => {
+  const checkSnapping = (snapDistance: number, snappingArea: number) => {
     const currentCanvas = canvas.current;
     const activeObjects = currentCanvas?.getActiveObjects();
 
@@ -216,14 +216,33 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
       const bottomObj = topObj + object.getScaledHeight();
       const rightObj = leftObj + object.getScaledWidth();
 
-      const isWithinVerticalBounds =
-        topObj < activeObjectBottom + snappingArea &&
-        bottomObj > activeObjectTop - snappingArea;
-      const isWithinHorizontalBounds =
-        leftObj < activeObjectRight + snappingArea &&
-        rightObj > activeObjectLeft - snappingArea;
+      const isAbove = activeObjectBottom < bottomObj;
+      const isBelow = activeObjectTop > topObj;
+      const isInside = (isAbove && isBelow) || (!isAbove && !isBelow);
 
-      return isWithinVerticalBounds && isWithinHorizontalBounds;
+      const isAboveAndInArea =
+        isAbove && topObj - activeObjectBottom < snappingArea;
+      const isBelowAndInArea =
+        isBelow && activeObjectTop - bottomObj < snappingArea;
+
+      const isWithinVerticalBounds =
+        isInside || isAboveAndInArea || isBelowAndInArea;
+
+      const isLeft = activeObjectRight < rightObj;
+      const isRight = activeObjectLeft > leftObj;
+      const isInsideHorizontal = (isLeft && isRight) || (!isLeft && !isRight);
+
+      const isLeftAndInArea =
+        isLeft && leftObj - activeObjectRight < snappingArea;
+      const isRightAndInArea =
+        isRight && activeObjectLeft - rightObj < snappingArea;
+
+      const isWithinHorizontalBounds =
+        isInsideHorizontal || isLeftAndInArea || isRightAndInArea;
+
+      const isWithinBounds = isWithinVerticalBounds && isWithinHorizontalBounds;
+
+      return isWithinBounds;
     });
 
     return objectsNearActiveObject;
