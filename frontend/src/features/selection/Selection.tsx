@@ -4,6 +4,8 @@ import { nanoid } from "nanoid";
 import Button from "../../components/Button";
 import { useNavigate } from "react-router-dom";
 import useSnapping from "../../hooks/useSnapping";
+import Checkbox from "../../components/Checkbox";
+import Input from "../../components/Input";
 
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.fabric.Canvas | undefined>;
@@ -15,6 +17,9 @@ export default function Selection(props: FabricCanvasProps) {
   const [mousePos, setMousePos] = useState<[number, number] | undefined>();
   const [object, setObject] = useState<fabric.fabric.Object | undefined>();
   const navigate = useNavigate();
+  const [enableSnapping, setEnableSnapping] = useState(true);
+  const [snappingDistance, setSnappingDistance] = useState<number>(5);
+
   const { checkSnapping } = useSnapping(props.canvas);
 
   useEffect(() => {
@@ -33,7 +38,9 @@ export default function Selection(props: FabricCanvasProps) {
       canvas.on("mouse:move", (options) => {
         setObjPos(canvas, options);
 
-        checkSnapping();
+        if (enableSnapping) {
+          checkSnapping(snappingDistance);
+        }
 
         canvas.renderAll();
       });
@@ -46,9 +53,9 @@ export default function Selection(props: FabricCanvasProps) {
         canvas.off("mouse:move");
       }
     };
-  }, [canvas, object]);
+  }, [canvas, object, enableSnapping, snappingDistance]);
 
-  const setObjPos = (canvas: any, options:any ) => {
+  const setObjPos = (canvas: any, options: any) => {
     const pointer = canvas.getPointer(options.e);
     setMousePos([pointer.x, pointer.y]);
 
@@ -59,8 +66,6 @@ export default function Selection(props: FabricCanvasProps) {
   };
 
   const addRect = useCallback(() => {
-
-    
     if (canvas && !object) {
       const rect = new fabric.fabric.Rect({
         top: mousePos ? mousePos[1] : 100,
@@ -78,7 +83,6 @@ export default function Selection(props: FabricCanvasProps) {
       setObject(rect);
       canvas.add(rect);
       canvas.setActiveObject(rect);
-
     }
   }, [canvas, mousePos]);
 
@@ -105,6 +109,10 @@ export default function Selection(props: FabricCanvasProps) {
     }
   }, [canvas, mousePos]);
 
+  const handleSnapClick = () => {
+    setEnableSnapping((prevState) => !prevState);
+  };
+
   return (
     <div
       style={{
@@ -114,7 +122,7 @@ export default function Selection(props: FabricCanvasProps) {
         width: "100%",
       }}
     >
-      <div>
+      <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
         <Button
           onClick={function (e: any): void {
             addRect();
@@ -130,6 +138,21 @@ export default function Selection(props: FabricCanvasProps) {
           color={"primary"}
           content={"Add text"}
         ></Button>
+        <Checkbox checked={enableSnapping} onClick={handleSnapClick} />
+        <div>
+          <Input
+            type={"number"}
+            placeholder=""
+            value={snappingDistance}
+            height="10px"
+            width="50px"
+            onChange={(e: any) => {
+              console.log(e.target.value);
+              setSnappingDistance(e.target.value);
+            }}
+          />
+          <label>Snapping distance</label>
+        </div>
       </div>
 
       <Button

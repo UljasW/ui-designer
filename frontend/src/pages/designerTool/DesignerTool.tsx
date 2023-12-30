@@ -40,6 +40,12 @@ export default function DesignerTool() {
     };
 
     fetchObjectsAndRender();
+
+    return () => {
+      console.log("Unmounting DesignerTool");
+      
+
+    }
   }, [canvas]);
 
   useEffect(() => {

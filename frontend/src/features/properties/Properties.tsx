@@ -16,6 +16,9 @@ export default function Properties(props: FabricCanvasProps) {
   const [strokeWidth, setStrokeWidth] = useState<number>(0);
   const [textValue, setTextValue] = useState<string>(""); // Add this line
 
+  const [width, setWidth] = useState<number>(100);
+  const [hight, setHight] = useState<number>(1);
+
   useEffect(() => {
     const canvasInstance = props.canvas.current;
 
@@ -29,12 +32,16 @@ export default function Properties(props: FabricCanvasProps) {
         setBorderRadius(selectedObject.rx || 0); // Assuming rx and ry are the same
         setStrokeColor(selectedObject.stroke || "");
         setStrokeWidth(selectedObject.strokeWidth || 0);
-
         if (selectedObject.type === "text") {
           setTextValue(selectedObject.text || "");
         }
+
+        initDimensions(canvasInstance);
+       
       }
     };
+
+    
 
     const handleSelectionCleared = () => {
       setSelectedObj(null);
@@ -44,6 +51,7 @@ export default function Properties(props: FabricCanvasProps) {
       canvasInstance.on("selection:created", handleSelectionCreated);
       canvasInstance.on("selection:updated", handleSelectionCreated);
       canvasInstance.on("selection:cleared", handleSelectionCleared);
+      canvasInstance.on("object:scaling", handleScaling);
     }
 
     return () => {
@@ -51,9 +59,45 @@ export default function Properties(props: FabricCanvasProps) {
         canvasInstance.off("selection:created", handleSelectionCreated);
         canvasInstance.off("selection:updated", handleSelectionCreated);
         canvasInstance.off("selection:cleared", handleSelectionCleared);
+        canvasInstance.off("object:scaling", handleScaling);
       }
     };
   }, [props.canvas]);
+
+  const handleScaling = (e:any) => {
+    const object = e.target;
+
+
+    const height = object.height * object.scaleY;
+    const width = object.width * object.scaleX;
+
+    setHight(height);
+    setWidth(width);
+
+
+      
+  };
+
+  const initDimensions = (canvasInstance : fabric.Canvas) => {
+
+    const obj = canvasInstance.getActiveObject();
+
+    if(!obj) return;
+
+    console.log(obj);
+
+    const height = (obj.height ?? 0) * (obj.scaleY ?? 0);
+    const width = (obj.width ?? 0) * (obj.scaleX ?? 0);
+
+
+
+    setHight(height);
+    setWidth(width);
+
+    
+  }
+
+
 
   function handleColorChange(event: any) {
     const canvasInstance = props.canvas.current;
@@ -125,75 +169,110 @@ export default function Properties(props: FabricCanvasProps) {
   function handleTextChange(event: any) {
     const canvasInstance = props.canvas.current;
     if (!canvasInstance) return;
-    
+
     const obj = canvasInstance.getActiveObject();
     if (obj && obj.type === "text") {
-        const textObj = obj as fabric.Text;
-        textObj.text = event.currentTarget.value;
-        textObj.set("text", event.currentTarget.value);
-        setTextValue(event.currentTarget.value);
-        canvasInstance.renderAll();
+      const textObj = obj as fabric.Text;
+      textObj.text = event.currentTarget.value;
+      textObj.set("text", event.currentTarget.value);
+      setTextValue(event.currentTarget.value);
+      canvasInstance.renderAll();
     }
-}
+  }
 
+  function handleWidthChange(event: any) {
+    const canvasInstance = props.canvas.current;
+    if (!canvasInstance) return;
+    const obj = canvasInstance.getActiveObject();
+
+    if(!obj) return;
+
+    setWidth(event.currentTarget.value);
+
+    const scaleX = event.currentTarget.value / (obj.width ?? 1);
+
+    obj.scaleX = scaleX;
+
+    canvasInstance.renderAll();
+  }
+
+  function handleHightChange(event: any) {
+    const canvasInstance = props.canvas.current;
+    if (!canvasInstance) return;
+    const obj = canvasInstance.getActiveObject();
+
+    if(!obj) return;
+
+    setHight(event.currentTarget.value);
+
+    const scaleY = event.currentTarget.value / (obj.height ?? 1);
+
+    obj.scaleY = scaleY;
+
+    canvasInstance.renderAll();
+
+
+    
+  }
 
   return (
     <div
-    style={{
-      width: "200px",
-      padding: "20px", // Assuming your app uses 20px padding, for example
-      background: "#F3F4F6", // Replace with the background color used in your app
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1)", // Replace with the shadow style used in your app
-      display: "flex",
-      flexDirection: "column",
-      gap: "10px", // Adjust the gap to match the spacing in your app
-      zIndex: 100,
-      borderLeft: "1px solid #ced4da",
-
-    }}
+      style={{
+        width: "200px",
+        padding: "20px", // Assuming your app uses 20px padding, for example
+        background: "#F3F4F6", // Replace with the background color used in your app
+        boxShadow: "0 2px 4px rgba(0,0,0,0.1)", // Replace with the shadow style used in your app
+        display: "flex",
+        flexDirection: "column",
+        gap: "10px", // Adjust the gap to match the spacing in your app
+        zIndex: 100,
+        borderLeft: "1px solid #ced4da",
+      }}
     >
-       {selectedObj && selectedObj.type === "text" && (
-            <div>
-                <label>Text Content</label>
-                <Input
-          type={"text"}
-          placeholder={"Enter text"}
-          value={textValue}
-          onChange={handleTextChange}
-          width="150px"
-        ></Input>
-
-                
-            </div>
-        )}
+      {selectedObj && selectedObj.type === "text" && (
+        <div>
+          <label>Text Content</label>
+          <Input
+            type={"text"}
+            placeholder={"Enter text"}
+            value={textValue}
+            onChange={handleTextChange}
+            width="150px"
+          ></Input>
+        </div>
+      )}
       <h4>Current color: {selectedObj ? selectedObj.fill : null} </h4>
       <label>Select color</label>
       <input
-        style={{ width: "150px", border: '1px solid #ced4da',borderRadius: '5px'}}
+        style={{
+          width: "150px",
+          border: "1px solid #ced4da",
+          borderRadius: "5px",
+        }}
         type="color"
         value={fillColor}
         onChange={handleColorChange}
       ></input>
-      
 
       <label>Select borderradius</label>
-      
-   
 
-<Input
-
-          type={"number"}
-          placeholder={"Enter radius"}
-          value={borderRadius}
-          onChange={handleRadiusChange}
-          width="150px"
-        ></Input>
+      <Input
+        type={"number"}
+        placeholder={"Enter radius"}
+        value={borderRadius}
+        onChange={handleRadiusChange}
+        width="150px"
+      ></Input>
 
       {/* New Inputs */}
       <h4>Current stroke color: {selectedObj ? selectedObj.stroke : null} </h4>
       <label>Select stroke color</label>
       <input
-        style={{ width: "150px", border: '1px solid #ced4da', borderRadius: '5px'}}
+        style={{
+          width: "150px",
+          border: "1px solid #ced4da",
+          borderRadius: "5px",
+        }}
         type="color"
         value={strokeColor}
         onChange={handleStrokeColorChange}
@@ -201,15 +280,33 @@ export default function Properties(props: FabricCanvasProps) {
 
       <label>Select stroke width</label>
 
+      <Input
+        type={"number"}
+        placeholder={"Enter stroke width"}
+        value={strokeWidth}
+        onChange={handleStrokeWidthChange}
+        width="150px"
+      ></Input>
 
-<Input
+      <label>Select width</label>
 
-type={"number"}
-placeholder={"Enter stroke width"}
-value={strokeWidth}
-onChange={handleStrokeWidthChange}
-width="150px"
-></Input>
+      <Input
+        type={"number"}
+        placeholder={"Enter hight"}
+        value={width}
+        onChange={handleWidthChange}
+        width="150px"
+      ></Input>
+
+      <label>Select height</label>
+
+      <Input
+        type={"number"}
+        placeholder={"Enter hight"}
+        value={hight}
+        onChange={handleHightChange}
+        width="150px"
+      ></Input>
     </div>
   );
 }

@@ -19,11 +19,9 @@ export default function useSnapping(
   }
 
   //object will teleport this many pixels maximum
-  const snapDistance = 10;
 
   //objects outside this area will not be taken into account
   const snappingArea = 500;
-  
 
   /* 
 run every time a mouse moves
@@ -39,7 +37,7 @@ if a line is close, it moves the active object to the other line
 a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. One in the middle and one on each side.
  */
 
-  const checkSnapping = () => {
+  const checkSnapping = (snapDistance: number) => {
     const currentCanvas = canvas.current;
     const activeObjects = currentCanvas?.getActiveObjects();
 
@@ -59,13 +57,14 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
       objectsNearActiveObject
     );
 
-    const snapped = snap(activeObject, activeObjectLines, objectsLines);
+    const snapped = snap(activeObject, activeObjectLines, objectsLines, snapDistance);
   };
 
   const snap = (
     activeObject: fabric.fabric.Object,
     activeObjectLines: Lines,
-    objectsLines: Lines[]
+    objectsLines: Lines[],
+    snapDistance: number
   ) => {
     //for each object that is close to the active object
     //check if any of the lines in the same plane are close to any of the active object's lines
@@ -73,7 +72,7 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
 
     objectsLines.forEach((element) => {
       if (
-        checkIfLinesAreCloseAndAdjust(activeObject, activeObjectLines, element)
+        checkIfLinesAreCloseAndAdjust(activeObject, activeObjectLines, element, snapDistance)
       ) {
         return true;
       }
@@ -85,7 +84,8 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
   const checkIfLinesAreCloseAndAdjust = (
     activeObject: fabric.fabric.Object,
     activeObjectLines: Lines,
-    objectLines: Lines
+    objectLines: Lines,
+    snapDistance: number
   ) => {
     const xLinesActive = [
       activeObjectLines.x.left,
@@ -97,7 +97,7 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
       activeObjectLines.y.center,
       activeObjectLines.y.bottom,
     ];
-  
+
     const xLinesObj = [
       objectLines.x.left,
       objectLines.x.center,
@@ -108,68 +108,77 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
       objectLines.y.center,
       objectLines.y.bottom,
     ];
-  
+
+    let snappedX = false;
+    let snappedY = false;
+
+
     // Check and snap x lines
     for (let index = 0; index < xLinesActive.length; index++) {
       for (let index2 = 0; index2 < xLinesObj.length; index2++) {
         if (Math.abs(xLinesActive[index] - xLinesObj[index2]) < snapDistance) {
+          if (xLinesActive[index] == xLinesObj[index2]) continue;
+
           switch (index) {
             case 0:
               activeObject.set("left", xLinesObj[index2]);
-              return true;
+              snappedX = true;
+              break;
             case 1:
-              activeObject.set("left", xLinesObj[index2] - activeObject.getScaledWidth() / 2);
-              return true;
+              activeObject.set(
+                "left",
+                xLinesObj[index2] - activeObject.getScaledWidth() / 2
+              );
+              snappedX = true;
+              break;
             case 2:
-              activeObject.set("left", xLinesObj[index2] - activeObject.getScaledWidth());
-              return true;
+              activeObject.set(
+                "left",
+                xLinesObj[index2] - activeObject.getScaledWidth()
+              );
+              snappedX = true;
+              break;
           }
+          if (snappedX) break;
         }
       }
+      if (snappedX) break;
     }
-  
+
     // Check and snap y lines
     for (let index = 0; index < yLinesActive.length; index++) {
       for (let index2 = 0; index2 < yLinesObj.length; index2++) {
         if (Math.abs(yLinesActive[index] - yLinesObj[index2]) < snapDistance) {
+          if (yLinesActive[index] == yLinesObj[index2]) continue;
+
           switch (index) {
             case 0:
               activeObject.set("top", yLinesObj[index2]);
-              return true;
+              snappedY = true;
+              break;
             case 1:
-              activeObject.set("top", yLinesObj[index2] - activeObject.getScaledHeight() / 2);
-              return true;
+              activeObject.set(
+                "top",
+                yLinesObj[index2] - activeObject.getScaledHeight() / 2
+              );
+              snappedY = true;
+              break;
             case 2:
-              activeObject.set("top", yLinesObj[index2] - activeObject.getScaledHeight());
-              return true;
+              activeObject.set(
+                "top",
+                yLinesObj[index2] - activeObject.getScaledHeight()
+              );
+              snappedY = true;
+              break;
           }
+          if (snappedY) break;
         }
       }
+      if (snappedY) break;
     }
-  
-    return false;
+
+    return snappedX || snappedY;
   };
-  
-
-    /* xLinesActive.forEach((xLineActive) => {
-      xLinesObj.forEach((xLineObj) => {
-        if (Math.abs(xLineActive - xLineObj) < snapDistance) {
-          activeObject.set("left", xLineObj);
-          return true;
-        }
-      });
-    });
-
-    yLinesActive.forEach((yLineActive) => {
-      yLinesObj.forEach((yLineObj) => {
-        if (Math.abs(yLineActive - yLineObj) < snapDistance) {
-          activeObject.set("top", yLineObj);
-          return true;
-        }
-      });
-    }); */
-
-  
 
   const filterObjectsNearActiveObject = (
     activeObject: fabric.fabric.Object,
