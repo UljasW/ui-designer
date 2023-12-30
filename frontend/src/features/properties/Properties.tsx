@@ -12,8 +12,8 @@ export default function Properties(props: FabricCanvasProps) {
 
   const [fillColor, setFillColor] = useState<string>("");
   const [borderRadius, setBorderRadius] = useState<number>(0);
-  const [strokeColor, setStrokeColor] = useState<string>("");
-  const [strokeWidth, setStrokeWidth] = useState<number>(0);
+  const [strokeColor, setStrokeColor] = useState<string>("black");
+  const [strokeWidth, setStrokeWidth] = useState<number>(1);
   const [textValue, setTextValue] = useState<string>(""); // Add this line
 
   const [width, setWidth] = useState<number>(100);
@@ -37,11 +37,8 @@ export default function Properties(props: FabricCanvasProps) {
         }
 
         initDimensions(canvasInstance);
-       
       }
     };
-
-    
 
     const handleSelectionCleared = () => {
       setSelectedObj(null);
@@ -64,40 +61,29 @@ export default function Properties(props: FabricCanvasProps) {
     };
   }, [props.canvas]);
 
-  const handleScaling = (e:any) => {
+  const handleScaling = (e: any) => {
     const object = e.target;
-
 
     const height = object.height * object.scaleY;
     const width = object.width * object.scaleX;
 
     setHight(height);
     setWidth(width);
-
-
-      
   };
 
-  const initDimensions = (canvasInstance : fabric.Canvas) => {
-
+  const initDimensions = (canvasInstance: fabric.Canvas) => {
     const obj = canvasInstance.getActiveObject();
 
-    if(!obj) return;
+    if (!obj) return;
 
     console.log(obj);
 
     const height = (obj.height ?? 0) * (obj.scaleY ?? 0);
     const width = (obj.width ?? 0) * (obj.scaleX ?? 0);
 
-
-
     setHight(height);
     setWidth(width);
-
-    
-  }
-
-
+  };
 
   function handleColorChange(event: any) {
     const canvasInstance = props.canvas.current;
@@ -185,7 +171,7 @@ export default function Properties(props: FabricCanvasProps) {
     if (!canvasInstance) return;
     const obj = canvasInstance.getActiveObject();
 
-    if(!obj) return;
+    if (!obj) return;
 
     setWidth(event.currentTarget.value);
 
@@ -201,7 +187,7 @@ export default function Properties(props: FabricCanvasProps) {
     if (!canvasInstance) return;
     const obj = canvasInstance.getActiveObject();
 
-    if(!obj) return;
+    if (!obj) return;
 
     setHight(event.currentTarget.value);
 
@@ -210,9 +196,6 @@ export default function Properties(props: FabricCanvasProps) {
     obj.scaleY = scaleY;
 
     canvasInstance.renderAll();
-
-
-    
   }
 
   return (
