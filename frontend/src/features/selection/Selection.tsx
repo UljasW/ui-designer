@@ -18,7 +18,7 @@ export default function Selection(props: FabricCanvasProps) {
   const [object, setObject] = useState<fabric.fabric.Object | undefined>();
   const navigate = useNavigate();
   const [enableSnapping, setEnableSnapping] = useState(true);
-  const [snappingDistance, setSnappingDistance] = useState<number>(10);
+  const [snappingDistance, setSnappingDistance] = useState<number>(5);
   const [snappingArea, setSnappingArea] = useState<number>(200);
 
   const { checkSnapping } = useSnapping(props.canvas);
@@ -172,7 +172,7 @@ export default function Selection(props: FabricCanvasProps) {
 
       <Button
         onClick={function (e: any): void {
-          navigate("/home");
+          navigate("/");
         }}
         color={"primary"}
         content={"Home"}

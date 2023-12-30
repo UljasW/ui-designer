@@ -3,6 +3,7 @@ import loginUser from "../../../api/authentication/loginUser";
 import { useNavigate } from "react-router-dom";
 import Input from "../../../components/Input";
 import Button from "../../../components/Button";
+import { Link } from "react-router-dom";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,7 +27,7 @@ export default function Login() {
         return;
       }
       localStorage.setItem("jwt", response?.data);
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       alert("An error occurred while logging in. Please try again.");
       console.error(error);
@@ -74,6 +75,9 @@ export default function Login() {
           color={"primary"}
           content={"Login"}
         ></Button>
+
+        <Link to="/register">Don't have an account? Register</Link>
+      
       </form>
     </div>
   );

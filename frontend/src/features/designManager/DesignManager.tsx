@@ -7,6 +7,7 @@ import Button from "../../components/Button";
 import Input from "../../components/Input";
 import MyInvites from "../myInvites/MyInvites";
 import TopBar from "../../components/TopBar";
+import notificationIcon from "../../images/icons8-bell-48.png";
 
 export default function DesignManager() {
   const [designList, setDesignList] = useState<any[]>();
@@ -37,12 +38,12 @@ export default function DesignManager() {
     try {
       const response = await getDesignes(localStorage.getItem("jwt") || "");
       console.log(response);
-  
 
       setDesignList(response);
       console.log(response);
     } catch (err) {
       console.log(err);
+      navigate("/login");
     }
   };
 
@@ -68,6 +69,8 @@ export default function DesignManager() {
           style={{
             width: "100%",
             display: "flex",
+            paddingLeft: "20px",
+            paddingRight: "20px",
             justifyContent: "space-between",
           }}
         >
@@ -88,13 +91,20 @@ export default function DesignManager() {
               content={"Create"}
             />
           </form>
-          <Button
+          <div style={{height:"100%", display:"flex", alignItems:"center"}}>
+            <span style={{marginRight:"10px"}}>My Invites</span>
+          <img
+            src={notificationIcon}
             onClick={(e: any) => {
               setShowInvite(!showInvite);
             }}
-            color="primary"
-            content={"Notification"}
-          />
+            style={{ cursor: "pointer"}}
+
+            height="40px"
+          ></img>
+
+          </div>
+          
           <MyInvites show={showInvite} />
         </div>
       </TopBar>

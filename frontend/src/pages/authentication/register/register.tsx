@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import registerUser from "../../../api/authentication/registerUser";
 import loginUser from "../../../api/authentication/loginUser";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../../../components/Input";
 import Button from "../../../components/Button";
 export default function Register() {
@@ -26,7 +26,7 @@ export default function Register() {
 
       const response = await loginUser(email, password);
       localStorage.setItem("jwt", response?.data);
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       alert(error);
     }
@@ -73,6 +73,8 @@ export default function Register() {
           color={"primary"}
           content={"Register"}
         ></Button>
+
+        <Link to="/login">Already have an account? Login </Link>
       </form>
     </div>
   );
