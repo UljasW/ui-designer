@@ -74,7 +74,6 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     objectsLines: Lines[],
     snapDistance: number
   ) => {
-
     //for each object that is close to the active object
     //check if any of the lines in the same plane are close to any of the active object's lines
     //if they are close, move the active object to the other line
@@ -130,8 +129,6 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     for (let index = 0; index < xLinesActive.length; index++) {
       for (let index2 = 0; index2 < xLinesObj.length; index2++) {
         if (Math.abs(xLinesActive[index] - xLinesObj[index2]) < snapDistance) {
-          if (xLinesActive[index] == xLinesObj[index2]) continue;
-
           switch (index) {
             case 0:
               activeObject.set("left", xLinesObj[index2]);
@@ -165,8 +162,6 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     for (let index = 0; index < yLinesActive.length; index++) {
       for (let index2 = 0; index2 < yLinesObj.length; index2++) {
         if (Math.abs(yLinesActive[index] - yLinesObj[index2]) < snapDistance) {
-          if (yLinesActive[index] == yLinesObj[index2]) continue;
-
           switch (index) {
             case 0:
               activeObject.set("top", yLinesObj[index2]);
