@@ -37,6 +37,9 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
  */
 
   const checkSnapping = (snapDistance: number, snappingArea: number) => {
+    canvas.current?.getObjects("line").forEach((obj) => {
+      canvas.current?.remove(obj);
+    });
     const currentCanvas = canvas.current;
     const activeObjects = currentCanvas?.getActiveObjects();
 
@@ -71,9 +74,7 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     objectsLines: Lines[],
     snapDistance: number
   ) => {
-    canvas.current?.getObjects("line").forEach((obj) => {
-      canvas.current?.remove(obj);
-    });
+
     //for each object that is close to the active object
     //check if any of the lines in the same plane are close to any of the active object's lines
     //if they are close, move the active object to the other line

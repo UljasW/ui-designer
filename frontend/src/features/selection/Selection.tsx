@@ -20,12 +20,14 @@ export default function Selection(props: FabricCanvasProps) {
   const [enableSnapping, setEnableSnapping] = useState(true);
   const [snappingDistance, setSnappingDistance] = useState<number>(5);
   const [snappingArea, setSnappingArea] = useState<number>(200);
+  const [mouseDown, setMouseDown] = useState<boolean>(false);
 
   const { checkSnapping } = useSnapping(props.canvas);
 
   useEffect(() => {
     if (canvas) {
       canvas.on("mouse:down", () => {
+        setMouseDown(true);
         if (!object) {
           return;
         }
@@ -36,11 +38,18 @@ export default function Selection(props: FabricCanvasProps) {
         setObject(undefined); // Clear the rect object
       });
 
+      canvas.on("mouse:up", () => {
+        setMouseDown(false);
+      });
+
       canvas.on("mouse:move", (options) => {
         setObjPos(canvas, options);
-
-        if (enableSnapping) {
+        if (enableSnapping && mouseDown) {
           checkSnapping(snappingDistance, snappingArea);
+        } else {
+          canvas.getObjects("line").forEach((obj) => {
+            canvas.remove(obj);
+          });
         }
 
         canvas.renderAll();
@@ -51,10 +60,18 @@ export default function Selection(props: FabricCanvasProps) {
     return () => {
       if (canvas) {
         canvas.off("mouse:down");
+        canvas.off("mouse:up");
         canvas.off("mouse:move");
       }
     };
-  }, [canvas, object, enableSnapping, snappingDistance, snappingArea]);
+  }, [
+    canvas,
+    object,
+    enableSnapping,
+    snappingDistance,
+    snappingArea,
+    mouseDown,
+  ]);
 
   const setObjPos = (canvas: any, options: any) => {
     const pointer = canvas.getPointer(options.e);
@@ -146,7 +163,7 @@ export default function Selection(props: FabricCanvasProps) {
           max-height="40px"
         ></Button>
         <Checkbox checked={enableSnapping} onClick={handleSnapClick} />
-        <div style={{ background: "lightGrey", borderRadius: "5px" }} >
+        <div style={{ background: "lightGrey", borderRadius: "5px" }}>
           <Input
             type={"number"}
             placeholder=""
