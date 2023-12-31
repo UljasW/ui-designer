@@ -71,7 +71,6 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     objectsLines: Lines[],
     snapDistance: number
   ) => {
-
     canvas.current?.getObjects("line").forEach((obj) => {
       canvas.current?.remove(obj);
     });
@@ -101,8 +100,6 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     objectLines: Lines,
     snapDistance: number
   ) => {
-   
-
     const xLinesActive = [
       activeObjectLines.x.left,
       activeObjectLines.x.center,
@@ -201,9 +198,7 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     return snappedX || snappedY;
   };
 
-
   const drawLineY = (y: number) => {
-
     if (!canvas.current) return;
 
     const canvasWidth = canvas.current.getWidth();
@@ -212,11 +207,8 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
       strokeWidth: 1.5,
       selectable: false,
     });
-    
 
     canvas.current.add(line);
-    console.log("drawing line Y");
-
   };
 
   const drawLineX = (x: number) => {
@@ -230,9 +222,6 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     });
 
     canvas.current.add(line);
-
-    console.log("drawing line X: " + line.left + " " + line.top + " " + line.width + " " + line.height + ")");
-
   };
 
   const filterObjectsNearActiveObject = (
