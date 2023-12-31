@@ -50,9 +50,7 @@ export default function Selection(props: FabricCanvasProps) {
 
       canvas.on("mouse:move", (options) => {
         setObjPos(canvas, options);
-        console.log(object);
         if (enableSnapping && (mouseDown || object !== undefined)) {
-          console.log("snapping");
           checkSnapping(snappingDistance, snappingArea);
         }
         canvas.renderAll();
