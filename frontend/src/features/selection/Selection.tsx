@@ -40,18 +40,21 @@ export default function Selection(props: FabricCanvasProps) {
 
       canvas.on("mouse:up", () => {
         setMouseDown(false);
+        if (object === undefined) {
+          canvas.getObjects("line").forEach((obj) => {
+            canvas.remove(obj);
+          });
+          canvas.renderAll();
+        }
       });
 
       canvas.on("mouse:move", (options) => {
         setObjPos(canvas, options);
-        if (enableSnapping && mouseDown) {
+        console.log(object);
+        if (enableSnapping && (mouseDown || object !== undefined)) {
+          console.log("snapping");
           checkSnapping(snappingDistance, snappingArea);
-        } else {
-          canvas.getObjects("line").forEach((obj) => {
-            canvas.remove(obj);
-          });
         }
-
         canvas.renderAll();
       });
     }
