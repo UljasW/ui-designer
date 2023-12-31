@@ -18,13 +18,15 @@ export default function Invite() {
     fetchInvitations();
   }, []);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    sendInvite(
+    await sendInvite(
       email,
       searchParams.get("id") || "",
       localStorage.getItem("jwt") || ""
     );
+    fetchInvitations();
+
   };
 
   const fetchCollaborators = async () => {

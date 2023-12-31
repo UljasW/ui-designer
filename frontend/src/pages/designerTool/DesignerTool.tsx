@@ -86,9 +86,9 @@ export default function DesignerTool() {
           display: "flex",
           justifyContent: "center",
           flexDirection: "row",
-          flex: 1, // This will make this div take up the remaining space
-          width: "100%",
-          overflow: "auto", // This will add a scrollbar to this div if the content overflows
+          flex: 1, 
+          width: "100vw",
+          height: "calc(100vh - 50px)",
         }}
       >
         <Layers

@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.Canvas | undefined>;
   updateDb: (objects: any) => void;
-  deleteObjects: (objects: any) => void
+  deleteObjects: (objects: any) => void;
   updateObjectsLiveVisually: (objects: any) => void;
 }
 
@@ -119,42 +119,49 @@ export default function Layers(props: FabricCanvasProps) {
         background: "#F3F4F6", // Replace with the background color used in your app
         boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
         borderRight: "1px solid #ced4da",
-
       }}
     >
+      <div style={{overflowY:"scroll", width:"100%"}}>
       {objList.map((obj, index) => {
         const reverseIndex = objList.length - 1 - index;
         const reverseObj = objList[reverseIndex];
-  
-        return (
-          <button
-            key={reverseIndex}
-            style={{
-              color: isObjectMatch(reverseObj, selectedObjects) ? "red" : "#555",
-              backgroundColor: "white",
-              borderRadius: "4px",
-              padding: "10px",
-              margin: "5px",
-              cursor: "pointer",
-              border: "none",
-              boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-              textAlign: "left",
-              width: "100%",
-              overflow: "hidden", // handle long text
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis"
-            }}
-            onClick={() => {
-              const canvasInstance = props.canvas.current;
-              canvasInstance?.setActiveObject(reverseObj);
-              canvasInstance?.renderAll();
-            }}
-          >
-            {reverseObj.layerIndex} - {reverseObj.type} - {reverseObj.fill}
-          </button>
-        );
+
+        if (reverseObj.type !== "line") {
+          return (
+            <button
+              key={reverseIndex}
+              style={{
+                color: isObjectMatch(reverseObj, selectedObjects)
+                  ? "red"
+                  : "#555",
+                backgroundColor: "white",
+                borderRadius: "4px",
+                padding: "10px",
+                margin: "5px",
+                cursor: "pointer",
+                border: "none",
+                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                textAlign: "left",
+                width: "100%",
+                overflow: "hidden", // handle long text
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              }}
+              onClick={() => {
+                const canvasInstance = props.canvas.current;
+                canvasInstance?.setActiveObject(reverseObj);
+                canvasInstance?.renderAll();
+              }}
+            >
+              {reverseObj.layerIndex} - {reverseObj.type} - {reverseObj.fill}
+            </button>
+          );
+        }
       })}
-  
+        
+      </div>
+      
+
       <div
         style={{
           display: "flex",
@@ -162,19 +169,20 @@ export default function Layers(props: FabricCanvasProps) {
           alignItems: "center",
           justifyContent: "flex-end",
           width: "100%",
-          marginTop: "auto"
+          marginTop: "auto",
         }}
       >
         <div
           style={{
-            display: selectedObjects && selectedObjects.length === 1 ? "flex" : "none",
+            display:
+              selectedObjects && selectedObjects.length === 1 ? "flex" : "none",
             flexDirection: "row",
             justifyContent: "space-between",
             width: "100%",
-            padding: "10px"
+            padding: "10px",
           }}
         >
-          {['Move up', 'Move down'].map((text, idx) => (
+          {["Move up", "Move down"].map((text, idx) => (
             <button
               key={idx}
               onClick={idx === 0 ? moveUp : moveDown}
@@ -186,7 +194,7 @@ export default function Layers(props: FabricCanvasProps) {
                 borderRadius: "4px",
                 cursor: "pointer",
                 border: "none",
-                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)"
+                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
               }}
             >
               {text}
@@ -205,7 +213,7 @@ export default function Layers(props: FabricCanvasProps) {
             borderRadius: "4px",
             cursor: "pointer",
             border: "none",
-            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)"
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
           }}
           onClick={() => {
             const canvasInstance = props.canvas.current;
@@ -224,5 +232,4 @@ export default function Layers(props: FabricCanvasProps) {
       </div>
     </div>
   );
-  
 }
