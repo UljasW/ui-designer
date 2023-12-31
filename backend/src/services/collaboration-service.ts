@@ -214,6 +214,7 @@ export default class CollaborationService {
     const invitations = await this.prisma.designInvitation.findMany({
       where: {
         userId: userId,
+        isActive: true
       },
 
       include: {

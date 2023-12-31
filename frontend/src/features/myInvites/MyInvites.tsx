@@ -60,6 +60,7 @@ useEffect(() => {
                 </li>
                     <Button onClick={function (e: any): void {
                       acceptInvite(invite.id, localStorage.getItem("jwt") || "");
+                      window.location.reload();
                       } } color={"primary"} content={"Accept"}></Button>
                 </div>
                 

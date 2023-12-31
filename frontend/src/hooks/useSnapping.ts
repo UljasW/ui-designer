@@ -71,6 +71,10 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     objectsLines: Lines[],
     snapDistance: number
   ) => {
+
+    canvas.current?.getObjects("line").forEach((obj) => {
+      canvas.current?.remove(obj);
+    });
     //for each object that is close to the active object
     //check if any of the lines in the same plane are close to any of the active object's lines
     //if they are close, move the active object to the other line
@@ -97,6 +101,8 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     objectLines: Lines,
     snapDistance: number
   ) => {
+   
+
     const xLinesActive = [
       activeObjectLines.x.left,
       activeObjectLines.x.center,
@@ -131,6 +137,7 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
           switch (index) {
             case 0:
               activeObject.set("left", xLinesObj[index2]);
+              drawLineX(xLinesObj[index2]);
               snappedX = true;
               break;
             case 1:
@@ -138,6 +145,7 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
                 "left",
                 xLinesObj[index2] - activeObject.getScaledWidth() / 2
               );
+              drawLineX(xLinesObj[index2]);
               snappedX = true;
               break;
             case 2:
@@ -145,6 +153,7 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
                 "left",
                 xLinesObj[index2] - activeObject.getScaledWidth()
               );
+              drawLineX(xLinesObj[index2]);
               snappedX = true;
               break;
           }
@@ -163,6 +172,7 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
           switch (index) {
             case 0:
               activeObject.set("top", yLinesObj[index2]);
+              drawLineY(yLinesObj[index2]);
               snappedY = true;
               break;
             case 1:
@@ -170,6 +180,7 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
                 "top",
                 yLinesObj[index2] - activeObject.getScaledHeight() / 2
               );
+              drawLineY(yLinesObj[index2]);
               snappedY = true;
               break;
             case 2:
@@ -177,6 +188,7 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
                 "top",
                 yLinesObj[index2] - activeObject.getScaledHeight()
               );
+              drawLineY(yLinesObj[index2]);
               snappedY = true;
               break;
           }
@@ -187,6 +199,40 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     }
 
     return snappedX || snappedY;
+  };
+
+
+  const drawLineY = (y: number) => {
+
+    if (!canvas.current) return;
+
+    const canvasWidth = canvas.current.getWidth();
+    const line = new fabric.fabric.Line([0, y, canvasWidth, y], {
+      stroke: "red",
+      strokeWidth: 1.5,
+      selectable: false,
+    });
+    
+
+    canvas.current.add(line);
+    console.log("drawing line Y");
+
+  };
+
+  const drawLineX = (x: number) => {
+    if (!canvas.current) return;
+
+    const canvasHeight = canvas.current.getHeight();
+    const line = new fabric.fabric.Line([x, 0, x, canvasHeight], {
+      stroke: "red",
+      strokeWidth: 1,
+      selectable: false,
+    });
+
+    canvas.current.add(line);
+
+    console.log("drawing line X: " + line.left + " " + line.top + " " + line.width + " " + line.height + ")");
+
   };
 
   const filterObjectsNearActiveObject = (
@@ -252,9 +298,9 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     activeObject: fabric.fabric.Object,
     objects: fabric.fabric.Object[]
   ) => {
-    const activeObjectLines = callculateLines(activeObject);
+    const activeObjectLines = calculateLines(activeObject);
 
-    const objectsLines = objects.map((object) => callculateLines(object));
+    const objectsLines = objects.map((object) => calculateLines(object));
 
     return {
       activeObjectLines,
@@ -262,7 +308,7 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     };
   };
 
-  const callculateLines = (object: fabric.fabric.Object): Lines => {
+  const calculateLines = (object: fabric.fabric.Object): Lines => {
     const centerPoint = object.getCenterPoint();
 
     const top = object.top;

@@ -1,15 +1,17 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import sendInvite from "../../api/collaboration/sendInvite";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import getCollaborators from "../../api/collaboration/getCollaborators";
 import getInvitationsByDesign from "../../api/collaboration/getInvitationsByDesign";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
+import TopBar from "../../components/TopBar";
 export default function Invite() {
   const [email, setEmail] = useState<string>("");
   const [searchParams] = useSearchParams();
   const [collaborators, setCollaborators] = useState<any[]>();
   const [invitations, setInvitations] = useState<any[]>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCollaborators();
@@ -57,24 +59,45 @@ export default function Invite() {
 
   return (
     <div>
-      <form style={{ marginBottom: "20px" }}>
-        <Input
-          value={email}
-          type={"email"}
-          placeholder={"Email"}
-          onChange={handleEmailChange}
-        />
-
-        <Button
-          onClick={(e: any) => {
-            handleSubmit(e);
+      <TopBar>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
           }}
-          color="primary"
-          content={"Send Invite"}
-        />
-      </form>
+        >
+          <div>
+            <Input
+              value={email}
+              type={"email"}
+              placeholder={"Email"}
+              onChange={handleEmailChange}
+            />
 
-      <div style={{ display: "flex", flexDirection: "row" }}>
+            <Button
+              onClick={(e: any) => {
+                handleSubmit(e);
+
+              }}
+              color="primary"
+              content={"Send Invite"}
+            />
+          </div>
+
+          <Button
+            onClick={function (e: any): void {
+              navigate("/");
+            }}
+            color={"primary"}
+            content={"Home"}
+          ></Button>
+        </div>
+      </TopBar>
+
+      <div
+        style={{ display: "flex", flexDirection: "row", marginTop: "20px  " }}
+      >
         <div
           style={{
             width: "200px",

@@ -13,7 +13,7 @@ export default function Properties(props: FabricCanvasProps) {
   const [fillColor, setFillColor] = useState<string>("");
   const [borderRadius, setBorderRadius] = useState<number>(0);
   const [strokeColor, setStrokeColor] = useState<string>("black");
-  const [strokeWidth, setStrokeWidth] = useState<number>(1);
+  const [strokeWidth, setStrokeWidth] = useState<number>(0);
   const [textValue, setTextValue] = useState<string>(""); // Add this line
 
   const [width, setWidth] = useState<number>(100);
@@ -30,7 +30,7 @@ export default function Properties(props: FabricCanvasProps) {
         // Update state with the properties of the newly selected object
         setFillColor(selectedObject.fill || "");
         setBorderRadius(selectedObject.rx || 0); // Assuming rx and ry are the same
-        setStrokeColor(selectedObject.stroke || "");
+        setStrokeColor(selectedObject.stroke || "black");
         setStrokeWidth(selectedObject.strokeWidth || 0);
         if (selectedObject.type === "text") {
           setTextValue(selectedObject.text || "");

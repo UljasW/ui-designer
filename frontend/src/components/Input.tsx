@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 // Define a type for the input props
 type InputProps = {
@@ -19,7 +19,9 @@ export default function Input({ type, placeholder, value, onChange, onFocus, onB
     height: height || 'auto',
     padding: '10px 20px',
     margin: '4px 2px',
-    border: '1px solid #ced4da',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: '#ced4da',
     borderRadius: '5px',
     fontSize: '16px',
     outline: 'none', // Remove default focus outline
@@ -28,12 +30,12 @@ export default function Input({ type, placeholder, value, onChange, onFocus, onB
   // Define the styles for the input when it is focused
   const focusStyle = {
     ...baseStyle,
-    borderColor: '#80bdff',
+    borderColor: '#80bdff', // Just change the borderColor
     boxShadow: '0 0 0 0.2rem rgba(0, 123, 255, 0.25)',
   };
 
   // State to manage whether the input is focused
-  const [isFocused, setIsFocused] = React.useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   return (
     <input 

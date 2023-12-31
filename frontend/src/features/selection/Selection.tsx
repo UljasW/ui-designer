@@ -75,7 +75,9 @@ export default function Selection(props: FabricCanvasProps) {
         height: 70,
         selectable: false, // Initially not selectable
         hasControls: false, // No controls for now
+        strokeWidth: 0,
         fill: props.currentColor,
+        stroke: props.currentColor,
       });
 
       (rect as any).id = nanoid();
@@ -97,6 +99,8 @@ export default function Selection(props: FabricCanvasProps) {
         selectable: false, // Initially not selectable
         hasControls: false, // No controls for now
         fill: props.currentColor,
+        stroke: props.currentColor,
+        strokeWidth: 0,
       });
 
       console.log(text);
@@ -130,6 +134,7 @@ export default function Selection(props: FabricCanvasProps) {
           }}
           color={"primary"}
           content={"Add rectangle"}
+          height="40px"
         ></Button>
 
         <Button
@@ -138,9 +143,10 @@ export default function Selection(props: FabricCanvasProps) {
           }}
           color={"primary"}
           content={"Add text"}
+          max-height="40px"
         ></Button>
         <Checkbox checked={enableSnapping} onClick={handleSnapClick} />
-        <div>
+        <div style={{ background: "lightGrey", borderRadius: "5px" }} >
           <Input
             type={"number"}
             placeholder=""
@@ -154,7 +160,7 @@ export default function Selection(props: FabricCanvasProps) {
           />
           <label>Snapping distance</label>
         </div>
-        <div>
+        <div style={{ background: "lightGrey", borderRadius: "5px" }}>
           <Input
             type={"number"}
             placeholder=""
@@ -175,6 +181,7 @@ export default function Selection(props: FabricCanvasProps) {
           navigate("/");
         }}
         color={"primary"}
+        height="40px"
         content={"Home"}
       ></Button>
     </div>

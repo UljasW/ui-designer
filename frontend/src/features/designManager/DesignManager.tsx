@@ -64,7 +64,7 @@ export default function DesignManager() {
 
   return (
     <div style={{ width: "100%" }}>
-      <TopBar>
+      <TopBar height="auto">
         <div
           style={{
             width: "100%",
@@ -75,11 +75,12 @@ export default function DesignManager() {
           }}
         >
           {" "}
-          <form style={{ marginBottom: "20px" }}>
+          <form style={{ marginBottom: "20px", display:"flex", height:"100%", justifyContent:"center", alignItems:"center" }}>
             <Input
               value={designName}
               type={"Text"}
               placeholder={"Design Name"}
+              height="20px"
               onChange={handleDesignNameChange}
             />
 
@@ -88,6 +89,7 @@ export default function DesignManager() {
                 handleSubmit(e);
               }}
               color="primary"
+              height="40px"
               content={"Create"}
             />
           </form>
