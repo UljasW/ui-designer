@@ -18,7 +18,7 @@ export default function Selection(props: FabricCanvasProps) {
   const [object, setObject] = useState<fabric.fabric.Object | undefined>();
   const navigate = useNavigate();
   const [enableSnapping, setEnableSnapping] = useState(true);
-  const [snappingDistance, setSnappingDistance] = useState<number>(5);
+  const [snappingDistance, setSnappingDistance] = useState<number>(8);
   const [snappingArea, setSnappingArea] = useState<number>(200);
   const [mouseDown, setMouseDown] = useState<boolean>(false);
 
@@ -89,7 +89,7 @@ export default function Selection(props: FabricCanvasProps) {
       const rect = new fabric.fabric.Rect({
         top: mousePos ? mousePos[1] : 100,
         left: mousePos ? mousePos[0] : 100,
-        width: 60,
+        width: 70,
         height: 70,
         selectable: false, // Initially not selectable
         hasControls: false, // No controls for now

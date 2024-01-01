@@ -200,7 +200,7 @@ a total of 6 lines are calculated for each object. 3 horizontal and 3 vertical. 
     const canvasWidth = canvas.current.getWidth();
     const line = new fabric.fabric.Line([0, y, canvasWidth, y], {
       stroke: "red",
-      strokeWidth: 1.5,
+      strokeWidth: 1,
       selectable: false,
     });
 

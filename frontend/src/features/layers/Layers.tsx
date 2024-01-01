@@ -121,46 +121,47 @@ export default function Layers(props: FabricCanvasProps) {
         borderRight: "1px solid #ced4da",
       }}
     >
-      <div style={{overflowY:"scroll", width:"100%"}}>
-      {objList.map((obj, index) => {
-        const reverseIndex = objList.length - 1 - index;
-        const reverseObj = objList[reverseIndex];
+      <div style={{ overflowY: "scroll", overflowX:"hidden" }}>
+        <div>
+          {objList.map((obj, index) => {
+            const reverseIndex = objList.length - 1 - index;
+            const reverseObj = objList[reverseIndex];
 
-        if (reverseObj.type !== "line") {
-          return (
-            <button
-              key={reverseIndex}
-              style={{
-                color: isObjectMatch(reverseObj, selectedObjects)
-                  ? "red"
-                  : "#555",
-                backgroundColor: "white",
-                borderRadius: "4px",
-                padding: "10px",
-                margin: "5px",
-                cursor: "pointer",
-                border: "none",
-                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                textAlign: "left",
-                width: "100%",
-                overflow: "hidden", // handle long text
-                whiteSpace: "nowrap",
-                textOverflow: "ellipsis",
-              }}
-              onClick={() => {
-                const canvasInstance = props.canvas.current;
-                canvasInstance?.setActiveObject(reverseObj);
-                canvasInstance?.renderAll();
-              }}
-            >
-              {reverseObj.layerIndex} - {reverseObj.type} - {reverseObj.fill}
-            </button>
-          );
-        }
-      })}
-        
+            if (reverseObj.type !== "line") {
+              return (
+                <button
+                  key={reverseIndex}
+                  style={{
+                    color: isObjectMatch(reverseObj, selectedObjects)
+                      ? "red"
+                      : "#555",
+                    backgroundColor: "white",
+                    borderRadius: "4px",
+                    padding: "10px",
+                    margin: "5px",
+                    cursor: "pointer",
+                    border: "none",
+                    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                    textAlign: "left",
+                    width: "100%",
+                    overflow: "hidden", // handle long text
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                  }}
+                  onClick={() => {
+                    const canvasInstance = props.canvas.current;
+                    canvasInstance?.setActiveObject(reverseObj);
+                    canvasInstance?.renderAll();
+                  }}
+                >
+                  {reverseObj.layerIndex} - {reverseObj.type} -{" "}
+                  {reverseObj.fill}
+                </button>
+              );
+            }
+          })}
+        </div>
       </div>
-      
 
       <div
         style={{
