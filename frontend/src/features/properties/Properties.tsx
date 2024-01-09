@@ -201,6 +201,8 @@ export default function Properties(props: FabricCanvasProps) {
   return (
     <div
       style={{
+        flexShrink: 0,
+
         width: "200px",
         padding: "20px", // Assuming your app uses 20px padding, for example
         background: "#F3F4F6", // Replace with the background color used in your app

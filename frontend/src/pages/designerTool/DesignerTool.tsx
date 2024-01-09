@@ -99,12 +99,11 @@ export default function DesignerTool() {
           </TopBar>
           <div
             style={{
-              display: "flex",
-              justifyContent: "center",
-              flexDirection: "row",
-              flex: 1,
               height: "calc(100vh - 50px)",
               width: "auto",
+              display: "flex",
+              flexDirection: "row",
+
             }}
           >
             <Layers
