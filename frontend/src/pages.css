@@ -1,0 +1,10 @@
+
+@media only screen and (max-width: 600px) {
+  .inviteText {
+    display: none;
+  }
+
+  .designListContainer {
+    justify-content: center;
+  }
+}

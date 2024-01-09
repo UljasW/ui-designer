@@ -16,6 +16,9 @@ export default function DesignerTool() {
   const [currentColor, setCurrentColor] = useState<string>("black");
   const [searchParams] = useSearchParams();
   const [designId, setDesignId] = useState<string>();
+  const [isScreenLargeEnough, setIsScreenLargeEnough] = useState(
+    window.innerWidth >= 1000
+  );
 
   const { renderObjectsOnCanvas } = useRenderObjectsOnCanvas();
 
@@ -27,25 +30,24 @@ export default function DesignerTool() {
     );
 
   useEffect(() => {
-    const fetchObjectsAndRender = async () => {
-      try {
-        const objects = await getObjects();
-        if (objects && canvas.current) {
-          setCanvasInitialized(true);
-          renderObjectsOnCanvas(canvas.current, objects);
-        }
-      } catch (error) {
-        console.error("Error fetching objects:", error);
-      }
+    const handleResize = () => {
+      setIsScreenLargeEnough(window.innerWidth >= 1000);
     };
 
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isScreenLargeEnough]);
+
+  useEffect(() => {
     fetchObjectsAndRender();
 
     return () => {
       console.log("Unmounting DesignerTool");
-      
-
-    }
+    };
   }, [canvas]);
 
   useEffect(() => {
@@ -64,45 +66,65 @@ export default function DesignerTool() {
       };
     }
   }, [canvas.current, isCanvasInitialized]);
-
+  const fetchObjectsAndRender = async () => {
+    try {
+      const objects = await getObjects();
+      if (objects && canvas.current) {
+        setCanvasInitialized(true);
+        renderObjectsOnCanvas(canvas.current, objects);
+      }
+    } catch (error) {
+      console.error("Error fetching objects:", error);
+    }
+  };
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        width: "100vw",
-        height: "100vh",
-        maxHeight: "100vh",
-      }}
-    >
-      <TopBar>
-        {isCanvasInitialized && (
-          <Selection canvas={canvas} currentColor={currentColor}></Selection>
-        )}
-      </TopBar>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          flexDirection: "row",
-          flex: 1, 
-          width: "100vw",
-          height: "calc(100vh - 50px)",
-        }}
-      >
-        <Layers
-          updateDb={updateDb}
-          canvas={canvas}
-          deleteObjects={deleteObjects}
-          updateObjectsLiveVisually={updateObjectsLiveVisually}
-        ></Layers>
-        <FabricCanvas canvas={canvas}></FabricCanvas>
-        <Properties
-          canvas={canvas}
-          setCurrentColor={setCurrentColor}
-        ></Properties>
-      </div>
-    </div>
+    <>
+      {isScreenLargeEnough ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100vw",
+            height: "100vh",
+            maxHeight: "100vh",
+          }}
+        >
+          <TopBar>
+            {isCanvasInitialized && (
+              <Selection
+                canvas={canvas}
+                currentColor={currentColor}
+              ></Selection>
+            )}
+          </TopBar>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "row",
+              flex: 1,
+              height: "calc(100vh - 50px)",
+              width: "auto",
+            }}
+          >
+            <Layers
+              updateDb={updateDb}
+              canvas={canvas}
+              deleteObjects={deleteObjects}
+              updateObjectsLiveVisually={updateObjectsLiveVisually}
+            ></Layers>
+            <FabricCanvas canvas={canvas}></FabricCanvas>
+            <Properties
+              canvas={canvas}
+              setCurrentColor={setCurrentColor}
+            ></Properties>
+          </div>
+        </div>
+      ) : (
+        <div style={{ textAlign: "center", marginTop: "50px" }}>
+          <h2>Your screen is not large enough to display the designer tool.</h2>
+        </div>
+      )}
+    </>
   );
 }
