@@ -84,7 +84,6 @@ export default function DesignerTool() {
           style={{
             display: "flex",
             flexDirection: "column",
-            width: "100vw",
             height: "100vh",
             maxHeight: "100vh",
           }}
@@ -98,11 +97,12 @@ export default function DesignerTool() {
             )}
           </TopBar>
           <div
+          //shrink this
             style={{
-              height: "calc(100vh - 50px)",
-              width: "auto",
+              flex: 1, // Flex grow to take available space
               display: "flex",
               flexDirection: "row",
+          
 
             }}
           >

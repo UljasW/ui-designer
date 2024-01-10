@@ -201,9 +201,7 @@ export default function Properties(props: FabricCanvasProps) {
   return (
     <div
       style={{
-        flexShrink: 0,
-
-        width: "200px",
+        width: "250px",
         padding: "20px", // Assuming your app uses 20px padding, for example
         background: "#F3F4F6", // Replace with the background color used in your app
         boxShadow: "0 2px 4px rgba(0,0,0,0.1)", // Replace with the shadow style used in your app

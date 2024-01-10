@@ -111,7 +111,6 @@ export default function Layers(props: FabricCanvasProps) {
   return (
     <div
       style={{
-        flexShrink: 0,
         width: "250px",
         display: "flex",
         flexDirection: "column",

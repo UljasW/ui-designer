@@ -26,8 +26,8 @@ const FabricCanvas: React.FC<FabricCanvasProps> = ({ canvas }) => {
       if (containerRef.current && canvas.current) {
         console.log("Resizing canvas: "+ containerRef.current.clientWidth);
 
-        canvas.current.setWidth(containerRef.current.clientWidth);
-        canvas.current.setHeight(containerRef.current.clientHeight);
+        canvas.current.setWidth(window.innerWidth-500);
+        canvas.current.setHeight(window.innerHeight-50);
       
         
         canvas.current.renderAll(); // Re-render the canvas after resizing
