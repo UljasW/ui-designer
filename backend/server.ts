@@ -19,14 +19,17 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "*",
-    credentials: true,
-    allowedHeaders:"*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: "*",
   },
 });
 const prisma = new PrismaClient();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+    allowedHeaders: "*",
+  })
+);
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
@@ -36,7 +39,6 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/auth", new AuthController(prisma).Router());
 app.use("/design", new DesignController(prisma).Router());
 app.use("/collab", new CollaborationController(prisma).Router());
-
 
 new SocketController(io, prisma);
 
