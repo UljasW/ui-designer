@@ -19,6 +19,9 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "*",
+    credentials: true,
+    allowedHeaders:"*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
   },
 });
 const prisma = new PrismaClient();
