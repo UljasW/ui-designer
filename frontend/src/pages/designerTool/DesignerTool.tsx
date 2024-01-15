@@ -29,43 +29,6 @@ export default function DesignerTool() {
       canvas
     );
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsScreenLargeEnough(window.innerWidth >= 1000);
-    };
-
-    window.addEventListener("resize", handleResize);
-    handleResize();
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [isScreenLargeEnough]);
-
-  useEffect(() => {
-    fetchObjectsAndRender();
-
-    return () => {
-      console.log("Unmounting DesignerTool");
-    };
-  }, [canvas]);
-
-  useEffect(() => {
-    if (canvas.current && isCanvasInitialized) {
-      console.log("Adding event listeners");
-
-      const handleObjectModified = (e: any) => {
-        console.log("Object modified");
-        updateObjectsLiveVisually(canvas.current?.getObjects());
-      };
-
-      canvas.current.on("object:modified", handleObjectModified);
-
-      return () => {
-        canvas.current?.off("object:modified", handleObjectModified);
-      };
-    }
-  }, [canvas.current, isCanvasInitialized]);
   const fetchObjectsAndRender = async () => {
     try {
       const objects = await getObjects();
@@ -77,6 +40,46 @@ export default function DesignerTool() {
       console.error("Error fetching objects:", error);
     }
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsScreenLargeEnough(window.innerWidth >= 1000);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isScreenLargeEnough, setIsScreenLargeEnough]);
+
+  useEffect(() => {
+    fetchObjectsAndRender();
+
+    return () => {
+      console.log("Unmounting DesignerTool");
+    };
+  }, [canvas, fetchObjectsAndRender]);
+
+  useEffect(() => {
+    if (canvas.current && isCanvasInitialized) {
+      console.log("Adding event listeners");
+  
+      const handleObjectModified = (e: any) => {
+        console.log("Object modified");
+        updateObjectsLiveVisually(canvas.current?.getObjects());
+      };
+  
+      canvas.current.on("object:modified", handleObjectModified);
+  
+      return () => {
+        canvas.current?.off("object:modified", handleObjectModified);
+      };
+    }
+  }, [isCanvasInitialized, updateObjectsLiveVisually]);
+  
+
   return (
     <>
       {isScreenLargeEnough ? (
@@ -97,13 +100,11 @@ export default function DesignerTool() {
             )}
           </TopBar>
           <div
-          //shrink this
+            //shrink this
             style={{
               flex: 1, // Flex grow to take available space
               display: "flex",
               flexDirection: "row",
-          
-
             }}
           >
             <Layers

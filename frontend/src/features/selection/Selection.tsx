@@ -24,6 +24,16 @@ export default function Selection(props: FabricCanvasProps) {
 
   const { checkSnapping } = useSnapping(props.canvas);
 
+  const setObjPos = (canvas: any, options: any) => {
+    const pointer = canvas.getPointer(options.e);
+    setMousePos([pointer.x, pointer.y]);
+
+    if (!object) {
+      return;
+    }
+    object.set({ left: pointer.x, top: pointer.y });
+  };
+
   useEffect(() => {
     if (canvas) {
       canvas.on("mouse:down", () => {
@@ -72,17 +82,9 @@ export default function Selection(props: FabricCanvasProps) {
     snappingDistance,
     snappingArea,
     mouseDown,
+    checkSnapping,
+    setObjPos,
   ]);
-
-  const setObjPos = (canvas: any, options: any) => {
-    const pointer = canvas.getPointer(options.e);
-    setMousePos([pointer.x, pointer.y]);
-
-    if (!object) {
-      return;
-    }
-    object.set({ left: pointer.x, top: pointer.y });
-  };
 
   const addRect = useCallback(() => {
     if (canvas && !object) {

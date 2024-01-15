@@ -25,15 +25,6 @@ export default function Home() {
   ): void => {
     setDesignName(event.target.value);
   };
-
-  useEffect(() => {
-    console.log("Design Manager Mounted");
-    fetchDesignes();
-    return () => {
-      console.log("Design Manager Unmounted");
-    };
-  }, []);
-
   const fetchDesignes = async () => {
     try {
       const response = await getDesignes(localStorage.getItem("jwt") || "");
@@ -46,6 +37,16 @@ export default function Home() {
       navigate("/login");
     }
   };
+
+  useEffect(() => {
+    console.log("Design Manager Mounted");
+    fetchDesignes();
+    return () => {
+      console.log("Design Manager Unmounted");
+    };
+  }, [fetchDesignes]);
+
+  
 
   const handleDesignStart = (e: any, id: string): void => {
     e.preventDefault();
@@ -108,6 +109,7 @@ export default function Home() {
             </span>
             <img
               src={notificationIcon}
+              alt="Notification Icon"
               onClick={(e: any) => {
                 setShowInvite(!showInvite);
               }}

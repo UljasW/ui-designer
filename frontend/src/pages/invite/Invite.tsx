@@ -13,10 +13,7 @@ export default function Invite() {
   const [invitations, setInvitations] = useState<any[]>();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchCollaborators();
-    fetchInvitations();
-  }, []);
+
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -54,6 +51,10 @@ export default function Invite() {
       console.log(err);
     }
   };
+  useEffect(() => {
+    fetchCollaborators();
+    fetchInvitations();
+  }, [fetchCollaborators, fetchInvitations]);
 
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setEmail(event.target.value);

@@ -32,7 +32,7 @@ export default function useLiveCollaboration(designId: string, renderObjectsOnCa
     return () => {
       socketRef.current.disconnect();
     };
-  }, [designId]);
+  }, [designId, token, renderObjectsOnCanvas, canvas]);
 
   //save changes when user deselects object
   const updateDb = (objects: any) => {
