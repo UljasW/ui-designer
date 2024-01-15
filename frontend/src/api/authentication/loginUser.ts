@@ -9,6 +9,7 @@ export default async (email: string, password: string) => {
     });
     return response;
   } catch (error) {
+    console.log(error);
     throw(error)
   }
 };

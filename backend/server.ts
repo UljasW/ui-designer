@@ -8,8 +8,15 @@ import { Server } from "socket.io";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import dotenv from "dotenv";
-
 dotenv.config();
+
+const corsOptions = {
+  origin:
+    process.env.NODE_ENV === "production"
+      ? "https://yourfrontenddomain.com"
+      : "*",
+};
+
 
 const app = express();
 
@@ -17,19 +24,12 @@ const PORT = process.env.PORT || 5000;
 
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: "*",
-    allowedHeaders: "*",
-  },
+  cors: corsOptions,
 });
 const prisma = new PrismaClient();
 
-app.use(
-  cors({
-    origin: "*",
-    allowedHeaders: "*",
-  })
-);
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
