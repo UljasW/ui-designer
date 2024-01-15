@@ -1,4 +1,4 @@
-const url = "ui-designer-production.up.railway.app"
+const url = "uiapi.uljaswennstrom.com"
 
 const ip = "192.168.68.59:3001"
 const apiUrl = "https://" + url;
