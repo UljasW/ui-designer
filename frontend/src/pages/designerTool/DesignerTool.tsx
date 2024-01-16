@@ -77,7 +77,7 @@ export default function DesignerTool() {
         canvas.current?.off("object:modified", handleObjectModified);
       };
     }
-  }, [isCanvasInitialized]);
+  }, [isCanvasInitialized, canvas.current]);
   
 
   return (
