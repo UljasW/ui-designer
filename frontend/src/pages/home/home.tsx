@@ -46,8 +46,6 @@ export default function Home() {
     };
   }, []);
 
-  
-
   const handleDesignStart = (e: any, id: string): void => {
     e.preventDefault();
     navigate("/designer?id=" + id);
@@ -121,7 +119,7 @@ export default function Home() {
           <MyInvites show={showInvite} />
         </div>
       </TopBar>
-      <div style={{ padding: "20px",  }}>
+      <div style={{ padding: "20px" }}>
         <div
           style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}
           className="designListContainer"
@@ -135,18 +133,18 @@ export default function Home() {
                 padding: "10px",
               }}
             >
-              <div style={{ width: "350px" }}>
+              <div style={{ width: "280px" }}>
                 <h3 style={{ color: "#333" }}>{design.name}</h3>
                 <h4>Is owner: {design.isOwner.toString()}</h4>
 
-                <p style={{ color: "#666" }}>{design.id}</p>
                 <div style={{ display: "flex", flexDirection: "row" }}>
                   <Button
                     onClick={(e: any) => {
                       handleDesignStart(e, design.id);
                     }}
                     color="primary"
-                    height="40px"
+                    height="35px"
+                    padding="5px 10px"
                     width="max-content"
                     content={"View/Edit"}
                   />
@@ -158,7 +156,8 @@ export default function Home() {
                           handleDesignInvite(e, design.id);
                         }}
                         color="secondary"
-                        height="40px"
+                        height="35px"
+                        padding="5px 10px"
                         width="max-content"
                         content={"Invite user"}
                       />
@@ -166,7 +165,8 @@ export default function Home() {
                         onClick={(e: any) => {
                           handleDesignDelete(design.id);
                         }}
-                        height="40px"
+                        height="35px"
+                        padding="5px 10px"
                         width="max-content"
                         color="delete"
                         content={"Delete"}

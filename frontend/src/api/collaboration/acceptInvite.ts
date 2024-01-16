@@ -14,7 +14,6 @@ export default async (invitationId: string, token: string) => {
         },
       }
     );
-    alert("Invite accepted!");
 
     return response.data;
   } catch (error) {

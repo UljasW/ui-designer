@@ -6,6 +6,7 @@ import getInvitationsByDesign from "../../api/collaboration/getInvitationsByDesi
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import TopBar from "../../components/TopBar";
+import kickCollaborator from "../../api/collaboration/kickCollaborator";
 export default function Invite() {
   const [email, setEmail] = useState<string>("");
   const [searchParams] = useSearchParams();
@@ -47,6 +48,11 @@ export default function Invite() {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const kick = async (id: string) => {
+    kickCollaborator(id, localStorage.getItem("jwt") || "");
+    fetchCollaborators();
   };
   useEffect(() => {
     fetchCollaborators();
@@ -95,9 +101,7 @@ export default function Invite() {
         </div>
       </TopBar>
 
-      <div
-        className="inviteAndCollabContainer"
-      >
+      <div className="inviteAndCollabContainer">
         <div
           style={{
             width: "100%",
@@ -116,10 +120,24 @@ export default function Invite() {
               style={{
                 border: "1px solid black",
                 padding: "10px",
+                height: "45px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
                 borderRadius: "10px",
               }}
             >
               {collaborator.email}
+              <Button
+                onClick={(e: any) => {
+                  alert("Not implemented yet");
+                }}
+                height="35px"
+                padding="5px 10px"
+                width="max-content"
+                color="delete"
+                content={"Kick"}
+              />
             </div>
           ))}
         </div>
@@ -138,18 +156,35 @@ export default function Invite() {
           }}
         >
           <h2>Invitations</h2>
-          {invitations?.map((invite) => (
-            <div
-              style={{
-                border: "1px solid black",
-                padding: "10px",
-                borderRadius: "10px",
-              }}
-            >
-              {invite.user.email}
-
-            </div>
-          ))}
+          {invitations?.map((invite) => {
+            if (invite.isActive) {
+              return (
+                <div
+                  style={{
+                    border: "1px solid black",
+                    padding: "10px",
+                    borderRadius: "10px",
+                    height: "45px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  {invite.user.email}
+                  <Button
+                    onClick={(e: any) => {
+                      alert("Not implemented yet");
+                    }}
+                    height="35px"
+                    padding="5px 10px"
+                    width="max-content"
+                    color="delete"
+                    content={"Remove"}
+                  />
+                </div>
+              );
+            }
+          })}
         </div>
       </div>
     </div>

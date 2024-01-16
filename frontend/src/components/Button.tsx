@@ -7,9 +7,10 @@ type ButtonProps = {
   content: any;
   width?: string;
   height?: string;
+  padding?: string;
 }
 
-export default function Button({ onClick, color, content, width, height }: ButtonProps) {
+export default function Button({ onClick, color, content, width, height , padding}: ButtonProps) {
   // Define the styles for each button type
   const colorStyles = {
     primary: {
@@ -32,7 +33,7 @@ export default function Button({ onClick, color, content, width, height }: Butto
   return (
     <button style={{
       border: 'none', // Set default border to none
-      padding: '10px 20px',
+      padding: padding || '10px 20px',
       textAlign: 'center',
       textDecoration: 'none',
       display: 'inline-block',

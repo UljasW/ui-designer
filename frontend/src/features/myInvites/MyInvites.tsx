@@ -9,13 +9,18 @@ interface Props {
 export default function MyInvites({ show }: Props) {
   const [invites, setInvites] = useState<any[]>([]);
 
-useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
-        const data = await getInvitations(localStorage.getItem("jwt") || "");
-        setInvites(data);
+      const data = await getInvitations(localStorage.getItem("jwt") || "");
+      setInvites(data);
     };
     fetchData();
-}, []);
+  }, []);
+
+  const accept = async (id: string) => {
+    await acceptInvite(id, localStorage.getItem("jwt") || "");
+    window.location.reload();
+  };
 
   return (
     <div
@@ -23,16 +28,19 @@ useEffect(() => {
         position: "absolute",
         top: "100px",
         right: "10px",
-        
       }}
     >
       {show ? (
-        <div style={{maxWidth: "300px",
-        backgroundColor: "#ffffff",
-        boxShadow:
-          "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-        borderRadius: "0.375rem",
-        padding: "1rem",}}>
+        <div
+          style={{
+            maxWidth: "300px",
+            backgroundColor: "#ffffff",
+            boxShadow:
+              "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+            borderRadius: "0.375rem",
+            padding: "1rem",
+          }}
+        >
           <h2
             style={{
               fontSize: "1.25rem",
@@ -46,25 +54,31 @@ useEffect(() => {
             <ul style={{ listStyle: "none", paddingLeft: "20" }}>
               {invites.map((invite, index) => (
                 <div>
-                    <li
-                  key={index}
-                  style={{
-                    borderBottom: "1px solid #e2e8f0",
-                    paddingBottom: "0.25rem",
-                    marginBottom: "0.25rem",
-                  }}
-                >
-                  <p style={{ marginBottom: "0.25rem" }}>{invite.design.name}</p>
-                  <small style={{ color: "#4a5568" }}>{invite.design.designer.email}</small>
-                  
-                </li>
-                    <Button onClick={function (e: any): void {
-                      acceptInvite(invite.id, localStorage.getItem("jwt") || "");
-                      window.location.reload();
-                      } } color={"primary"} content={"Accept"}></Button>
+                  <li
+                    key={index}
+                    style={{
+                      borderBottom: "1px solid #e2e8f0",
+                      paddingBottom: "0.25rem",
+                      marginBottom: "0.25rem",
+                    }}
+                  >
+                    <p style={{ marginBottom: "0.25rem" }}>
+                      {invite.design.name}
+                    </p>
+                    <small style={{ color: "#4a5568" }}>
+                      {invite.design.designer.email}
+                    </small>
+                  </li>
+                  <Button
+                    onClick={function (e: any): void {
+                      accept(invite.id);
+
+                      
+                    }}
+                    color={"primary"}
+                    content={"Accept"}
+                  ></Button>
                 </div>
-                
-                
               ))}
             </ul>
           ) : (
