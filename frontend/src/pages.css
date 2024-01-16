@@ -1,7 +1,17 @@
+.inviteAndCollabContainer {
+  display: flex;
+  flex-direction: row;
+ 
+
+}
+
 
 @media only screen and (max-width: 600px) {
   .inviteText {
     display: none;
+  }
+  .inviteAndCollabContainer {
+    flex-direction: column;
   }
 
   .designListContainer {

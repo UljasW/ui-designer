@@ -52,7 +52,7 @@ export default function DesignerTool() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [isScreenLargeEnough, setIsScreenLargeEnough]);
+  }, [isScreenLargeEnough]);
 
   useEffect(() => {
     fetchObjectsAndRender();
@@ -60,7 +60,7 @@ export default function DesignerTool() {
     return () => {
       console.log("Unmounting DesignerTool");
     };
-  }, [canvas, fetchObjectsAndRender]);
+  }, [canvas]);
 
   useEffect(() => {
     if (canvas.current && isCanvasInitialized) {
@@ -77,7 +77,7 @@ export default function DesignerTool() {
         canvas.current?.off("object:modified", handleObjectModified);
       };
     }
-  }, [isCanvasInitialized, updateObjectsLiveVisually]);
+  }, [isCanvasInitialized]);
   
 
   return (

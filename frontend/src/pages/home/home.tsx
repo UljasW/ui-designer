@@ -44,7 +44,7 @@ export default function Home() {
     return () => {
       console.log("Design Manager Unmounted");
     };
-  }, [fetchDesignes]);
+  }, []);
 
   
 
@@ -89,6 +89,7 @@ export default function Home() {
               type={"Text"}
               placeholder={"Design Name"}
               height="20px"
+              width="100px"
               onChange={handleDesignNameChange}
             />
 
