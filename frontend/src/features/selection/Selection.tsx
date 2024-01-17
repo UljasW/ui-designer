@@ -22,6 +22,9 @@ export default function Selection(props: FabricCanvasProps) {
   const [snappingArea, setSnappingArea] = useState<number>(200);
   const [mouseDown, setMouseDown] = useState<boolean>(false);
 
+  const customControls = fabric.fabric.Object.prototype.controls;
+  delete customControls.mtr;
+
   const { checkSnapping } = useSnapping(props.canvas);
 
   const setObjPos = (canvas: any, options: any) => {
@@ -58,9 +61,11 @@ export default function Selection(props: FabricCanvasProps) {
         }
       });
 
+
       canvas.on("mouse:move", (options) => {
         setObjPos(canvas, options);
         if (enableSnapping && (mouseDown || object !== undefined)) {
+
           checkSnapping(snappingDistance, snappingArea);
         }
         canvas.renderAll();
@@ -91,13 +96,17 @@ export default function Selection(props: FabricCanvasProps) {
       const rect = new fabric.fabric.Rect({
         top: mousePos ? mousePos[1] : 100,
         left: mousePos ? mousePos[0] : 100,
-        width: 70,
-        height: 70,
+        width: 100,
+        height: 100,
         selectable: false, // Initially not selectable
         hasControls: false, // No controls for now
         strokeWidth: 0,
         fill: props.currentColor,
         stroke: props.currentColor,
+        lockRotation: true,
+        lockScalingFlip: true,
+        lockUniScaling: true,
+
       });
 
       (rect as any).id = nanoid();
@@ -121,6 +130,10 @@ export default function Selection(props: FabricCanvasProps) {
         fill: props.currentColor,
         stroke: props.currentColor,
         strokeWidth: 0,
+        lockRotation: true,
+        lockScalingFlip: true,
+
+
       });
 
       console.log(text);

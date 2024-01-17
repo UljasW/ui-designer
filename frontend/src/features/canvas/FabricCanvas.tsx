@@ -33,10 +33,13 @@ const FabricCanvas: React.FC<FabricCanvasProps> = ({ canvas }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+   
+
     if (canvasRef.current && !canvas.current && containerRef.current) {
       const fabricCanvas = new fabric.Canvas(canvasRef.current, {
         width: containerRef.current.clientWidth,
         height: containerRef.current.clientHeight,
+        
       });
 
 

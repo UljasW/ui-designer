@@ -4,18 +4,12 @@ import Button from "../../components/Button";
 import acceptInvite from "../../api/collaboration/acceptInvite";
 interface Props {
   show: boolean;
+  invites: any[];
 }
 
-export default function MyInvites({ show }: Props) {
-  const [invites, setInvites] = useState<any[]>([]);
+export default function MyInvites({ show, invites }: Props) {
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getInvitations(localStorage.getItem("jwt") || "");
-      setInvites(data);
-    };
-    fetchData();
-  }, []);
+  
 
   const accept = async (id: string) => {
     await acceptInvite(id, localStorage.getItem("jwt") || "");

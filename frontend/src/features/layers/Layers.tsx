@@ -121,7 +121,7 @@ export default function Layers(props: FabricCanvasProps) {
         borderRight: "1px solid #ced4da",
       }}
     >
-      <div style={{ overflowY: "scroll", overflowX:"hidden" }}>
+      <div style={{ overflowY: "scroll", overflowX:"hidden", width:"100%" }}>
         <div>
           {objList.map((obj, index) => {
             const reverseIndex = objList.length - 1 - index;
