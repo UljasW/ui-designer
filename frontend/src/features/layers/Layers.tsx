@@ -53,7 +53,7 @@ export default function Layers(props: FabricCanvasProps) {
       canvasInstance.off("selection:updated", handleSelectionCreated);
       canvasInstance.off("selection:cleared", handleSelectionCleared);
     };
-  }, [props.canvas]);
+  }, [props.canvas.current]);
 
   function moveDown() {
     const canvasInstance = props.canvas.current;
