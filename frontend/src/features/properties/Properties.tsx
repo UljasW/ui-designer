@@ -5,6 +5,8 @@ import Input from "../../components/Input";
 interface FabricCanvasProps {
   canvas: React.MutableRefObject<fabric.Canvas | undefined>;
   setCurrentColor: React.Dispatch<React.SetStateAction<string>>;
+  updateDb: (objects: any) => void;
+
 }
 
 export default function Properties(props: FabricCanvasProps) {
@@ -14,7 +16,7 @@ export default function Properties(props: FabricCanvasProps) {
   const [borderRadius, setBorderRadius] = useState<number>(0);
   const [strokeColor, setStrokeColor] = useState<string>("black");
   const [strokeWidth, setStrokeWidth] = useState<number>(0);
-  const [textValue, setTextValue] = useState<string>(""); // Add this line
+  const [textValue, setTextValue] = useState<string>(""); 
 
   const [width, setWidth] = useState<number>(100);
   const [hight, setHight] = useState<number>(1);
@@ -23,6 +25,9 @@ export default function Properties(props: FabricCanvasProps) {
     const canvasInstance = props.canvas.current;
 
     const handleSelectionCreated = (e: any) => {
+
+
+
       if (canvasInstance && e.selected.length === 1) {
         setSelectedObj(e.selected[0]);
         const selectedObject = e.selected[0];
@@ -53,10 +58,12 @@ export default function Properties(props: FabricCanvasProps) {
 
     return () => {
       if (canvasInstance) {
+
         canvasInstance.off("selection:created", handleSelectionCreated);
         canvasInstance.off("selection:updated", handleSelectionCreated);
         canvasInstance.off("selection:cleared", handleSelectionCleared);
         canvasInstance.off("object:scaling", handleScaling);
+        
       }
     };
   }, [props.canvas]);
@@ -76,7 +83,6 @@ export default function Properties(props: FabricCanvasProps) {
 
     if (!obj) return;
 
-    console.log(obj);
 
     const height = (obj.height ?? 0) * (obj.scaleY ?? 0);
     const width = (obj.width ?? 0) * (obj.scaleX ?? 0);
@@ -96,7 +102,6 @@ export default function Properties(props: FabricCanvasProps) {
 
     if (obj) {
       obj.set({ fill: event.currentTarget.value as string });
-      console.log(event.currentTarget.value as string);
       setFillColor(event.currentTarget.value as string);
       canvasInstance.renderAll();
     }
@@ -122,7 +127,6 @@ export default function Properties(props: FabricCanvasProps) {
 
       setBorderRadius(radius);
 
-      console.log(event.currentTarget.value);
       canvasInstance.renderAll();
     }
   }
@@ -133,7 +137,6 @@ export default function Properties(props: FabricCanvasProps) {
     const obj = canvasInstance.getActiveObject();
     if (obj) {
       obj.set({ stroke: event.currentTarget.value });
-      console.log(event.currentTarget.value);
       setStrokeColor(event.currentTarget.value);
       canvasInstance.renderAll();
     }
@@ -147,7 +150,6 @@ export default function Properties(props: FabricCanvasProps) {
       const strokeWidth = parseFloat(event.currentTarget.value);
       obj.set({ strokeWidth });
       setStrokeWidth(strokeWidth);
-      console.log(event.currentTarget.value);
       canvasInstance.renderAll();
     }
   }

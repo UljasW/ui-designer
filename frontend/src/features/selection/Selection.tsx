@@ -61,11 +61,9 @@ export default function Selection(props: FabricCanvasProps) {
         }
       });
 
-
       canvas.on("mouse:move", (options) => {
         setObjPos(canvas, options);
         if (enableSnapping && (mouseDown || object !== undefined)) {
-
           checkSnapping(snappingDistance, snappingArea);
         }
         canvas.renderAll();
@@ -106,7 +104,6 @@ export default function Selection(props: FabricCanvasProps) {
         lockRotation: true,
         lockScalingFlip: true,
         lockUniScaling: true,
-
       });
 
       (rect as any).id = nanoid();
@@ -132,8 +129,6 @@ export default function Selection(props: FabricCanvasProps) {
         strokeWidth: 0,
         lockRotation: true,
         lockScalingFlip: true,
-
-
       });
 
       console.log(text);
@@ -158,9 +153,20 @@ export default function Selection(props: FabricCanvasProps) {
         flexDirection: "row",
         justifyContent: "space-between",
         width: "100%",
+        marginRight:"10px",
+        marginLeft:"10px"
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+        <Button
+          onClick={function (e: any): void {
+            navigate("/");
+          }}
+          color={"secondary"}
+          height="40px"
+          content={"Home"}
+        ></Button>
+
         <Button
           onClick={function (e: any): void {
             addRect();
@@ -179,7 +185,10 @@ export default function Selection(props: FabricCanvasProps) {
           max-height="40px"
         ></Button>
         <Checkbox checked={enableSnapping} onClick={handleSnapClick} />
-        <div style={{ background: "lightGrey", borderRadius: "5px" }}>
+      </div>
+
+      <div style={{display:"flex", gap:"20px", height:"100%", alignItems:"center"}}>
+        <div style={{ background: "lightGrey", height:"max-content",borderRadius: "5px" }}>
           <Input
             type={"number"}
             placeholder=""
@@ -193,7 +202,7 @@ export default function Selection(props: FabricCanvasProps) {
           />
           <label>Snapping distance</label>
         </div>
-        <div style={{ background: "lightGrey", borderRadius: "5px" }}>
+        <div style={{ background: "lightGrey", height:"max-content",borderRadius: "5px" }}>
           <Input
             type={"number"}
             placeholder=""
@@ -208,15 +217,6 @@ export default function Selection(props: FabricCanvasProps) {
           <label>Snapping area</label>
         </div>
       </div>
-
-      <Button
-        onClick={function (e: any): void {
-          navigate("/");
-        }}
-        color={"primary"}
-        height="40px"
-        content={"Home"}
-      ></Button>
     </div>
   );
 }

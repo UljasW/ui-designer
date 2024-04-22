@@ -64,10 +64,9 @@ export default function DesignerTool() {
 
   useEffect(() => {
     if (canvas.current && isCanvasInitialized) {
-      console.log("Adding event listeners");
   
       const handleObjectModified = (e: any) => {
-        console.log("Object modified");
+       
         updateObjectsLiveVisually(canvas.current?.getObjects());
       };
   
@@ -115,6 +114,8 @@ export default function DesignerTool() {
             ></Layers>
             <FabricCanvas canvas={canvas}></FabricCanvas>
             <Properties
+                          updateDb={updateDb}
+
               canvas={canvas}
               setCurrentColor={setCurrentColor}
             ></Properties>

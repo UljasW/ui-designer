@@ -6,12 +6,13 @@ export default function useRenderObjectsOnCanvas() {
     objectsContainer: any
   ) => {
     canvasInstance.clear();
-    console.log("Original objects:", objectsContainer);
 
     const sortedDataObjects = objectsContainer.objects
       .sort((a: any, b: any) => a.layerIndex - b.layerIndex);
 
-    console.log("Sorted objects:", sortedDataObjects);
+
+      console.log(sortedDataObjects)
+
 
     sortedDataObjects.forEach((obj: any) => {
       let fabricObj;

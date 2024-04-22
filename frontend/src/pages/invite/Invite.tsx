@@ -69,10 +69,18 @@ export default function Invite() {
         <div
           style={{
             display: "flex",
-            justifyContent: "space-between",
+            gap:"10px",
             width: "100%",
           }}
         >
+          <Button
+            onClick={function (e: any): void {
+              navigate("/");
+            }}
+            color={"secondary"}
+            height="40px"
+            content={"Home"}
+          ></Button>
           <div>
             <Input
               value={email}
@@ -90,14 +98,6 @@ export default function Invite() {
               content={"Send Invite"}
             />
           </div>
-
-          <Button
-            onClick={function (e: any): void {
-              navigate("/");
-            }}
-            color={"primary"}
-            content={"Home"}
-          ></Button>
         </div>
       </TopBar>
 

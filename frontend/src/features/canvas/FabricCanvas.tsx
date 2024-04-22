@@ -13,7 +13,6 @@ interface CustomFabricObject extends fabric.Object {
   text?: string;
 }
 
-
 fabric.Object.prototype.toObject = (function (toObject) {
   return function (this: CustomFabricObject) {
     return fabric.util.object.extend(toObject.call(this), {
@@ -22,26 +21,23 @@ fabric.Object.prototype.toObject = (function (toObject) {
       rx: this.rx || 0,
       ry: this.ry || 0,
       text: this.text || "",
+      selectable: this.selectable,
+      hasControls: this.hasControls,
+
     });
   };
 })(fabric.Object.prototype.toObject);
-
-
 
 const FabricCanvas: React.FC<FabricCanvasProps> = ({ canvas }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-   
-
     if (canvasRef.current && !canvas.current && containerRef.current) {
       const fabricCanvas = new fabric.Canvas(canvasRef.current, {
         width: containerRef.current.clientWidth,
         height: containerRef.current.clientHeight,
-        
       });
-
 
       canvas.current = fabricCanvas;
     }
@@ -50,12 +46,9 @@ const FabricCanvas: React.FC<FabricCanvasProps> = ({ canvas }) => {
   useEffect(() => {
     const handleResize = () => {
       if (containerRef.current && canvas.current) {
-        console.log("Resizing canvas: "+ containerRef.current.clientWidth);
+        canvas.current.setWidth(window.innerWidth - 500);
+        canvas.current.setHeight(window.innerHeight - 50);
 
-        canvas.current.setWidth(window.innerWidth-500);
-        canvas.current.setHeight(window.innerHeight-50);
-      
-        
         canvas.current.renderAll(); // Re-render the canvas after resizing
       }
     };
@@ -71,7 +64,7 @@ const FabricCanvas: React.FC<FabricCanvasProps> = ({ canvas }) => {
   }, []);
 
   return (
-    <div ref={containerRef} style={{  height: "100%", width: "100%" }}>
+    <div ref={containerRef} style={{ height: "100%", width: "100%" }}>
       <canvas ref={canvasRef} />
     </div>
   );

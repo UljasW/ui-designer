@@ -19,6 +19,11 @@ export default function Home() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     console.log("Design Name: " + designName);
+    if (!designName || designName === "") {
+      event.preventDefault();
+      alert("Please enter a design name to create");
+      return;
+    }
     createDesign(designName, localStorage.getItem("jwt") || "");
   };
 
@@ -108,10 +113,12 @@ export default function Home() {
             />
           </form>
           <div
-            style={{ height: "100%", display: "flex", alignItems: "center"}}
+            style={{ height: "100%", display: "flex", alignItems: "center" }}
           >
             {invites.length > 0 ? (
-              <span style={{ marginRight: "10px", fontWeight:"bold" }}>New invite</span>
+              <span style={{ marginRight: "10px", fontWeight: "bold" }}>
+                New invite
+              </span>
             ) : (
               <span style={{ marginRight: "10px" }} className="inviteText">
                 My Invities
@@ -124,7 +131,11 @@ export default function Home() {
               onClick={(e: any) => {
                 setShowInvite(!showInvite);
               }}
-              style={{ cursor: "pointer",borderRadius:"10px", backgroundColor:invites.length > 0 ? "green":""  }}
+              style={{
+                cursor: "pointer",
+                borderRadius: "10px",
+                backgroundColor: invites.length > 0 ? "green" : "",
+              }}
               height="40px"
             ></img>
           </div>
@@ -132,63 +143,69 @@ export default function Home() {
         </div>
       </TopBar>
       <div style={{ padding: "20px" }}>
-        <div
-          style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}
-          className="designListContainer"
-        >
-          {designList?.map((design) => (
+        <div>
+          {!designList || designList.length === 0 ? (
+            <h1> No designs has loaded! Try creating one in the upper left corner. </h1>
+          ) : (
             <div
-              key={design.id}
-              style={{
-                borderRadius: "10px",
-                border: "1px solid #ced4da",
-                padding: "10px",
-              }}
+              style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}
+              className="designListContainer"
             >
-              <div style={{ width: "280px" }}>
-                <h3 style={{ color: "#333" }}>{design.name}</h3>
-                <h4>Is owner: {design.isOwner.toString()}</h4>
+              {designList.map((design) => (
+                <div
+                  key={design.id}
+                  style={{
+                    borderRadius: "10px",
+                    border: "1px solid #ced4da",
+                    padding: "10px",
+                  }}
+                >
+                  <div style={{ width: "280px" }}>
+                    <h3 style={{ color: "#333" }}>{design.name}</h3>
+                    <h4>Is owner: {design.isOwner.toString()}</h4>
 
-                <div style={{ display: "flex", flexDirection: "row" }}>
-                  <Button
-                    onClick={(e: any) => {
-                      handleDesignStart(e, design.id);
-                    }}
-                    color="primary"
-                    height="35px"
-                    padding="5px 10px"
-                    width="max-content"
-                    content={"View/Edit"}
-                  />
-
-                  {design.isOwner && (
-                    <>
+                    <div style={{ display: "flex", flexDirection: "row" }}>
                       <Button
                         onClick={(e: any) => {
-                          handleDesignInvite(e, design.id);
+                          handleDesignStart(e, design.id);
                         }}
-                        color="secondary"
+                        color="primary"
                         height="35px"
                         padding="5px 10px"
                         width="max-content"
-                        content={"Invite user"}
+                        content={"View/Edit"}
                       />
-                      <Button
-                        onClick={(e: any) => {
-                          handleDesignDelete(design.id);
-                        }}
-                        height="35px"
-                        padding="5px 10px"
-                        width="max-content"
-                        color="delete"
-                        content={"Delete"}
-                      />
-                    </>
-                  )}
+
+                      {design.isOwner && (
+                        <>
+                          <Button
+                            onClick={(e: any) => {
+                              handleDesignInvite(e, design.id);
+                            }}
+                            color="secondary"
+                            height="35px"
+                            padding="5px 10px"
+                            width="max-content"
+                            content={"Invite user"}
+                          />
+                          <Button
+                            onClick={(e: any) => {
+                              handleDesignDelete(design.id);
+                            }}
+                            height="35px"
+                            padding="5px 10px"
+                            width="max-content"
+                            color="delete"
+                            content={"Delete"}
+                          />
+                        </>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))}{" "}
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>
